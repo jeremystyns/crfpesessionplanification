@@ -1,0 +1,50 @@
+name: Publication GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/adoring-bell-7toudg]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Construire pour le sous-chemin du dépôt
+        run: |
+          OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
+          REPO="${{ github.event.repository.name }}"
+          export VITE_BASE="/${REPO}/"
+          export VITE_PUBLIC_BASE_URL="https://${OWNER}.github.io/${REPO}"
+          npm run build
+          # Repli pour les liens directs : GitHub Pages sert 404.html pour toute adresse inconnue.
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

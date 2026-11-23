@@ -1,3 +1,4 @@
+import { withBase } from '@/lib/basePath';
 import { ChevronDown, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -48,11 +49,11 @@ export const EmptyStateHero = ({ onAddBlock, landingPageContent, onReopenSession
   const { resolvedTheme } = useTheme();
   const [previewSrc, setPreviewSrc] = useState(
     () => (typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
-      ? '/assets/preview-dark.webp'
-      : '/assets/preview.webp')
+      ? withBase('/assets/preview-dark.webp')
+      : withBase('/assets/preview.webp'))
   );
   useEffect(() => {
-    setPreviewSrc(resolvedTheme === 'dark' ? '/assets/preview-dark.webp' : '/assets/preview.webp');
+    setPreviewSrc(resolvedTheme === 'dark' ? withBase('/assets/preview-dark.webp') : withBase('/assets/preview.webp'));
   }, [resolvedTheme]);
 
   return (

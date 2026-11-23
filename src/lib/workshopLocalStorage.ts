@@ -7,14 +7,15 @@
 import { MAX_DAYS, WorkshopData, WorkshopDay, WorkshopItem, generateId } from '@/types/workshop';
 import { SessionHistoryEntry } from '@/types/sessionHistory';
 import { withoutNegativeDurations } from '@/lib/workshopUtils';
+import { stripBase, withBase } from '@/lib/basePath';
 
 // ── Default library loader ────────────────────────────────────────────────────
 
 const loadDefaultLibrary = async () => {
   try {
-    const locale = window.location.pathname.startsWith('/en') ? 'en' : 'fr';
+    const locale = stripBase(window.location.pathname).startsWith('/en') ? 'en' : 'fr';
     const path = locale === 'en' ? '/data/defaultLibrary.en.json' : '/data/defaultLibrary.json';
-    const response = await fetch(path);
+    const response = await fetch(withBase(path));
     if (!response.ok) throw new Error('Failed to load default library');
     return await response.json();
   } catch (error) {
@@ -44,7 +45,7 @@ export const KEYS = {
   migrated: 'sp:_migrated_v1',
 } as const;
 
-const getLocale = () => (window.location.pathname.startsWith('/en') ? 'en' : 'fr');
+const getLocale = () => (stripBase(window.location.pathname).startsWith('/en') ? 'en' : 'fr');
 
 // ── Storage migration (legacy → sp: keys) ────────────────────────────────────
 

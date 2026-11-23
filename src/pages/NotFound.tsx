@@ -1,3 +1,4 @@
+import { withBase } from '@/lib/basePath';
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { DocumentMeta } from '@/hooks/useDocumentMeta';
@@ -27,7 +28,7 @@ const NotFound = () => {
           />
           <div className="text-center">
             <p className="mb-4 text-xl text-muted-foreground">Oups ! Page introuvable</p>
-            <a href="/" className="text-primary-text underline hover:text-primary-text/90">
+            <a href={withBase('/')} className="text-primary-text underline hover:text-primary-text/90">
               Retour à l'accueil
             </a>
           </div>

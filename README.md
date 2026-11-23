@@ -45,6 +45,14 @@ npm run build    # production → dist/
 
 Variables optionnelles : voir `.env.example` (`VITE_PUBLIC_BASE_URL`, `VITE_SESSIONS_API`). L'API facultative des liens dynamiques (PHP) est décrite dans [ARCHITECTURE.md](./ARCHITECTURE.md) et dans le [README amont](https://github.com/tim-peters/sessionplan#self-hosting).
 
+## Publication sur GitHub Pages
+
+Le workflow `.github/workflows/pages.yml` teste, construit et publie l'application à chaque envoi sur `main` (ou sur la branche de travail), et à la demande depuis l'onglet *Actions*. Il construit avec `VITE_BASE=/<nom-du-dépôt>/` pour que l'application fonctionne dans le sous-chemin du dépôt, copie `index.html` en `404.html` (liens directs) et publie `dist/`.
+
+Une seule configuration manuelle : *Settings → Pages → Build and deployment → Source : GitHub Actions*.
+
+Adresse : `https://<compte>.github.io/crfpesessionplanification/`. Les liens dynamiques (API PHP) ne sont pas disponibles sur GitHub Pages ; le reste fonctionne (partage par lien instantané, export JSON).
+
 ## Licence
 
 AGPL-3.0, comme le projet d'origine : voir [LICENSE](./LICENSE). Toute version modifiée mise à disposition en ligne doit en publier le code source.

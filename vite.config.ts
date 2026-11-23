@@ -66,7 +66,13 @@ function backendMirrorPlugin(): Plugin {
 }
 
 // https://vitejs.dev/config/
+// Base de déploiement : "/" par défaut, "/depot/" pour GitHub Pages (VITE_BASE).
+const rawBase = process.env.VITE_BASE || "/";
+const base = `/${rawBase.replace(/^\/+|\/+$/g, "")}/`.replace(/^\/\/$/, "/");
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export default defineConfig(({ mode }) => ({
+  base,
   define: {
     __APP_BUILD__: appBuild,
   },
@@ -103,17 +109,17 @@ export default defineConfig(({ mode }) => ({
         name: "Session planification – CRFPE",
         short_name: "Session planif.",
         description: "Planificateur de déroulés de séances du CRFPE : glisser-déposer, modèles et mode direct.",
-        start_url: "/",
-        scope: "/",
+        start_url: base,
+        scope: base,
         display: "standalone",
         theme_color: "#004C8E",
         background_color: "#ffffff",
         lang: "fr",
         "icons": [
-          { "src": "/pwa/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
-          { "src": "/pwa/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
-          { "src": "/pwa/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-          { "src": "/pwa/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+          { "src": `${base}pwa/icon-192.png`,          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+          { "src": `${base}pwa/icon-512.png`,          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+          { "src": `${base}pwa/icon-maskable-192.png`, "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+          { "src": `${base}pwa/icon-maskable-512.png`, "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
         ]
       },
       workbox: {
@@ -132,12 +138,12 @@ export default defineConfig(({ mode }) => ({
         // shell-only: the DE and EN homepages. Everything else always goes to the
         // network (or its own precache entry), so a repeat visitor's browser never
         // substitutes route-specific content with the generic shell.
-        navigateFallbackAllowlist: [/^\/$/, /^\/en\/?$/],
+        navigateFallbackAllowlist: [new RegExp(`^${escapeRe(base)}$`), new RegExp(`^${escapeRe(base)}en/?$`)],
         navigateFallbackDenylist: [
-          /^\/data\//,
-          /^\/(?:llms\.txt|import-schema\.md)$/,
-          /^\/enterprise\/?$/,
-          /^\/en\/enterprise\/?$/,
+          new RegExp(`^${escapeRe(base)}data/`),
+          new RegExp(`^${escapeRe(base)}(?:llms\\.txt|import-schema\\.md)$`),
+          new RegExp(`^${escapeRe(base)}enterprise/?$`),
+          new RegExp(`^${escapeRe(base)}en/enterprise/?$`),
         ],
         globPatterns: [
           // HTML is intentionally NOT globbed with **/ here: prerendering emits

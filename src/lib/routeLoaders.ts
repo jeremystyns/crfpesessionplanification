@@ -13,6 +13,7 @@ import { LoaderFunctionArgs, defer } from 'react-router-dom';
 import { BlogPost, BlogIndex } from '../types/blog';
 import { LandingPageContent, SiteStats } from '../types/landingPage';
 import type { Hub } from '../types/hub';
+import { withBase } from './basePath';
 import { getLocaleFromPathname, getContentDataPath, type Locale } from './i18n';
 import { filterVisibleBlogPosts } from './blog-visibility';
 
@@ -109,7 +110,7 @@ async function fetchJsonOnce<T>(url: string, notFoundMessage: string): Promise<T
   let response: Response;
 
   try {
-    response = await fetch(url);
+    response = await fetch(withBase(url));
   } catch (error) {
     throw new HttpFetchError(
       `Failed to fetch ${url}: ${error instanceof Error ? error.message : String(error)}`,

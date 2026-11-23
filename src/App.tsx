@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider, useLocation, Outlet, useNavigation
 import { HelmetProvider } from "react-helmet-async";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { lazyPage } from "./lib/lazyRoute";
+import { ROUTER_BASENAME } from "./lib/basePath";
 import { resetPrerenderReady, signalPrerenderReadyAfterPaint, isPrerendering } from "./lib/prerender";
 import { LibraryProvider } from "./contexts/LibraryContext";
 import { LocaleProvider } from "./contexts/LocaleContext";
@@ -296,7 +297,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+], { basename: ROUTER_BASENAME || undefined });
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient());

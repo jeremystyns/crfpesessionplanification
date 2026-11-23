@@ -12,6 +12,7 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
+import { stripBase, withBase } from './basePath';
 
 export type Locale = 'fr' | 'en';
 
@@ -39,7 +40,8 @@ export const LOCALE_PREFIX: Record<Locale, string> = {
  * Derives the locale from a URL pathname.
  * /en → 'en'  |  /en/anything → 'en'  |  everything else → 'fr'
  */
-export function getLocaleFromPathname(pathname: string): Locale {
+export function getLocaleFromPathname(rawPathname: string): Locale {
+  const pathname = stripBase(rawPathname);
   if (pathname === '/en' || pathname.startsWith('/en/')) {
     return 'en';
   }
@@ -67,7 +69,7 @@ i18next
     defaultNS: 'common',
     ns: ['common'],
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: withBase('/locales/{{lng}}/{{ns}}.json'),
     },
     interpolation: {
       escapeValue: false, // React already escapes

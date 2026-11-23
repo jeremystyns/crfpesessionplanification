@@ -7,6 +7,7 @@
  *       scheduled window off, while a later window starts again.
  * Used by: WorkshopPlanner (live bar rendering + timeline highlighting)
  */
+import { withBase } from '@/lib/basePath';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { WorkshopData } from '@/types/workshop';
 import { timeToMinutes } from '@/lib/clock-time';
@@ -161,7 +162,7 @@ export function usePlayMode(
 
     if (!sound) return;
 
-    const audio = new Audio(sound);
+    const audio = new Audio(withBase(sound));
     void audio
       .play()
       .then(() => {

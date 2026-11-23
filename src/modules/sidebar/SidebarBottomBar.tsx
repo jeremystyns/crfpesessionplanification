@@ -1,3 +1,4 @@
+import { withBase } from '@/lib/basePath';
 import { Button } from '@/components/primitives/button';
 import { useTranslation } from 'react-i18next';
 import { Settings, ChevronDown, ChevronUp, X, PanelLeftClose } from 'lucide-react';
@@ -73,8 +74,8 @@ export const SidebarLogo = ({ onCollapse }: { onCollapse: () => void }) => {
       <div className="flex items-center justify-between gap-0">
         <div className="flex-1 min-w-0 p-5 sm:p-6">
           <h2 className="text-lg font-semibold leading-tight">
-            <a href={locale === 'en' ? '/en' : '/'} className="inline-flex items-center gap-2 hover:underline">
-              <img src="/pwa/favicon.svg" alt="" className="h-9 w-9 shrink-0 rounded-sm" aria-hidden="true" />
+            <a href={withBase(locale === 'en' ? '/en' : '/')} className="inline-flex items-center gap-2 hover:underline">
+              <img src={withBase('/pwa/favicon.svg')} alt="" className="h-9 w-9 shrink-0 rounded-sm" aria-hidden="true" />
               <span>Session planification</span>
             </a>
           </h2>
