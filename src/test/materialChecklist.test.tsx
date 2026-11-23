@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { MaterialChecklist, MaterialCounter } from '@/modules/timeline/MaterialChecklist';
+import { MaterialAddButton, MaterialChecklist, MaterialCounter } from '@/modules/timeline/MaterialChecklist';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string, vars?: Record<string, string | number>) => (vars ? `${key} ${JSON.stringify(vars)}` : key) }),
@@ -33,13 +34,51 @@ describe('MaterialChecklist', () => {
 
   it('adds an entry with Enter and removes one from the editor', () => {
     const onChange = vi.fn();
-    render(<MaterialChecklist value="[ ] A" onChange={onChange} editable startAdding />);
+    render(<MaterialChecklist value="[ ] A" onChange={onChange} editable adding />);
     const input = screen.getByPlaceholderText('material.addPlaceholder');
     fireEvent.change(input, { target: { value: 'Colle' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onChange).toHaveBeenLastCalledWith('[ ] A\n[ ] Colle');
     fireEvent.click(screen.getAllByRole('button', { name: /material.remove/ })[0]);
     expect(onChange).toHaveBeenLastCalledWith('');
+  });
+
+  it('edits an existing entry in place and keeps the tick state', () => {
+    const onChange = vi.fn();
+    render(<MaterialChecklist value={'[x] Badges\n[ ] Marqueurs'} onChange={onChange} editable />);
+    fireEvent.click(screen.getByText('Marqueurs'));
+    const input = screen.getByRole('textbox', { name: /material.edit/ });
+    fireEvent.change(input, { target: { value: 'Marqueurs noirs' } });
+    expect(onChange).toHaveBeenLastCalledWith('[x] Badges\n[ ] Marqueurs noirs');
+  });
+
+  it('removes an entry that was emptied when editing ends', () => {
+    const Harness = () => {
+      const [value, setValue] = useState('[ ] A\n[ ] B');
+      return (
+        <>
+          <MaterialChecklist value={value} onChange={setValue} editable />
+          <output data-testid="value">{value}</output>
+        </>
+      );
+    };
+    render(<Harness />);
+    fireEvent.click(screen.getByText('B'));
+    const input = screen.getByRole('textbox', { name: /material.edit/ });
+    fireEvent.change(input, { target: { value: '   ' } });
+    fireEvent.blur(input);
+    expect(screen.getByTestId('value').textContent).toBe('[ ] A');
+  });
+
+  it('does not take a row of its own for the add button: it sits in the title row', () => {
+    const onClick = vi.fn();
+    const { container } = render(<MaterialAddButton onClick={onClick} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(container.querySelectorAll('li')).toHaveLength(0);
+    // The list itself only renders the add field while adding.
+    const list = render(<MaterialChecklist value="[ ] A" onChange={() => {}} editable />);
+    expect(list.container.querySelectorAll('li')).toHaveLength(1);
   });
 
   it('is read only without onChange', () => {

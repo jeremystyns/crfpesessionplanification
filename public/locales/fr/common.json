@@ -116,7 +116,7 @@
   "settings": {
     "sectionTitle": "Paramètres",
     "language": "Langue",
-    "truncateDescription": "Raccourcir les descriptions",
+    "truncateDescription": "Vue organisationnelle : masquer objectifs et descriptions",
     "playModeSounds": "Notifications sonores",
     "timeVisualizationStrip": "Afficher la visualisation du temps",
     "exportData": "Exporter les données",
@@ -435,7 +435,7 @@
     "objectives": "Objectifs",
     "objectivesPlaceholder": "Ce que les participants sauront ou sauront faire à l'issue de cette phase…",
     "addObjectives": "Ajouter des objectifs",
-    "materialHint": "Cochez le matériel au fur et à mesure : coché = prêt.",
+    "materialHint": "Coché = prêt",
     "placeSection": "Lieu et disposition",
     "placeHint": "À renseigner seulement si cette phase se déroule ailleurs ou autrement que le reste de la séance.",
     "sameAsSession": "Comme la séance",
@@ -550,7 +550,9 @@
     "readyCount": "{{ready}} sur {{total}} prêts",
     "toggle": "Matériel prêt : {{name}}",
     "remove": "Retirer {{name}}",
-    "addPlaceholder": "Ajouter du matériel puis Entrée…"
+    "addPlaceholder": "Ajouter du matériel puis Entrée…",
+    "edit": "Modifier {{name}}",
+    "editHint": "Cliquer pour modifier"
   },
   "layouts": {
     "conference": "Conférence",

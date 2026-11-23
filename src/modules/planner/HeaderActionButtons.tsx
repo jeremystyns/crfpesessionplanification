@@ -8,7 +8,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu, ListCollapse, ChartNoAxesGantt, Volume2, VolumeX } from 'lucide-react';
+import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu, ListChecks, ChartNoAxesGantt, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { Badge } from '@/components/primitives/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/primitives/tooltip';
@@ -312,7 +312,7 @@ export const HeaderActionButtons = ({
             <DisplayToggle
               pressed={!showFullPreviewText}
               label={t('settings.truncateDescription')}
-              icon={<ListCollapse className="h-4 w-4" />}
+              icon={<ListChecks className="h-4 w-4" />}
               onToggle={() => onSetShowFullPreviewText(!showFullPreviewText)}
             />
           )}

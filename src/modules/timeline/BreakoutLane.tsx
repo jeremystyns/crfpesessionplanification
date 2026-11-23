@@ -34,7 +34,7 @@ export const BreakoutLane = ({
   laneChildren,
   blockTypes,
   persons,
-  showFullPreviewText = false,
+  showFullPreviewText = true,
   parentTimeDisplay,
   onAddChild,
   childPlayStates,

@@ -52,7 +52,7 @@ export const GroupCard = ({
   item,
   blockTypes,
   persons,
-  showFullPreviewText = false,
+  showFullPreviewText = true,
   timeDisplay,
   onUpdate,
   onDelete,

@@ -1,6 +1,6 @@
 import { Button } from '@/components/primitives/button';
 import { useState } from 'react';
-import { MapPin, Plus } from 'lucide-react';
+import { AlignLeft, MapPin, Package, Plus, Target, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { hasListSyntax, renderRichText } from '@/lib/textFormatting';
@@ -10,7 +10,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useClickToEdit } from '@/hooks/useClickToEdit';
 import type { RoomLayout } from '@/types/workshop';
 import { ROOM_LAYOUT_ICONS } from '@/lib/roomLayout';
-import { MaterialChecklist, MaterialCounter } from './MaterialChecklist';
+import { MaterialAddButton, MaterialChecklist, MaterialCounter } from './MaterialChecklist';
 
 const InlineEditableField = ({
   value,
@@ -98,8 +98,12 @@ interface BlockPreviewProps {
   onUpdate?: (updates: { objectives?: string; notes?: string; material?: string }) => void;
 }
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-[hsl(var(--content-subtitle))]">{children}</p>
+/** Sous-titre d'une section : petite icône à gauche, texte en gras, espace dessous. */
+export const SectionTitle = ({ icon: Icon, children, className }: { icon: LucideIcon; children: React.ReactNode; className?: string }) => (
+  <span className={cn('mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[hsl(var(--content-subtitle))]', className)}>
+    <Icon className="h-3.5 w-3.5 shrink-0 text-primary-text" aria-hidden />
+    <span>{children}</span>
+  </span>
 );
 
 /** Lieu, salle et disposition de la phase, en pastilles. */
@@ -136,7 +140,7 @@ export const BlockPreview = ({
   location,
   room,
   layout,
-  showFullText = false,
+  showFullText = true,
   showEmptyPlaceholders = true,
   onUpdate,
 }: BlockPreviewProps) => {
@@ -147,10 +151,13 @@ export const BlockPreview = ({
   const [forced, setForced] = useState<Partial<Record<FieldKey, boolean>>>({});
   const force = (field: FieldKey, value: boolean) => setForced((prev) => ({ ...prev, [field]: value }));
 
+  // Vue organisationnelle (option « Vue organisationnelle ») : objectifs et descriptions
+  // sont masqués, on garde le matériel, le lieu, la salle et la disposition.
+  const organisational = !showFullText;
   const hasMeta = !!location || !!room || !!layout;
   const active: Record<FieldKey, boolean> = {
-    objectives: !!objectives || !!forced.objectives,
-    notes: !!notes || !!forced.notes,
+    objectives: !organisational && (!!objectives || !!forced.objectives),
+    notes: !organisational && (!!notes || !!forced.notes),
     material: !!material || !!forced.material,
   };
 
@@ -170,7 +177,8 @@ export const BlockPreview = ({
       <div className={showFullText ? 'whitespace-pre-wrap break-words' : 'line-clamp-2'}>{renderRichText(value || '')}</div>
     );
 
-  const missing = (['objectives', 'notes', 'material'] as FieldKey[]).filter((f) => !active[f]);
+  const candidates: FieldKey[] = organisational ? ['material'] : ['objectives', 'notes', 'material'];
+  const missing = candidates.filter((f) => !active[f]);
   const addLabels: Record<FieldKey, string> = {
     objectives: t('dialog.addObjectives'),
     notes: t('dialog.addNotes'),
@@ -185,30 +193,33 @@ export const BlockPreview = ({
 
       {active.objectives && (
         <section aria-label={t('dialog.objectives')} className="py-3 first:pt-0 last:pb-0">
-          <SectionTitle>{t('dialog.objectives')}</SectionTitle>
+          <SectionTitle icon={Target}>{t('dialog.objectives')}</SectionTitle>
           {textField('objectives', objectives)}
         </section>
       )}
 
       {active.notes && (
         <section aria-label={t('dialog.notes')} className="py-3 first:pt-0 last:pb-0">
-          <SectionTitle>{t('dialog.notes')}</SectionTitle>
+          <SectionTitle icon={AlignLeft}>{t('dialog.notes')}</SectionTitle>
           {textField('notes', notes)}
         </section>
       )}
 
       {active.material && (
         <section aria-label={t('dialog.material')} className="py-3 first:pt-0 last:pb-0">
-          <SectionTitle>
-            {t('dialog.material')}
-            <MaterialCounter value={material || ''} />
-          </SectionTitle>
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <SectionTitle icon={Package} className="mb-0">
+              {t('dialog.material')}
+              <MaterialCounter value={material || ''} />
+            </SectionTitle>
+            {canEdit && !forced.material && <MaterialAddButton onClick={() => force('material', true)} />}
+          </div>
           <MaterialChecklist
             value={material || ''}
             onChange={onUpdate ? (v) => onUpdate({ material: v }) : undefined}
             editable={canEdit}
-            startAdding={!!forced.material && !material}
-            onStopAdding={() => force('material', false)}
+            adding={!!forced.material}
+            onAddingChange={(v) => force('material', v)}
             className="text-[hsl(var(--content-text))]"
           />
         </section>

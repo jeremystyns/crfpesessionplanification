@@ -45,7 +45,7 @@ export const BlockCard = ({
   blockType,
   blockTypes,
   persons,
-  showFullPreviewText = false,
+  showFullPreviewText = true,
   stackPreviewFields = false,
   stackTimeAboveTitle = false,
   timeDisplay,

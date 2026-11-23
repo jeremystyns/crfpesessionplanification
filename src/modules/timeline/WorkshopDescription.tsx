@@ -52,7 +52,7 @@ export const WorkshopDescription = ({
   date,
   startTime,
   onAddStartTimeClick,
-  showFullText = false,
+  showFullText = true,
   onUpdate,
   participants,
   location,
@@ -80,12 +80,14 @@ export const WorkshopDescription = ({
           )}
         </div>
       )}
+      {(showFullText || onUpdateDetails) && (
       <section
         aria-label={t('planner.infoCardLabel')}
         data-testid="session-info-card"
         className="w-full flex-1 min-w-0 overflow-hidden rounded-md border border-t-4 border-t-primary bg-[#b7ddff]/30 shadow-sm dark:bg-primary/15 print:border-gray-300 print:bg-transparent print:shadow-none"
       >
         <div className="flex flex-col gap-3 p-3">
+      {showFullText && (
       <div className="w-full sm:w-auto flex-1 min-w-0">
         {editing ? (
           // Padding + min height live on this wrapper (not on the textarea)
@@ -144,8 +146,9 @@ export const WorkshopDescription = ({
           </p>
         )}
       </div>
+      )}
       {onUpdateDetails && (
-        <div className="grid gap-2.5 border-t border-primary/20 pt-3 sm:grid-cols-[7rem_minmax(0,1fr)_minmax(0,1fr)]">
+        <div className={cn('grid gap-2.5 sm:grid-cols-[7rem_minmax(0,1fr)_minmax(0,1fr)]', showFullText && 'border-t border-primary/20 pt-3')}>
           <DetailField id="session-participants" icon={Users} label={t('planner.participants')}>
             <Input
               id="session-participants"
@@ -183,6 +186,7 @@ export const WorkshopDescription = ({
       )}
         </div>
       </section>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { getBlockTypeName, parseDuration } from '@/lib/workshopUtils';
 import { WorkshopItem, BlockType, Person, RoomLayout } from '@/types/workshop';
 import { useBlockFormState } from '@/hooks/useBlockFormState';
@@ -22,7 +22,7 @@ import { Input } from '@/components/primitives/input';
 import { Label } from '@/components/primitives/label';
 import { Switch } from '@/components/primitives/switch';
 import { FormattedTextField } from '@/components/atoms/FormattedTextField';
-import { Lock, Unlock, Trash2, MapPin, DoorOpen } from 'lucide-react';
+import { Lock, Unlock, Trash2, MapPin, DoorOpen, Target, AlignLeft, Package } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -34,7 +34,8 @@ import { PersonAvatar } from '@/components/atoms/PersonAvatar';
 import { DEBOUNCE_TIMES } from '@/lib/timing';
 import { ROOM_LAYOUTS } from '@/types/workshop';
 import { ROOM_LAYOUT_ICONS } from '@/lib/roomLayout';
-import { MaterialChecklist } from './MaterialChecklist';
+import { MaterialAddButton, MaterialChecklist, MaterialCounter } from './MaterialChecklist';
+import { SectionTitle } from './BlockPreview';
 
 interface BlockEditDialogProps {
   item: WorkshopItem | null;
@@ -69,6 +70,7 @@ export const BlockEditDialog = ({
   }, [hasUnsavedChanges, onUnsavedChangesChange]);
   useEffect(() => () => onUnsavedChangesChange?.(false), [onUnsavedChangesChange]);
 
+  const [addingMaterial, setAddingMaterial] = useState(false);
   const fixedStartTimeRef = useRef<HTMLInputElement>(null);
   const durationRef = useRef<HTMLInputElement>(null);
 
@@ -353,7 +355,9 @@ export const BlockEditDialog = ({
     <div className="space-y-4">
       {/* Objectifs, avant la description */}
       <div className="space-y-2">
-        <Label htmlFor="objectives">{t('dialog.objectives')}</Label>
+        <Label htmlFor="objectives" className="block">
+          <SectionTitle icon={Target}>{t('dialog.objectives')}</SectionTitle>
+        </Label>
         <FormattedTextField
           id="objectives"
           value={formData.objectives || ''}
@@ -371,7 +375,9 @@ export const BlockEditDialog = ({
 
       {/* Description */}
       <div className="space-y-2">
-        <Label htmlFor="notes">{t('dialog.notes')}</Label>
+        <Label htmlFor="notes" className="block">
+          <SectionTitle icon={AlignLeft}>{t('dialog.notes')}</SectionTitle>
+        </Label>
         <FormattedTextField
           id="notes"
           value={formData.notes || ''}
@@ -389,12 +395,22 @@ export const BlockEditDialog = ({
 
       {/* Matériel : liste à cocher, coché = prêt */}
       <div className="space-y-2">
-        <Label>{t('dialog.material')}</Label>
-        <p className="text-xs text-muted-foreground">{t('dialog.materialHint')}</p>
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <SectionTitle icon={Package} className="mb-0">
+            {t('dialog.material')}
+            <MaterialCounter value={formData.material || ''} />
+          </SectionTitle>
+          <span className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">{t('dialog.materialHint')}</span>
+            {!addingMaterial && <MaterialAddButton onClick={() => setAddingMaterial(true)} />}
+          </span>
+        </div>
         <MaterialChecklist
           value={formData.material || ''}
           onChange={(v) => handleFieldChange('material', v)}
           editable
+          adding={addingMaterial}
+          onAddingChange={setAddingMaterial}
         />
       </div>
     </div>
