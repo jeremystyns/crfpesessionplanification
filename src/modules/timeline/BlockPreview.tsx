@@ -100,7 +100,7 @@ interface BlockPreviewProps {
 
 /** Sous-titre d'une section : petite icône à gauche, texte en gras, espace dessous. */
 export const SectionTitle = ({ icon: Icon, children, className }: { icon: LucideIcon; children: React.ReactNode; className?: string }) => (
-  <span className={cn('mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[hsl(var(--content-subtitle))]', className)}>
+  <span className={cn('mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[hsl(var(--content-subtitle))]', className)}>
     <Icon className="h-3.5 w-3.5 shrink-0 text-primary-text" aria-hidden />
     <span>{children}</span>
   </span>
@@ -207,7 +207,7 @@ export const BlockPreview = ({
 
       {active.material && (
         <section aria-label={t('dialog.material')} className="py-3 first:pt-0 last:pb-0">
-          <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="mb-3 flex items-center justify-between gap-2">
             <SectionTitle icon={Package} className="mb-0">
               {t('dialog.material')}
               <MaterialCounter value={material || ''} />

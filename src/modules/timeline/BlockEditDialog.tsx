@@ -395,7 +395,7 @@ export const BlockEditDialog = ({
 
       {/* Matériel : liste à cocher, coché = prêt */}
       <div className="space-y-2">
-        <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="mb-3 flex items-center justify-between gap-2">
           <SectionTitle icon={Package} className="mb-0">
             {t('dialog.material')}
             <MaterialCounter value={formData.material || ''} />
