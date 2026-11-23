@@ -13,8 +13,8 @@ const NotFound = () => {
   return (
     <>
       <DocumentMeta
-        title="Seite nicht gefunden (404)"
-        description="Die angeforderte Seite konnte nicht gefunden werden."
+        title="Page introuvable (404)"
+        description="La page demandée est introuvable."
         canonicalPath="/404"
         noindex={true}
         robots="noindex,nofollow"
@@ -26,9 +26,9 @@ const NotFound = () => {
             breadcrumbs={[{ label: '404' }]}
           />
           <div className="text-center">
-            <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
+            <p className="mb-4 text-xl text-muted-foreground">Oups ! Page introuvable</p>
             <a href="/" className="text-primary-text underline hover:text-primary-text/90">
-              Return to Home
+              Retour à l'accueil
             </a>
           </div>
         </div>

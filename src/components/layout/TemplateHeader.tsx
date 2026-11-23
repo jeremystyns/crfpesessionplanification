@@ -43,7 +43,7 @@ export const TemplateHeader = ({
     <header className="mb-12">
       <div className="mb-8 flex items-center justify-between gap-4 border-b pb-4">
         <Link to={rootPath} className="inline-flex items-center gap-2 font-semibold hover:opacity-80">
-          <img src="/pwa/favicon.svg" alt="Session planification Logo" className="h-7 w-7" aria-hidden="true" />
+          <img src="/pwa/favicon.svg" alt="Logo Session planification" className="h-7 w-7" aria-hidden="true" />
           <span>Session planification</span>
         </Link>
         <div className="flex items-center gap-3">

@@ -27,7 +27,7 @@ const renderWith = (
       days={days}
       activeDayId="b"
       liveDayId={null}
-      dateLocale="de-DE"
+      dateLocale="fr-FR"
       onSelect={onSelect}
       onAdd={() => null}
       onDuplicate={() => null}
@@ -46,7 +46,7 @@ const baseProps = () => ({
   days,
   activeDayId: 'b',
   liveDayId: null,
-  dateLocale: 'de-DE',
+  dateLocale: 'fr-FR',
   onSelect: () => {},
   onAdd: () => null,
   onDuplicate: () => null,

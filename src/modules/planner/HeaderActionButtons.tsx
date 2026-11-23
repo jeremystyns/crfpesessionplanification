@@ -84,7 +84,7 @@ const LastSavedLabel = ({ lastModified, dateLocale }: { lastModified: string; da
   return (
     <span className="hidden md:inline text-xs">
       {t('planner.sharedAt')} {!isToday && date.toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' '}
-      {date.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit' })} Uhr
+      {date.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit' })}
     </span>
   );
 };

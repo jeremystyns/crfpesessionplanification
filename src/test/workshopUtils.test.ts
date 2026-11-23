@@ -303,7 +303,7 @@ describe('withDisplayNames', () => {
 
 describe('getWorkshopTitle', () => {
   it('returns the translated default title', () => {
-    expect(getWorkshopTitle('Neuer Workshop', fakeT)).toBe('t:planner.defaultWorkshopTitle');
+    expect(getWorkshopTitle('Nouvelle séance', fakeT)).toBe('t:planner.defaultWorkshopTitle');
   });
 
   it('returns a custom title unchanged', () => {

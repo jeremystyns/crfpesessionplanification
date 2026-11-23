@@ -27,11 +27,11 @@
     "website": "Website"
   },
   "languageHint": {
-    "regionLabel": "Sprachhinweis",
-    "message": "Dies ist die englische Seite. Lieber zu Deutsch wechseln?",
-    "primary": "Zur deutschen Version",
-    "secondary": "Bei Englisch bleiben",
-    "close": "Sprachhinweis schließen"
+    "regionLabel": "Suggestion de langue",
+    "message": "Ceci est la version anglaise. Passer en français ?",
+    "primary": "Voir la version française",
+    "secondary": "Rester en anglais",
+    "close": "Fermer la suggestion de langue"
   },
   "blog": {
     "title": "Blog",
@@ -219,6 +219,7 @@
     "blockTemplates": "Block Templates",
     "sessionTemplates": "Session Templates",
     "group": "Group",
+    "block": "Block",
     "breakout": "Breakout",
     "addBreakout": "Add breakout",
     "dragAndDrop": "Drag & Drop Timeline",

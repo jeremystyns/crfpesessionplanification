@@ -8,12 +8,12 @@ export const getLocalePrefix = (locale: Locale): string => LOCALE_PREFIX[locale]
 export const getLocalizedPath = (locale: Locale, path: string): string =>
   `${LOCALE_PREFIX[locale]}${path}`;
 
-/** Returns the root path for a locale (`'/'` for DE, `'/en'` for EN). */
+/** Returns the root path for a locale (`'/'` for FR, `'/en'` for EN). */
 export const getLocaleRoot = (locale: Locale): string =>
   locale === 'en' ? '/en' : '/';
 
-/** Creates `{ de, en }` alternates for a symmetric path like `/blog` → `{ de: '/blog', en: '/en/blog' }`. */
+/** Creates `{ fr, en }` alternates for a symmetric path like `/blog` → `{ fr: '/blog', en: '/en/blog' }`. */
 export const createSymmetricAlternates = (path: string): Record<Locale, string> => ({
-  de: path,
+  fr: path,
   en: `${LOCALE_PREFIX.en}${path}`,
 });

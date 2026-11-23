@@ -10,11 +10,11 @@ import {
 
 describe('i18n constants', () => {
   it('exposes both supported locales', () => {
-    expect(LOCALES).toEqual(['de', 'en']);
+    expect(LOCALES).toEqual(['fr', 'en']);
   });
 
-  it('maps DE to no prefix and EN to /en', () => {
-    expect(LOCALE_PREFIX.de).toBe('');
+  it('maps FR to no prefix and EN to /en', () => {
+    expect(LOCALE_PREFIX.fr).toBe('');
     expect(LOCALE_PREFIX.en).toBe('/en');
   });
 
@@ -27,13 +27,13 @@ describe('i18n constants', () => {
 });
 
 describe('getLocaleFromPathname', () => {
-  it('returns de for /', () => {
-    expect(getLocaleFromPathname('/')).toBe('de');
+  it('returns fr for /', () => {
+    expect(getLocaleFromPathname('/')).toBe('fr');
   });
 
-  it('returns de for arbitrary DE paths', () => {
-    expect(getLocaleFromPathname('/blog')).toBe('de');
-    expect(getLocaleFromPathname('/blog/some-slug')).toBe('de');
+  it('returns fr for arbitrary FR paths', () => {
+    expect(getLocaleFromPathname('/blog')).toBe('fr');
+    expect(getLocaleFromPathname('/blog/some-slug')).toBe('fr');
   });
 
   it('returns en for /en', () => {
@@ -47,10 +47,10 @@ describe('getLocaleFromPathname', () => {
 });
 
 describe('getContentDataPath', () => {
-  it('uses the non-prefixed base path for de', () => {
-    expect(getContentDataPath('blog', 'de')).toBe('/data/blog/');
-    expect(getContentDataPath('landing', 'de')).toBe('/data/landing/');
-    expect(getContentDataPath('templates', 'de')).toBe('/data/templates/');
+  it('uses the non-prefixed base path for fr', () => {
+    expect(getContentDataPath('blog', 'fr')).toBe('/data/blog/');
+    expect(getContentDataPath('landing', 'fr')).toBe('/data/landing/');
+    expect(getContentDataPath('templates', 'fr')).toBe('/data/templates/');
   });
 
   it('inserts /en/ segment before the file name for en', () => {

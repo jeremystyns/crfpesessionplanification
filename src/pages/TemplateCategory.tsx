@@ -1,5 +1,5 @@
 /**
- * TemplateCategory — Category hub page for templates (e.g. /templates/retrospektive).
+ * TemplateCategory — Category hub page for templates (e.g. /templates/retrospective).
  *
  * Role: Thin configuration + card renderer on top of `HubCollection`.
  *       The hub loader (`templateCategoryLoader`) is a thin wrapper around

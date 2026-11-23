@@ -78,8 +78,8 @@ describe('FormattedTextField — toolbar visibility', () => {
     const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
     act(() => textarea.focus());
     expect(textarea.selectionStart).toBe(textarea.selectionEnd);
-    expect(screen.queryByTitle(/Fett/)).toBeNull();
-    expect(screen.queryByTitle(/Kursiv/)).toBeNull();
+    expect(screen.queryByTitle(/Gras/)).toBeNull();
+    expect(screen.queryByTitle(/Italique/)).toBeNull();
   });
 
   it('renders the toolbar after a non-collapsed selection is committed (mouseUp)', () => {
@@ -88,9 +88,9 @@ describe('FormattedTextField — toolbar visibility', () => {
     act(() => textarea.focus());
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
-    expect(screen.getByTitle(/Fett/)).toBeTruthy();
-    expect(screen.getByTitle(/Kursiv/)).toBeTruthy();
-    expect(screen.getByTitle(/Link/)).toBeTruthy();
+    expect(screen.getByTitle(/Gras/)).toBeTruthy();
+    expect(screen.getByTitle(/Italique/)).toBeTruthy();
+    expect(screen.getByTitle(/Insérer un lien/)).toBeTruthy();
   });
 
   it('hides the toolbar when the selection collapses back to a caret', () => {
@@ -99,11 +99,11 @@ describe('FormattedTextField — toolbar visibility', () => {
     act(() => textarea.focus());
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeTruthy();
+    expect(screen.queryByTitle(/Gras/)).toBeTruthy();
 
     textarea.setSelectionRange(2, 2);
     fireEvent.mouseUp(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeNull();
+    expect(screen.queryByTitle(/Gras/)).toBeNull();
   });
 
   it('hides the toolbar when the textarea loses focus (blur)', () => {
@@ -112,10 +112,10 @@ describe('FormattedTextField — toolbar visibility', () => {
     act(() => textarea.focus());
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeTruthy();
+    expect(screen.queryByTitle(/Gras/)).toBeTruthy();
 
     fireEvent.blur(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeNull();
+    expect(screen.queryByTitle(/Gras/)).toBeNull();
   });
 });
 
@@ -126,7 +126,7 @@ describe('FormattedTextField — toolbar interactions', () => {
     act(() => textarea.focus());
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
-    const bold = screen.getByTitle(/Fett/);
+    const bold = screen.getByTitle(/Gras/);
     expect(screen.getByRole('dialog').contains(bold)).toBe(true);
     fireEvent.click(bold);
     expect(textarea.value).toBe('*hello* world');
@@ -141,7 +141,7 @@ describe('FormattedTextField — toolbar interactions', () => {
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     fireEvent.click(boldButton);
 
     // Fallback path (jsdom has no execCommand): wrapSelection returns the
@@ -168,7 +168,7 @@ describe('FormattedTextField — toolbar interactions', () => {
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     const toolbarRoot = boldButton.parentElement as HTMLElement;
     expect(toolbarRoot).toBeTruthy();
     expect(toolbarRoot).not.toBe(textarea);
@@ -223,7 +223,7 @@ describe('FormattedTextField — toolbar interactions', () => {
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     const toolbarRoot = boldButton.parentElement as HTMLElement;
 
     // The toolbar must NOT live inside the field's DOM subtree — otherwise
@@ -252,7 +252,7 @@ describe('FormattedTextField — toolbar interactions', () => {
       textarea.setSelectionRange(0, 5);
       fireEvent.mouseUp(textarea);
 
-      const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+      const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
       fireEvent.click(boldButton);
 
       // Native undo path: execCommand('insertText', …) carries the wrapped
@@ -291,7 +291,7 @@ const setupCaretInside = (initialValue: string, caret: number) => {
   act(() => textarea.focus());
   textarea.setSelectionRange(caret, caret);
   fireEvent.mouseUp(textarea);
-  const boldButton = screen.queryByTitle(/Fett/) as HTMLButtonElement | null;
+  const boldButton = screen.queryByTitle(/Gras/) as HTMLButtonElement | null;
   return { textarea, boldButton };
 };
 
@@ -302,20 +302,20 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     expect(boldButton).toBeTruthy();
     expect(boldButton.getAttribute('aria-pressed')).toBe('true');
     // The other two buttons stay inactive.
-    expect(screen.getByTitle(/Kursiv/).getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByTitle(/Link/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Italique/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Insérer un lien/).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('shows the italic button pressed when the caret sits inside _hello_ world', () => {
     const { boldButton } = setupCaretInside('_hello_ world', 3);
-    const italicButton = screen.getByTitle(/Kursiv/) as HTMLButtonElement;
+    const italicButton = screen.getByTitle(/Italique/) as HTMLButtonElement;
     expect(italicButton.getAttribute('aria-pressed')).toBe('true');
     expect(boldButton.getAttribute('aria-pressed')).toBe('false');
   });
 
   it('shows the link button pressed AND enabled when the caret sits inside link text', () => {
     setupCaretInside('[hello](https://x.test) world', 3);
-    const linkButton = screen.getByTitle(/Link/) as HTMLButtonElement;
+    const linkButton = screen.getByTitle(/Insérer un lien/) as HTMLButtonElement;
     expect(linkButton.getAttribute('aria-pressed')).toBe('true');
     // Caret inside link → link button is enabled (it can toggle the link off).
     expect(linkButton.disabled).toBe(false);
@@ -323,28 +323,28 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
 
   it('hides the toolbar again when the caret moves out of the formatted run to plain text', () => {
     const { textarea } = setupCaretInside('*hello* world', 3);
-    expect(screen.queryByTitle(/Fett/)).toBeTruthy();
+    expect(screen.queryByTitle(/Gras/)).toBeTruthy();
 
     // Move the caret into the plain trailing word.
     textarea.setSelectionRange(9, 9);
     fireEvent.mouseUp(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeNull();
+    expect(screen.queryByTitle(/Gras/)).toBeNull();
   });
 
   // ── Nested formatting (bold + italic chain) ──────────────────────────────
 
   it('presses BOTH bold and italic when the caret sits inside nested *_hello_* content', () => {
     setupCaretInside('*_hello_* world', 4); // inside "hello"
-    expect(screen.getByTitle(/Fett/).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getByTitle(/Kursiv/).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getByTitle(/Link/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Gras/).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByTitle(/Italique/).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByTitle(/Insérer un lien/).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('presses only bold when the caret sits between the bold and italic markers', () => {
     // *_hello_*: raw 1 sits after the bold `*` but before the italic `_`.
     setupCaretInside('*_hello_* world', 1);
-    expect(screen.getByTitle(/Fett/).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getByTitle(/Kursiv/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Gras/).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByTitle(/Italique/).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('clicking italic in a nested chain removes only the italic layer', async () => {
@@ -355,7 +355,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(4, 4);
     fireEvent.mouseUp(textarea);
 
-    fireEvent.click(screen.getByTitle(/Kursiv/));
+    fireEvent.click(screen.getByTitle(/Italique/));
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('*hello* world');
   });
@@ -368,7 +368,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(4, 4);
     fireEvent.mouseUp(textarea);
 
-    fireEvent.click(screen.getByTitle(/Fett/));
+    fireEvent.click(screen.getByTitle(/Gras/));
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('_hello_ world');
   });
@@ -384,10 +384,10 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     fireEvent.mouseUp(textarea);
 
     // Nothing is active for a partial selection — all buttons unpressed.
-    expect(screen.getByTitle(/Fett/).getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByTitle(/Kursiv/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Gras/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Italique/).getAttribute('aria-pressed')).toBe('false');
 
-    fireEvent.click(screen.getByTitle(/Kursiv/));
+    fireEvent.click(screen.getByTitle(/Italique/));
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith('*h_ell_o* world');
   });
@@ -400,7 +400,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(3, 3);
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     expect(boldButton.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(boldButton);
 
@@ -424,7 +424,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(3, 3);
     fireEvent.mouseUp(textarea);
 
-    const linkButton = screen.getByTitle(/Link/) as HTMLButtonElement;
+    const linkButton = screen.getByTitle(/Insérer un lien/) as HTMLButtonElement;
     expect(linkButton.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(linkButton);
 
@@ -440,7 +440,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(0, 7); // exactly the bold region with syntax
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     expect(boldButton.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(boldButton);
 
@@ -453,7 +453,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     await replaceValueAndFlush(textarea, 'hello world');
     expect(textarea.selectionStart).toBe(0);
     expect(textarea.selectionEnd).toBe(5);
-    expect(screen.getByTitle(/Fett/).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByTitle(/Gras/).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('a partial selection inside a formatted run is NOT active (toolbar buttons stay unpressed, click still wraps)', () => {
@@ -465,7 +465,7 @@ describe('FormattedTextField — toolbar active state (caret inside formatted ru
     textarea.setSelectionRange(2, 5);
     fireEvent.mouseUp(textarea);
 
-    const boldButton = screen.getByTitle(/Fett/) as HTMLButtonElement;
+    const boldButton = screen.getByTitle(/Gras/) as HTMLButtonElement;
     expect(boldButton.getAttribute('aria-pressed')).toBe('false');
 
     fireEvent.click(boldButton);
@@ -493,7 +493,7 @@ describe('FormattedTextField — initialSelection prop', () => {
 
     expect(textarea.selectionStart).toBe(0);
     expect(textarea.selectionEnd).toBe(5);
-    expect(screen.getByTitle(/Fett/)).toBeTruthy();
+    expect(screen.getByTitle(/Gras/)).toBeTruthy();
   });
 });
 
@@ -520,7 +520,7 @@ describe('FormattedTextField — double-click word selection emulation', () => {
     expect(textarea.selectionStart).toBe(6);
     expect(textarea.selectionEnd).toBe(10);
     // The word selection makes the toolbar visible.
-    expect(screen.getByTitle(/Fett/)).toBeTruthy();
+    expect(screen.getByTitle(/Gras/)).toBeTruthy();
   });
 
   it('a second click far from the opening point does NOT expand to a word (caret reposition)', async () => {
@@ -530,7 +530,7 @@ describe('FormattedTextField — double-click word selection emulation', () => {
 
     expect(textarea.selectionStart).toBe(8);
     expect(textarea.selectionStart).toBe(textarea.selectionEnd);
-    expect(screen.queryByTitle(/Fett/)).toBeNull();
+    expect(screen.queryByTitle(/Gras/)).toBeNull();
   });
 
   it('a second click after the double-click window does NOT expand to a word', async () => {
@@ -545,7 +545,7 @@ describe('FormattedTextField — double-click word selection emulation', () => {
 
       expect(textarea.selectionStart).toBe(8);
       expect(textarea.selectionStart).toBe(textarea.selectionEnd);
-      expect(screen.queryByTitle(/Fett/)).toBeNull();
+      expect(screen.queryByTitle(/Gras/)).toBeNull();
     } finally {
       nowSpy.mockRestore();
     }
@@ -566,6 +566,6 @@ describe('FormattedTextField — double-click word selection emulation', () => {
 
     expect(textarea.selectionStart).toBe(6);
     expect(textarea.selectionEnd).toBe(10);
-    expect(screen.getByTitle(/Fett/)).toBeTruthy();
+    expect(screen.getByTitle(/Gras/)).toBeTruthy();
   });
 });

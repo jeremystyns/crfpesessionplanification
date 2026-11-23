@@ -1,5 +1,5 @@
 /**
- * BlogCategory — Category hub page for blog posts (e.g. /blog/workshop-methoden).
+ * BlogCategory — Category hub page for blog posts (e.g. /blog/methodes-d-atelier).
  *
  * Role: Thin configuration + card renderer on top of `HubCollection`. The hub
  *       loader (`blogCategoryLoader`) is a thin wrapper around

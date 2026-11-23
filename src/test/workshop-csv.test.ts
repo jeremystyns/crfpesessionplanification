@@ -3,8 +3,8 @@ import { buildWorkshopCsv, downloadWorkshopCsv, type CsvColumnLabels } from '@/l
 import { makeBlock, makeBreakout, makeGroup, makeWorkshop } from './test-helpers';
 import type { WorkshopData, WorkshopItem } from '@/types/workshop';
 
-const LABELS_DE: CsvColumnLabels = {
-  nr: 'Nr.',
+const LABELS_FR: CsvColumnLabels = {
+  nr: 'N°',
   from: 'Von',
   to: 'Bis',
   duration: 'Dauer (Min.)',
@@ -51,32 +51,32 @@ const splitLines = (csv: string): string[] => {
 
 describe('buildWorkshopCsv — framing', () => {
   it('starts with a UTF-8 BOM and uses CRLF line endings', () => {
-    const csv = buildWorkshopCsv(makeWorkshop(), LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(makeWorkshop(), LABELS_FR, 'fr');
     expect(csv.charCodeAt(0)).toBe(0xfeff);
     // No bare LF in the body except the CRLF pairs.
     expect(csv.includes('\n')).toBe(true);
     expect(csv.split('\r\n').length).toBeGreaterThan(1);
   });
 
-  it('uses ";" as delimiter for "de" and "," for "en"', () => {
-    const de = buildWorkshopCsv(makeWorkshop(), LABELS_DE, 'de');
+  it('uses ";" as delimiter for "fr" and "," for "en"', () => {
+    const fr = buildWorkshopCsv(makeWorkshop(), LABELS_FR, 'fr');
     const en = buildWorkshopCsv(makeWorkshop(), LABELS_EN, 'en');
     // Header line contains the labels separated by the delimiter.
-    const deHeader = splitLines(de).find((l) => l.includes('Nr.'));
+    const frHeader = splitLines(fr).find((l) => l.includes('N°'));
     const enHeader = splitLines(en).find((l) => l.includes('No.'));
-    expect(deHeader).toBeDefined();
+    expect(frHeader).toBeDefined();
     expect(enHeader).toBeDefined();
-    expect(deHeader!.split(';').length).toBeGreaterThan(deHeader!.split(',').length);
+    expect(frHeader!.split(';').length).toBeGreaterThan(frHeader!.split(',').length);
     expect(enHeader!.split(',').length).toBeGreaterThan(enHeader!.split(';').length);
   });
 
   it('emits a valid title+header+footer file when items are empty', () => {
     const data = makeWorkshop({ workshop: { ...makeWorkshop().workshop, title: 'Leere Session' } });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
     expect(lines[0]).toBe('Leere Session');
-    // Header line includes "Nr." but no actual data rows.
-    expect(csv).toContain('Nr.');
+    // Header line includes "N°" but no actual data rows.
+    expect(csv).toContain('N°');
     expect(csv).toContain('Gesamt: 0 Min.');
   });
 });
@@ -92,7 +92,7 @@ describe('buildWorkshopCsv — header layout', () => {
         description: 'A great session',
       },
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
     expect(lines[0]).toBe('My Workshop — 2026-04-12 — 09:00');
     expect(lines[1]).toBe('A great session');
@@ -102,7 +102,7 @@ describe('buildWorkshopCsv — header layout', () => {
     const data = makeWorkshop({
       workshop: { ...makeWorkshop().workshop, title: 'Only Title', date: null, startTime: null, description: '' },
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
     expect(lines[0]).toBe('Only Title');
   });
@@ -117,7 +117,7 @@ describe('buildWorkshopCsv — header layout', () => {
         description: 'desc',
       },
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
     // First line keeps at least one of title/date/startTime, joined em-dash.
     expect(lines[0]).toBe('2026-04-12 — 09:00');
@@ -131,10 +131,10 @@ describe('buildWorkshopCsv — dropping fully-empty columns', () => {
       workshop: { ...makeWorkshop().workshop, startTime: '10:00' },
       items: [makeBlock({ id: 'b1', title: 'Solo', duration: 30 })],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
-    const header = lines.find((l) => l.startsWith('Nr.'));
-    expect(header).toBe('Nr.;Von;Bis;Dauer (Min.);Typ;Titel');
+    const header = lines.find((l) => l.startsWith('N°'));
+    expect(header).toBe('N°;Von;Bis;Dauer (Min.);Typ;Titel');
     expect(csv).not.toContain('Breakout-Gruppe');
     expect(csv).not.toContain('Personen');
     expect(csv).not.toContain('Material');
@@ -148,10 +148,10 @@ describe('buildWorkshopCsv — dropping fully-empty columns', () => {
         makeBlock({ id: 'b2', title: 'B', duration: 5, notes: 'wifi password' }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
-    const header = lines.find((l) => l.startsWith('Nr.'));
-    expect(header).toBe('Nr.;Dauer (Min.);Typ;Titel;Notizen');
+    const header = lines.find((l) => l.startsWith('N°'));
+    expect(header).toBe('N°;Dauer (Min.);Typ;Titel;Notizen');
     // Data rows end with the note text and no trailing extra cells.
     expect(csv).toMatch(/(^|\r\n)1;5;Block;A;bring laptop\r?$/m);
     expect(csv).toMatch(/(^|\r\n)2;5;Block;B;wifi password\r?$/m);
@@ -169,10 +169,10 @@ describe('buildWorkshopCsv — dropping fully-empty columns', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
-    const header = lines.find((l) => l.startsWith('Nr.'));
-    expect(header).toBe('Nr.;Dauer (Min.);Typ;Titel;Breakout-Gruppe');
+    const header = lines.find((l) => l.startsWith('N°'));
+    expect(header).toBe('N°;Dauer (Min.);Typ;Titel;Breakout-Gruppe');
     expect(csv).toMatch(/(^|\r\n)1\.1;5;Block;Test Block;1\r?$/m);
     expect(csv).toMatch(/(^|\r\n)1\.2;5;Block;Test Block;2\r?$/m);
     // Personen/Material/Notizen dropped (no notes/material and no personIds).
@@ -187,8 +187,8 @@ describe('buildWorkshopCsv — escaping (RFC 4180)', () => {
     const data = makeWorkshop({
       items: [makeBlock({ id: 'b1', title: 'A;B', duration: 5 })],
     });
-    const de = buildWorkshopCsv(data, LABELS_DE, 'de');
-    expect(de).toContain('"A;B"');
+    const fr = buildWorkshopCsv(data, LABELS_FR, 'fr');
+    expect(fr).toContain('"A;B"');
   });
 
   it('doubles internal quotes and wraps the field', () => {
@@ -218,7 +218,7 @@ describe('buildWorkshopCsv — time columns', () => {
     const data = makeWorkshop({
       items: [makeBlock({ id: 'b1', title: 'No clock', duration: 5 })],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).not.toContain('Von');
     expect(csv).not.toContain('Bis');
   });
@@ -231,7 +231,7 @@ describe('buildWorkshopCsv — time columns', () => {
         makeBlock({ id: 'b2', title: 'B', duration: 5 }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toContain('Von');
     expect(csv).toContain('Bis');
     // A starts at 10:00 ends at 10:15; B starts at 10:15 ends at 10:20.
@@ -251,7 +251,7 @@ describe('buildWorkshopCsv — group semantics', () => {
         ], { id: 'g1', title: 'G' }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // No startTime → no Von/Bis; no persons/notes/material/breakouts → no droppable
     // columns. Row: Nr=1; Duration=15; Type=Gruppe; Title=G.
     expect(csv).toMatch(/(^|\r\n)1;15;Gruppe;G\r?$/m);
@@ -266,7 +266,7 @@ describe('buildWorkshopCsv — group semantics', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toContain(';99;');
   });
 });
@@ -282,7 +282,7 @@ describe('buildWorkshopCsv — breakouts', () => {
         ], { id: 'bo', lanes: 2 }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // Lane 0 sums to 8, lane 1 sums to 10 → max is 10.
     // No startTime → no Von/Bis. Breakout-Gruppe is kept (children have lane
     // cells). No Personen/Material/Notizen. Row: Nr=1; Duration=10; Type=Breakout;
@@ -302,7 +302,7 @@ describe('buildWorkshopCsv — breakouts', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv);
     // 1 summary row + exactly 2 child rows (no N× duplication).
     const dataRows = lines.filter((l) => /^\d/.test(l) || /^\d+\.\d/.test(l));
@@ -324,7 +324,7 @@ describe('buildWorkshopCsv — breakouts', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toMatch(/(^|\r\n)1\.1;/);
     expect(csv).toMatch(/(^|\r\n)1\.2;/);
   });
@@ -336,7 +336,7 @@ describe('buildWorkshopCsv — breakouts', () => {
     const data = makeWorkshop({
       items: [makeBreakout(children, { id: 'bo', lanes: 10, sameInAllBreakouts: false })],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // Breakout-Gruppe is the last remaining column. Each lane label appears
     // either as `;i;` (not last) or `;i$` (last) depending on row position.
     for (let i = 1; i <= 10; i++) {
@@ -362,7 +362,7 @@ describe('buildWorkshopCsv — breakouts', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toContain('1: Anna; 2: Ben');
   });
 });
@@ -376,7 +376,7 @@ describe('buildWorkshopCsv — numbering', () => {
         makeBlock({ id: 'b3', title: 'C', duration: 5 }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     const lines = splitLines(csv).filter((l) => /^[123];/.test(l));
     expect(lines.length).toBe(3);
     expect(lines[0].startsWith('1;')).toBe(true);
@@ -397,7 +397,7 @@ describe('buildWorkshopCsv — numbering', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toMatch(/(^|\r\n)2\.1;/);
     expect(csv).toMatch(/(^|\r\n)2\.2;/);
   });
@@ -417,7 +417,7 @@ describe('buildWorkshopCsv — footer total counts top-level once', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     expect(csv).toContain('Gesamt: 75 Min.');
   });
 
@@ -434,7 +434,7 @@ describe('buildWorkshopCsv — footer total counts top-level once', () => {
         ),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // G1 = 30, G2 = 40 → total 70, not 0.
     expect(csv).toContain('Gesamt: 70 Min.');
   });
@@ -449,7 +449,7 @@ describe('buildWorkshopCsv — timing semantics', () => {
         makeBlock({ id: 'b', title: 'B', duration: 7, parallel: true }),
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // Both share the start "10:00". Their Bis cells reflect each block's own
     // duration (5 and 7 min after 10:00), so 10:05 and 10:07.
     expect(csv).toMatch(/(^|\r\n)1;10:00;10:05;/);
@@ -465,7 +465,7 @@ describe('buildWorkshopCsv — timing semantics', () => {
         makeBlock({ id: 'c', title: 'C', duration: 5 }),                                    // 11:05–11:10
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // The fixedStartTime snaps B to 11:00, leaving a 09:10–11:00 gap.
     expect(csv).toMatch(/(^|\r\n)1;09:00;09:10;/);
     expect(csv).toMatch(/(^|\r\n)2;11:00;11:05;/);
@@ -494,7 +494,7 @@ describe('buildWorkshopCsv — robustness against undefined template fields', ()
       material: undefined as unknown as string,
     };
     data.items = [sparse];
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // All droppable columns (Breakout-Gruppe, Personen, Material, Notizen) are
     // empty across all data rows, so they are dropped. Header + data row
     // contain only the mandatory columns.
@@ -504,7 +504,7 @@ describe('buildWorkshopCsv — robustness against undefined template fields', ()
     expect(dataLine).toBe('1;5;Block;Sparse');
     // Header is the line just before the data row.
     const headerIdx = lines.indexOf(dataLine!) - 1;
-    expect(lines[headerIdx]).toBe('Nr.;Dauer (Min.);Typ;Titel');
+    expect(lines[headerIdx]).toBe('N°;Dauer (Min.);Typ;Titel');
     // No date/description in the sub-line — only the title remains.
     expect(csv).not.toContain(' — ');
   });
@@ -552,10 +552,10 @@ describe('buildWorkshopCsv — robustness against undefined template fields', ()
         },
       ],
     });
-    const csv = buildWorkshopCsv(data, LABELS_DE, 'de');
+    const csv = buildWorkshopCsv(data, LABELS_FR, 'fr');
     // Personen column is kept (p1 = "Anna" is non-empty on row 1). All other
     // droppable columns are empty across all rows and therefore dropped.
-    // Header: Nr.;Dauer (Min.);Typ;Titel;Personen
+    // Header: N°;Dauer (Min.);Typ;Titel;Personen
     expect(csv).toContain('1;5;Vortrag;Known;Anna');
     // "Ghost type" (blockTypeId is set but name is missing) → empty Typ cell.
     // "Orphan type" (blockTypeId is not in the map) → fallback localized "Block".
@@ -619,7 +619,7 @@ describe('buildWorkshopCsv — multiple days', () => {
   };
 
   it('lists the days below each other with headings and totals', () => {
-    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_DE, 'de'));
+    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_FR, 'fr'));
 
     expect(lines[0]).toBe('Retreat');
     expect(lines[2]).toBe('Montag — 2026-10-12 — 09:00');
@@ -632,7 +632,7 @@ describe('buildWorkshopCsv — multiple days', () => {
   });
 
   it('computes times from the start of each day and numbers each day from 1', () => {
-    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_DE, 'de'));
+    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_FR, 'fr'));
 
     expect(lines.find((line) => line.includes('Auftakt'))?.startsWith('1;09:00;09:30;30;')).toBe(true);
     expect(lines.find((line) => line.includes('Bauen'))?.startsWith('1;14:00;14:45;45;')).toBe(true);
@@ -640,8 +640,8 @@ describe('buildWorkshopCsv — multiple days', () => {
   });
 
   it('keeps the same columns on every day', () => {
-    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_DE, 'de'));
-    const headers = lines.filter((line) => line.startsWith('Nr.;'));
+    const lines = splitLines(buildWorkshopCsv(twoDays(), LABELS_FR, 'fr'));
+    const headers = lines.filter((line) => line.startsWith('N°;'));
 
     expect(headers).toHaveLength(2);
     expect(headers[0]).toBe(headers[1]);
@@ -653,7 +653,7 @@ describe('buildWorkshopCsv — multiple days', () => {
   it('leaves the times empty on a day without a start time', () => {
     const data = twoDays();
     data.days![1].startTime = null;
-    const lines = splitLines(buildWorkshopCsv(data, LABELS_DE, 'de'));
+    const lines = splitLines(buildWorkshopCsv(data, LABELS_FR, 'fr'));
 
     expect(lines.find((line) => line.includes('Auftakt'))?.startsWith('1;09:00;09:30;')).toBe(true);
     expect(lines.find((line) => line.includes('Bauen'))?.startsWith('1;;;45;')).toBe(true);
@@ -662,7 +662,7 @@ describe('buildWorkshopCsv — multiple days', () => {
   it('still lists an empty day', () => {
     const data = twoDays();
     data.days![1] = { id: 'd2', title: 'Puffer' };
-    const lines = splitLines(buildWorkshopCsv(data, LABELS_DE, 'de'));
+    const lines = splitLines(buildWorkshopCsv(data, LABELS_FR, 'fr'));
 
     expect(lines).toContain('Puffer');
     expect(lines).toContain('Summe: 0 Min.');
@@ -672,7 +672,7 @@ describe('buildWorkshopCsv — multiple days', () => {
   it('leaves a single-day plan without day headings or subtotal', () => {
     const data = twoDays();
     delete data.days;
-    const lines = splitLines(buildWorkshopCsv(data, LABELS_DE, 'de'));
+    const lines = splitLines(buildWorkshopCsv(data, LABELS_FR, 'fr'));
 
     expect(lines[0]).toBe('Retreat — 2026-10-12 — 09:00');
     expect(lines[1]).toBe('Ankommen');

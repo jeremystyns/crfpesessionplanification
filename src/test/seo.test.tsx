@@ -125,16 +125,16 @@ interface RouteSpec {
   hasAlternate: boolean;
 }
 
-const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
+const ROUTES: Array<{ fr: RouteSpec; en?: RouteSpec }> = [
   {
-    de: {
+    fr: {
       name: 'Home (/)',
       props: {
         title: 'Workshop Agenda – Session Ablauf Planer',
         description: 'Kostenloser Ablauf Planer für Trainer, Coaches und Moderatoren.',
         canonicalPath: '/',
-        locale: 'de',
-        alternates: { de: '/', en: '/en' },
+        locale: 'fr',
+        alternates: { fr: '/', en: '/en' },
       },
       hasAlternate: true,
     },
@@ -145,19 +145,19 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'Free agenda planner for trainers, coaches and facilitators.',
         canonicalPath: '/en',
         locale: 'en',
-        alternates: { de: '/', en: '/en' },
+        alternates: { fr: '/', en: '/en' },
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: 'Blog index (/blog)',
       props: {
         title: 'Blog',
         description: 'Artikel rund um Workshops und Sessionplan.',
         canonicalPath: '/blog',
-        locale: 'de',
+        locale: 'fr',
         alternates: createSymmetricAlternates('/blog'),
       },
       hasAlternate: true,
@@ -175,14 +175,14 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
     },
   },
   {
-    de: {
+    fr: {
       name: 'Blog article (/blog/:slug)',
       props: {
         title: 'Ein Artikel',
         description: 'Beschreibung des Artikels.',
         canonicalPath: '/blog/ein-artikel',
-        locale: 'de',
-        alternates: { de: '/blog/ein-artikel', en: '/en/blog/an-article' },
+        locale: 'fr',
+        alternates: { fr: '/blog/ein-artikel', en: '/en/blog/an-article' },
       },
       hasAlternate: true,
     },
@@ -193,19 +193,19 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'Description of the article.',
         canonicalPath: '/en/blog/an-article',
         locale: 'en',
-        alternates: { de: '/blog/ein-artikel', en: '/en/blog/an-article' },
+        alternates: { fr: '/blog/ein-artikel', en: '/en/blog/an-article' },
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: 'Templates index (/templates)',
       props: {
         title: 'Vorlagen',
         description: 'Workshop-Vorlagen für verschiedene Anlässe.',
         canonicalPath: '/templates',
-        locale: 'de',
+        locale: 'fr',
         alternates: createSymmetricAlternates('/templates'),
       },
       hasAlternate: true,
@@ -223,14 +223,14 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
     },
   },
   {
-    de: {
+    fr: {
       name: 'Template detail (/templates/:slug)',
       props: {
         title: 'Retrospektive Vorlage',
         description: 'Vorlage für eine Retrospektive.',
         canonicalPath: '/templates/retrospektive',
-        locale: 'de',
-        alternates: { de: '/templates/retrospektive', en: '/en/templates/retrospective' },
+        locale: 'fr',
+        alternates: { fr: '/templates/retrospektive', en: '/en/templates/retrospective' },
       },
       hasAlternate: true,
     },
@@ -241,20 +241,20 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'Template for a retrospective.',
         canonicalPath: '/en/templates/retrospective',
         locale: 'en',
-        alternates: { de: '/templates/retrospektive', en: '/en/templates/retrospective' },
+        alternates: { fr: '/templates/retrospektive', en: '/en/templates/retrospective' },
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: 'Landing page (/:slug)',
       props: {
         title: 'Workshop planen',
         description: 'So planst du einen Workshop.',
         canonicalPath: '/workshop-ablauf-planen',
-        locale: 'de',
-        alternates: { de: '/workshop-ablauf-planen', en: '/en/workshop-planning' },
+        locale: 'fr',
+        alternates: { fr: '/workshop-ablauf-planen', en: '/en/workshop-planning' },
       },
       hasAlternate: true,
     },
@@ -265,19 +265,19 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'How to plan a workshop.',
         canonicalPath: '/en/workshop-planning',
         locale: 'en',
-        alternates: { de: '/workshop-ablauf-planen', en: '/en/workshop-planning' },
+        alternates: { fr: '/workshop-ablauf-planen', en: '/en/workshop-planning' },
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: 'Landing pages index (/landing-pages)',
       props: {
         title: 'Landing Pages',
         description: 'Alle Landing Pages.',
         canonicalPath: '/landing-pages',
-        locale: 'de',
+        locale: 'fr',
         alternates: createSymmetricAlternates('/landing-pages'),
       },
       hasAlternate: true,
@@ -295,13 +295,13 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
     },
   },
   {
-    de: {
+    fr: {
       name: 'Impressum (/impressum) ↔ Imprint (/en/imprint)',
       props: {
         title: 'Impressum',
         description: 'Impressum und rechtliche Informationen.',
         canonicalPath: '/impressum',
-        alternates: { de: '/impressum', en: '/en/imprint' },
+        alternates: { fr: '/impressum', en: '/en/imprint' },
         noindex: true,
       },
       hasAlternate: true,
@@ -313,21 +313,21 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'Imprint and legal information.',
         canonicalPath: '/en/imprint',
         locale: 'en',
-        alternates: { de: '/impressum', en: '/en/imprint' },
+        alternates: { fr: '/impressum', en: '/en/imprint' },
         noindex: true,
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: 'Datenschutz (/datenschutz) ↔ Privacy (/en/privacy)',
       props: {
         title: 'Datenschutz',
         description: 'Datenschutzerklärung.',
         canonicalPath: '/datenschutz',
         noindex: true,
-        alternates: { de: '/datenschutz', en: '/en/privacy' },
+        alternates: { fr: '/datenschutz', en: '/en/privacy' },
       },
       hasAlternate: true,
     },
@@ -338,14 +338,14 @@ const ROUTES: Array<{ de: RouteSpec; en?: RouteSpec }> = [
         description: 'Privacy policy.',
         canonicalPath: '/en/privacy',
         locale: 'en',
-        alternates: { de: '/datenschutz', en: '/en/privacy' },
+        alternates: { fr: '/datenschutz', en: '/en/privacy' },
         noindex: true,
       },
       hasAlternate: true,
     },
   },
   {
-    de: {
+    fr: {
       name: '404 (/404)',
       props: {
         title: 'Seite nicht gefunden (404)',
@@ -366,22 +366,22 @@ describe('SEO: every route ships correct canonical / hreflang / title', () => {
   afterEach(() => cleanup());
 
   for (const pair of ROUTES) {
-    describe(pair.de.name, () => {
+    describe(pair.fr.name, () => {
       it('renders exactly one <link rel="canonical">', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
+        const head = await renderDocumentMeta(pair.fr.props);
         expect(head.canonicalCount).toBe(1);
       });
 
       it('canonical points to the production base URL', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
-        const expectedCanonical = getCanonicalUrl(pair.de.props.canonicalPath!);
+        const head = await renderDocumentMeta(pair.fr.props);
+        const expectedCanonical = getCanonicalUrl(pair.fr.props.canonicalPath!);
         expect(head.canonical).toBe(expectedCanonical);
         const baseEscaped = META_CONFIG.baseUrl.replace(/\./g, '\\.');
         expect(head.canonical).toMatch(new RegExp(`^${baseEscaped}/`));
       });
 
       it('has a non-empty <title> with a separator', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
+        const head = await renderDocumentMeta(pair.fr.props);
         expect(head.title).toBeTruthy();
         expect(head.title.length).toBeGreaterThan(0);
         // Either the brand template was applied ("X – Sessionplan") or the
@@ -392,90 +392,90 @@ describe('SEO: every route ships correct canonical / hreflang / title', () => {
       });
 
       it('has a non-empty meta description', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
+        const head = await renderDocumentMeta(pair.fr.props);
         expect(head.description).toBeTruthy();
         expect(head.description!.length).toBeGreaterThan(0);
       });
 
       it('sets <html lang> to the page locale', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
-        const expectedLang = pair.de.props.locale ?? 'de';
+        const head = await renderDocumentMeta(pair.fr.props);
+        const expectedLang = pair.fr.props.locale ?? 'fr';
         expect(head.htmlLang).toBe(expectedLang);
       });
 
       it('contains exactly one self-hreflang', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
-        const expectedLang = pair.de.props.locale ?? 'de';
+        const head = await renderDocumentMeta(pair.fr.props);
+        const expectedLang = pair.fr.props.locale ?? 'fr';
         const selfTags = head.hreflangs.filter((h) => h.hreflang === expectedLang);
         expect(selfTags).toHaveLength(1);
-        expect(selfTags[0].href).toBe(getCanonicalUrl(pair.de.props.canonicalPath!));
+        expect(selfTags[0].href).toBe(getCanonicalUrl(pair.fr.props.canonicalPath!));
       });
 
       it('emits x-default pointing to EN when an EN alternate exists, else to the DE self URL', async () => {
-        const head = await renderDocumentMeta(pair.de.props);
+        const head = await renderDocumentMeta(pair.fr.props);
         const xDefault = head.hreflangs.filter((h) => h.hreflang === 'x-default');
         // x-default must exist on every route (paired or not).
         expect(xDefault).toHaveLength(1);
-        const enPath = pair.de.props.alternates?.en;
+        const enPath = pair.fr.props.alternates?.en;
         if (enPath) {
           // Paired: x-default must point at the EN alternate.
           expect(xDefault[0].href).toBe(getCanonicalUrl(enPath));
         } else {
           // DE-only: x-default must point at the page's own DE URL.
-          expect(xDefault[0].href).toBe(getCanonicalUrl(pair.de.props.canonicalPath!));
+          expect(xDefault[0].href).toBe(getCanonicalUrl(pair.fr.props.canonicalPath!));
         }
       });
 
-      if (pair.de.hasAlternate) {
+      if (pair.fr.hasAlternate) {
         it('contains an other-locale hreflang pointing at the translated equivalent', async () => {
-          const head = await renderDocumentMeta(pair.de.props);
-          const otherLang: Locale = pair.de.props.locale === 'de' ? 'en' : 'de';
+          const head = await renderDocumentMeta(pair.fr.props);
+          const otherLang: Locale = pair.fr.props.locale === 'fr' ? 'en' : 'fr';
           const otherTags = head.hreflangs.filter((h) => h.hreflang === otherLang);
           expect(otherTags).toHaveLength(1);
-          const otherPath = pair.de.props.alternates?.[otherLang];
+          const otherPath = pair.fr.props.alternates?.[otherLang];
           expect(otherPath).toBeTruthy();
           expect(otherTags[0].href).toBe(getCanonicalUrl(otherPath!));
           expect(otherTags[0].href.startsWith(META_CONFIG.baseUrl)).toBe(true);
         });
       } else {
         it('has no other-locale hreflang (no EN equivalent exists)', async () => {
-          const head = await renderDocumentMeta(pair.de.props);
+          const head = await renderDocumentMeta(pair.fr.props);
           // No alternates were passed → no other-locale hreflang should exist.
-          // Self-hreflang (defaulting to 'de') and x-default (pointing at
+          // Self-hreflang (defaulting to 'fr') and x-default (pointing at
           // the DE self URL) are both emitted on these DE-only pages.
           const enTags = head.hreflangs.filter((h) => h.hreflang === 'en');
           expect(enTags).toHaveLength(0);
         });
       }
 
-      if (pair.de.props.noindex) {
+      if (pair.fr.props.noindex) {
         it('declares noindex when the page opts out of indexing', async () => {
-          const head = await renderDocumentMeta(pair.de.props);
+          const head = await renderDocumentMeta(pair.fr.props);
           expect(head.robots).toBe('noindex,nofollow');
         });
       }
     });
 
     if (pair.en) {
-      describe(`${pair.en.name} ↔ ${pair.de.name} (bidirectional hreflang)`, () => {
+      describe(`${pair.en.name} ↔ ${pair.fr.name} (bidirectional hreflang)`, () => {
         afterEach(() => cleanup());
 
         it('the DE page points to the EN page and the EN page points back to the DE page', async () => {
-          const deHead = await renderDocumentMeta(pair.de.props);
+          const deHead = await renderDocumentMeta(pair.fr.props);
           const enHead = await renderDocumentMeta(pair.en!.props);
 
           const deEnHreflang = deHead.hreflangs.find((h) => h.hreflang === 'en');
-          const enDeHreflang = enHead.hreflangs.find((h) => h.hreflang === 'de');
+          const enDeHreflang = enHead.hreflangs.find((h) => h.hreflang === 'fr');
 
           expect(deEnHreflang).toBeDefined();
           expect(enDeHreflang).toBeDefined();
 
           expect(deEnHreflang!.href).toBe(getCanonicalUrl(pair.en!.props.canonicalPath!));
-          expect(enDeHreflang!.href).toBe(getCanonicalUrl(pair.de.props.canonicalPath!));
+          expect(enDeHreflang!.href).toBe(getCanonicalUrl(pair.fr.props.canonicalPath!));
         });
 
         it('x-default is consistent across both pages (points to the EN URL on paired routes)', async () => {
-          const deHead = await renderDocumentMeta(pair.de.props);
+          const deHead = await renderDocumentMeta(pair.fr.props);
           const enHead = await renderDocumentMeta(pair.en!.props);
           const deXDefault = deHead.hreflangs.find((h) => h.hreflang === 'x-default');
           const enXDefault = enHead.hreflangs.find((h) => h.hreflang === 'x-default');
@@ -503,8 +503,8 @@ describe('SEO: buildHreflangLinks is symmetric for every paired route', () => {
     const deHead = await renderDocumentMeta({
       title: 'x',
       description: 'y',
-      canonicalPath: alternates.de,
-      locale: 'de',
+      canonicalPath: alternates.fr,
+      locale: 'fr',
       alternates,
     });
     const enHead = await renderDocumentMeta({

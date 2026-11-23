@@ -24,8 +24,8 @@ const STATIC_BILATERAL_PATHS: Array<[string, string]> = [
   ['/blog', '/en/blog'],
   ['/templates', '/en/templates'],
   ['/landing-pages', '/en/landing-pages'],
-  ['/impressum', '/en/imprint'],
-  ['/datenschutz', '/en/privacy'],
+  ['/mentions-legales', '/en/imprint'],
+  ['/confidentialite', '/en/privacy'],
 ];
 
 export const useLanguageSwitcher = () => {
@@ -56,9 +56,9 @@ export const useLanguageSwitcher = () => {
     if (explicit) return withCurrentSearch(explicit);
 
     // 2. Static index pages known to exist in both languages
-    for (const [deVariant, enVariant] of STATIC_BILATERAL_PATHS) {
-      if (pathname === deVariant || pathname === enVariant) {
-        return withCurrentSearch(targetLocale === 'de' ? deVariant : enVariant);
+    for (const [frVariant, enVariant] of STATIC_BILATERAL_PATHS) {
+      if (pathname === frVariant || pathname === enVariant) {
+        return withCurrentSearch(targetLocale === 'fr' ? frVariant : enVariant);
       }
     }
 
@@ -71,7 +71,7 @@ export const useLanguageSwitcher = () => {
    * Returns the URL to navigate to when switching to `targetLocale`.
    */
   const getTargetUrl = (targetLocale: Locale): string => {
-    return getAlternateUrl(targetLocale) ?? withCurrentSearch(targetLocale === 'de' ? '/' : LOCALE_PREFIX.en);
+    return getAlternateUrl(targetLocale) ?? withCurrentSearch(targetLocale === 'fr' ? '/' : LOCALE_PREFIX.en);
   };
 
   return { locale, getTargetUrl, getAlternateUrl };

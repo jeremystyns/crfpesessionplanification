@@ -1,7 +1,7 @@
 /**
- * Formats a date string into a localized German date string.
+ * Formats a date string into a localized French date string.
  */
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
 };

@@ -170,7 +170,7 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
   // Mirrors HeaderActionButtons' share popover open state so the feedback
   // prompt can suppress itself while the user is interacting with it.
   const [sharePopoverOpen, setSharePopoverOpen] = useState(false);
-  const dateLocale = locale === 'en' ? 'en-GB' : 'de-DE';
+  const dateLocale = locale === 'en' ? 'en-GB' : 'fr-FR';
 
   const preferences = usePlannerPreferences();
   const {

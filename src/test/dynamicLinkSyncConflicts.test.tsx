@@ -582,7 +582,7 @@ describe('language switch', () => {
     window.history.replaceState(null, '', `/?id=${key}${secrets}`);
     const { result } = render(`/?id=${key}`);
     expect(result.current.getTargetUrl('en')).toBe(`/en?id=${key}${secrets}`);
-    expect(result.current.getTargetUrl('de')).toBe(`/?id=${key}${secrets}`);
+    expect(result.current.getTargetUrl('fr')).toBe(`/?id=${key}${secrets}`);
   });
 
   it('reads the session from the live URL when the router has not seen it yet', () => {

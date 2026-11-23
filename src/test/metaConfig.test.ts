@@ -49,32 +49,32 @@ describe('getAbsoluteImageUrl', () => {
 
 describe('getOgLocale', () => {
   it('returns the OG locale string for the given locale', () => {
-    expect(getOgLocale('de')).toBe('de_DE');
+    expect(getOgLocale('fr')).toBe('fr_FR');
     expect(getOgLocale('en')).toBe('en_US');
   });
 });
 
 describe('getOgLocaleAlternates', () => {
   it('returns all locales except the current one', () => {
-    expect(getOgLocaleAlternates('de')).toEqual(['en_US']);
-    expect(getOgLocaleAlternates('en')).toEqual(['de_DE']);
+    expect(getOgLocaleAlternates('fr')).toEqual(['en_US']);
+    expect(getOgLocaleAlternates('en')).toEqual(['fr_FR']);
   });
 });
 
 describe('buildHreflangLinks', () => {
   it('emits the current page, alternates, and x-default pointing to the EN URL on a paired non-root path', () => {
-    const links = buildHreflangLinks('de', '/blog', { en: '/en/blog' });
+    const links = buildHreflangLinks('fr', '/blog', { en: '/en/blog' });
     expect(links).toEqual([
-      { hreflang: 'de', href: `${META_CONFIG.baseUrl}/blog` },
+      { hreflang: 'fr', href: `${META_CONFIG.baseUrl}/blog` },
       { hreflang: 'en', href: `${META_CONFIG.baseUrl}/en/blog` },
       { hreflang: 'x-default', href: `${META_CONFIG.baseUrl}/en/blog` },
     ]);
   });
 
   it('omits en hreflang on DE-only paths and x-default points to the DE self URL', () => {
-    const links = buildHreflangLinks('de', '/impressum');
+    const links = buildHreflangLinks('fr', '/impressum');
     expect(links).toEqual([
-      { hreflang: 'de', href: `${META_CONFIG.baseUrl}/impressum` },
+      { hreflang: 'fr', href: `${META_CONFIG.baseUrl}/impressum` },
       { hreflang: 'x-default', href: `${META_CONFIG.baseUrl}/impressum` },
     ]);
   });
@@ -83,20 +83,20 @@ describe('buildHreflangLinks', () => {
     // Mirrors the actual Index.tsx homeAlternates: the DE home is at "/"
     // and the EN home is at "/en". x-default should point at the EN home
     // for users without a language preference.
-    const links = buildHreflangLinks('de', '/', { de: '/', en: '/en' });
+    const links = buildHreflangLinks('fr', '/', { fr: '/', en: '/en' });
     const xDefault = links.find((l) => l.hreflang === 'x-default');
     expect(xDefault?.href).toBe(`${META_CONFIG.baseUrl}/en`);
   });
 
   it('emits x-default pointing to EN self URL when the current page is EN on a paired path', () => {
-    const links = buildHreflangLinks('en', '/en/blog', { de: '/blog' });
+    const links = buildHreflangLinks('en', '/en/blog', { fr: '/blog' });
     const xDefault = links.find((l) => l.hreflang === 'x-default');
     expect(xDefault?.href).toBe(`${META_CONFIG.baseUrl}/en/blog`);
   });
 
   it('x-default points to EN when an EN alternate exists on the current page, else to DE', () => {
     // Paired path → x-default points to the EN alternate.
-    const paired = buildHreflangLinks('de', '/blog/gute-workshops', {
+    const paired = buildHreflangLinks('fr', '/blog/gute-workshops', {
       en: '/en/blog/how-to-run-great-workshops',
     });
     expect(paired.find((l) => l.hreflang === 'x-default')?.href).toBe(
@@ -104,7 +104,7 @@ describe('buildHreflangLinks', () => {
     );
 
     // DE-only path → x-default points to the DE self URL.
-    const deOnly = buildHreflangLinks('de', '/impressum');
+    const deOnly = buildHreflangLinks('fr', '/impressum');
     expect(deOnly.find((l) => l.hreflang === 'x-default')?.href).toBe(
       `${META_CONFIG.baseUrl}/impressum`,
     );
@@ -114,7 +114,7 @@ describe('buildHreflangLinks', () => {
     // Defensive: shouldn't happen in practice (locale is always in urlMap),
     // but guards against future refactors that might leave a page without
     // any URL.
-    const links = buildHreflangLinks('de', '/', {});
+    const links = buildHreflangLinks('fr', '/', {});
     const xDefault = links.find((l) => l.hreflang === 'x-default');
     expect(xDefault).toBeDefined();
     // / has the current page's DE URL → x-default should still point to it.

@@ -67,27 +67,27 @@ describe('LLM JSON import helpers', () => {
 describe('migrateStorageKeys', () => {
   it('migrates legacy workshop-templates-<locale> to sp:templates:<locale>', () => {
     const payload = JSON.stringify([{ id: 'tpl-1', name: 'Old', data: {}, createdAt: '' }]);
-    localStorage.setItem('workshop-templates-de', payload);
+    localStorage.setItem('workshop-templates-fr', payload);
     localStorage.setItem('workshop-templates-en', payload);
 
     migrateStorageKeys();
 
-    expect(localStorage.getItem('sp:templates:de')).toBe(payload);
+    expect(localStorage.getItem('sp:templates:fr')).toBe(payload);
     expect(localStorage.getItem('sp:templates:en')).toBe(payload);
-    expect(localStorage.getItem('workshop-templates-de')).toBeNull();
+    expect(localStorage.getItem('workshop-templates-fr')).toBeNull();
     expect(localStorage.getItem('workshop-templates-en')).toBeNull();
   });
 
   it('migrates legacy block-library-<locale> and library-initialized-<locale>', () => {
-    localStorage.setItem('block-library-de', '[{"id":"b1"}]');
-    localStorage.setItem('library-initialized-de', 'true');
+    localStorage.setItem('block-library-fr', '[{"id":"b1"}]');
+    localStorage.setItem('library-initialized-fr', 'true');
 
     migrateStorageKeys();
 
-    expect(localStorage.getItem('sp:lib:de')).toBe('[{"id":"b1"}]');
-    expect(localStorage.getItem('sp:lib-init:de')).toBe('true');
-    expect(localStorage.getItem('block-library-de')).toBeNull();
-    expect(localStorage.getItem('library-initialized-de')).toBeNull();
+    expect(localStorage.getItem('sp:lib:fr')).toBe('[{"id":"b1"}]');
+    expect(localStorage.getItem('sp:lib-init:fr')).toBe('true');
+    expect(localStorage.getItem('block-library-fr')).toBeNull();
+    expect(localStorage.getItem('library-initialized-fr')).toBeNull();
   });
 
   it('removes the former temp workshop keys, also after the migration guard is set', () => {
@@ -255,9 +255,9 @@ describe('templates & library', () => {
     // Reset the libInit flag so initializeLibraryIfNeeded() loads the default
     // library (which fetch()s from /data/defaultLibrary*.json in jsdom).
     // For these tests we explicitly populate the storage to avoid fetch.
-    localStorage.setItem('sp:lib-init:de', 'true');
-    localStorage.setItem('sp:templates:de', '[]');
-    localStorage.setItem('sp:lib:de', '[]');
+    localStorage.setItem('sp:lib-init:fr', 'true');
+    localStorage.setItem('sp:templates:fr', '[]');
+    localStorage.setItem('sp:lib:fr', '[]');
   });
 
   it('saves and lists templates', async () => {

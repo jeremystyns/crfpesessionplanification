@@ -278,11 +278,11 @@ export async function blogIndexLoader({ request }: LoaderFunctionArgs): Promise<
 }
 
 /**
- * Loader for blog category hub pages (e.g. /blog/workshop-methoden).
+ * Loader for blog category hub pages (e.g. /blog/methodes-d-atelier).
  *
  * Thin wrapper around `createHubLoader('blog')` so the registered routes in
  * App.tsx keep the same shape as the blog index loader. The category slug is
- * locale-specific (e.g. "workshop-methoden" for DE, "workshop-methods" for EN)
+ * locale-specific (e.g. "methodes-d-atelier" for FR, "workshop-methods" for EN)
  * and is passed in by the route definition so static hub paths stay decoupled
  * from the generic `/blog/:slug` detail route.
  */
@@ -292,7 +292,7 @@ export interface BlogIndexEntry {
   excerpt: string;
   publishedDate: string;
   tags?: string[];
-  /** Locale-specific category slug, e.g. "workshop-methoden" / "workshop-methods". */
+  /** Locale-specific category slug, e.g. "methodes-d-atelier" / "workshop-methods". */
   category?: string;
 }
 
@@ -326,7 +326,7 @@ export interface LandingPageHubMember {
 }
 
 /**
- * Loader for landing-page hub pages (e.g. /landing-pages/workshops).
+ * Loader for landing-page hub pages (e.g. /landing-pages/ateliers).
  *
  * Thin wrapper around `createHubLoader('landing')` so the registered routes in
  * App.tsx keep the same `{ items, hub, hubs }` shape as the blog index loader.
@@ -349,7 +349,7 @@ export interface TemplateSummary {
   slug: string;
   title: string;
   excerpt: string;
-  /** Optional category slug (locale-specific, e.g. "retrospektive" / "retrospective"). */
+  /** Optional category slug (locale-specific, e.g. "retrospective" / "retrospective"). */
   category?: string;
 }
 
@@ -401,7 +401,7 @@ export async function templatesIndexLoader({ request }: LoaderFunctionArgs): Pro
   };
 }
 
-/** A template category hub (e.g. /templates/retrospektive). Content lives in public/data/templates/hubs/. */
+/** A template category hub (e.g. /templates/retrospective). Content lives in public/data/templates/hubs/. */
 export interface TemplateHub {
   slug: string;
   title: string;
@@ -415,11 +415,11 @@ export interface TemplateHub {
 }
 
 /**
- * Loader for template category hub pages (e.g. /templates/retrospektive).
+ * Loader for template category hub pages (e.g. /templates/retrospective).
  *
  * Thin wrapper around `createHubLoader('templates')` so the registered
  * routes in App.tsx keep their current shape. The category slug is locale-
- * specific (e.g. "retrospektive" for DE, "retrospective" for EN) and is passed
+ * specific (e.g. "retrospective" for FR, "retrospective" for EN) and is passed
  * in by the route definition so static hub paths stay decoupled from the
  * generic `/templates/:slug` detail route.
  */

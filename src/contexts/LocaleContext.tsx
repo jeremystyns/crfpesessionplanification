@@ -20,7 +20,7 @@ interface LocaleContextValue {
   locale: Locale;
   /**
    * Alternate URLs for the current page keyed by locale.
-   * Example: { de: '/workshop-ablauf-planen', en: '/en/workshop-planning' }
+   * Example: { fr: '/creer-un-deroule-de-seance', en: '/en/workshop-planning' }
    * Published by content pages (LandingPage, BlogArticle).
    * Static pages (Blog, Templates) don't need to publish — they always exist
    * in both languages at predictable paths.

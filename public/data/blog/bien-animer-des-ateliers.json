@@ -1,0 +1,20 @@
+{
+    "slug": "bien-animer-des-ateliers",
+    "alternates": {
+        "en": "/en/blog/how-to-run-great-workshops"
+    },
+    "title": "Exemple : bien animer des ateliers",
+    "metaTitle": "Exemple : bien animer des ateliers",
+    "metaDescription": "Exemple d'article de blog sur l'animation d'ateliers.",
+    "publishedDate": "2026-01-01",
+    "lastModified": "2026-01-01",
+    "author": {
+        "name": "Auteur d'exemple",
+        "url": "https://example.com/"
+    },
+    "tags": [
+        "Exemple"
+    ],
+    "excerpt": "Ceci est un exemple d'extrait pour un article de blog sur l'animation d'ateliers.",
+    "content": "<p>Ceci est un exemple de contenu pour l'article de blog sur l'animation d'ateliers. À remplacer par un contenu réel.</p>"
+}

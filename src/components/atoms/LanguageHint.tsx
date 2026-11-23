@@ -3,10 +3,10 @@
  * the other language.
  *
  * Role: Shown only when ALL of the following hold:
- *   a) the browser's primary language mismatches the page locale (DE page +
- *      non-German-preferring browser → EN suggestion, since EN is the
- *      international fallback; EN page + DE-preferring browser → DE
- *      suggestion; regional codes like en-US / de-AT count as en / de),
+ *   a) the browser's primary language mismatches the page locale (FR page +
+ *      non-French-preferring browser → EN suggestion, since EN is the
+ *      international fallback; EN page + FR-preferring browser → FR
+ *      suggestion; regional codes like en-US / fr-BE count as en / fr),
  *   b) a real translation of the current URL exists (published alternates or a
  *      known static bilingual pair — never the home-page fallback),
  *   c) the visitor has not dismissed the hint for this direction within the
@@ -25,7 +25,7 @@
  *
  * Texts live in the locale file of the PAGE language but are written in the
  * language the hint addresses (the browser's preference): the DE file holds
- * the English-facing strings, the EN file the German-facing ones. This is
+ * the English-facing strings, the EN file the French-facing ones. This is
  * intentional — the hint always speaks the visitor's preferred language.
  *
  * Accessibility: real <Button variant="plain" size="none">/<a> elements only, no focus stealing, labelled
@@ -59,10 +59,10 @@ import { cn } from '@/lib/utils';
  * the page locale, otherwise null. Reads navigator.languages with a fallback
  * to navigator.language; regional codes are reduced to their base language.
  *
- * The EN version is the international fallback: on a DE page, any visitor
- * whose primary language is not German is pointed to the English version.
- * On an EN page (already the international version), only German-preferring
- * visitors are pointed to the German version — suggesting German to e.g.
+ * The EN version is the international fallback: on a FR page, any visitor
+ * whose primary language is not French is pointed to the English version.
+ * On an EN page (already the international version), only French-preferring
+ * visitors are pointed to the French version — suggesting French to e.g.
  * Spanish speakers would not be helpful.
  */
 const getMismatchTarget = (locale: Locale): Locale | null => {
@@ -75,12 +75,12 @@ const getMismatchTarget = (locale: Locale): Locale | null => {
         : [];
   if (preferred.length === 0) return null;
   // Only the top-priority language counts: browsers almost always list a
-  // secondary fallback (e.g. en-US behind de-DE), which must not trigger the
+  // secondary fallback (e.g. en-US behind fr-FR), which must not trigger the
   // hint. The first entry reflects what the visitor actually prefers.
   const primary = (preferred[0] ?? '').toLowerCase();
   const prefers = (base: Locale) => primary.startsWith(base);
-  if (locale === 'de' && !prefers('de')) return 'en';
-  if (locale === 'en' && prefers('de')) return 'de';
+  if (locale === 'fr' && !prefers('fr')) return 'en';
+  if (locale === 'en' && prefers('fr')) return 'fr';
   return null;
 };
 

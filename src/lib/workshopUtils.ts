@@ -16,11 +16,11 @@ import type { TFunction } from 'i18next';
 // public/locales), so changing a translation or adding a language leaves this
 // list untouched. Never change or remove existing entries.
 const UNCUSTOMIZED_BLOCK_TYPE_NAMES = new Map<string, readonly string[]>([
-  ['input', ['🎤 Vortrag/Input', '🎤 Lecture/Input']],
-  ['activity', ['🏃 Übung/Aktivität', '🏃 Exercise/Activity']],
+  ['input', ['🎤 Vortrag/Input', '🎤 Lecture/Input', '🎤 Apport / Exposé']],
+  ['activity', ['🏃 Übung/Aktivität', '🏃 Exercise/Activity', '🏃 Exercice / Activité']],
   ['discussion', ['💬 Diskussion', '💬 Discussion']],
   ['break', ['☕ Pause', '☕ Break']],
-  ['energizer', ['⚡ Energizer']],
+  ['energizer', ['⚡ Energizer', '⚡ Énergiseur']],
 ]);
 
 /**

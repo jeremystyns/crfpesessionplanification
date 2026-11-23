@@ -26,7 +26,7 @@ const Index = () => {
 
   // The home page always has a symmetric alternate in the other language
   const homeAlternates = {
-    de: '/',
+    fr: '/',
     en: '/en',
   };
 

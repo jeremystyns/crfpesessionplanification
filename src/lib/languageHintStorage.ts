@@ -4,12 +4,12 @@
  * Role: Stores (a) per-direction dismissals of the language suggestion hint for
  *       30 days in localStorage and (b) an active language choice for the
  *       current session in sessionStorage. No IP addresses, no location data —
- *       only a direction string (e.g. "en->de") and a timestamp.
+ *       only a direction string (e.g. "en->fr") and a timestamp.
  *
  * Direction convention: "<browserBaseLanguage>-><pageLocale>". A visitor on a
- * German page whose browser prefers English has direction "en->de"; "Stay in
- * German" dismisses that direction. A visitor on an English page whose browser
- * prefers German has direction "de->en"; "Auf Englisch bleiben" dismisses that
+ * French page whose browser prefers English has direction "en->fr"; "Stay in
+ * French" dismisses that direction. A visitor on an English page whose browser
+ * prefers French has direction "fr->en"; "Rester en français" dismisses that
  * one. Because only two locales exist, the direction is fully determined by the
  * page locale — storing the explicit direction keeps the semantics readable.
  */

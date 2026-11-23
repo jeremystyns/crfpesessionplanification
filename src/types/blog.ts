@@ -7,7 +7,7 @@ export interface BlogPost {
   /**
    * Alternate URLs for other language versions of this post.
    * Keys are locale codes; values are the absolute path for that locale.
-   * Example: { de: '/blog/mein-artikel', en: '/en/blog/my-article' }
+   * Example: { fr: '/blog/mein-artikel', en: '/en/blog/my-article' }
    */
   alternates?: Partial<Record<Locale, string>>;
   metaDescription: string;

@@ -1,0 +1,87 @@
+{
+  "slug": "creer-un-deroule-de-seance",
+  "alternates": {
+    "en": "/en/workshop-agenda"
+  },
+  "title": "Exemple : créer un déroulé de séance",
+  "metaTitle": "Exemple : créer un déroulé de séance",
+  "metaDescription": "Exemple de page d'outil pour un planificateur de séances.",
+  "heroTitle": "Exemple : créez votre déroulé de séance",
+  "heroDescription": "Ceci est un exemple de contenu. À remplacer par de vrais textes.",
+  "ctaText": "Commencer",
+  "exampleSlug": "templates/atelier-design-thinking",
+  "seoContent": {
+    "sections": [
+      {
+        "type": "features",
+        "tint": "default",
+        "title": "Exemple : fonctionnalités",
+        "content": "<p>Exemple de description des fonctionnalités. À remplacer par un contenu réel.</p>",
+        "items": [
+          {
+            "title": "Exemple de fonctionnalité 1",
+            "icon": "Calendar",
+            "description": "Description de l'exemple de fonctionnalité 1."
+          },
+          {
+            "title": "Exemple de fonctionnalité 2",
+            "icon": "GitBranch",
+            "description": "Description de l'exemple de fonctionnalité 2."
+          }
+        ],
+        "columns": 2
+      },
+      {
+        "title": "Exemple : contenu",
+        "content": "<p>Exemple de contenu. À remplacer par des informations réelles.</p>"
+      },
+      {
+        "type": "faq",
+        "title": "Exemple : questions fréquentes",
+        "items": [
+          {
+            "question": "Exemple de question ?",
+            "answer": "<p>Exemple de réponse.</p>"
+          }
+        ]
+      },
+      {
+        "type": "cta",
+        "title": "Exemple : appel à l'action",
+        "buttonText": "Commencer maintenant",
+        "buttonNote": "Gratuit.",
+        "content": "Exemple de description pour l'appel à l'action."
+      }
+    ]
+  },
+  "prefillData": {
+    "workshopTitle": "Nouvelle séance",
+    "blockTypes": [
+      {
+        "id": "input",
+        "name": "Apport / Exposé",
+        "color": "#004C8E"
+      },
+      {
+        "id": "break",
+        "name": "Pause",
+        "color": "#58889E"
+      }
+    ]
+  },
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Planificateur de séances",
+        "description": "Exemple de description.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        }
+      }
+    ]
+  }
+}

@@ -31,7 +31,7 @@ import { normalizeStructuredData, toJsonLdPayload } from '@/lib/structuredData';
  *   title="My Page"
  *   description="Page description"
  *   canonicalPath="/my-page"
- *   locale="de"
+ *   locale="fr"
  *   alternates={{ en: '/en/my-page' }}
  * />
  * ```
@@ -40,7 +40,7 @@ export const DocumentMeta = ({
   title,
   description = META_CONFIG.defaultDescription,
   canonicalPath = '/',
-  locale = 'de',
+  locale = 'fr',
   alternates,
   ogImage,
   ogType = 'website',

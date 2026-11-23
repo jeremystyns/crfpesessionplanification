@@ -12,7 +12,7 @@ import { withoutNegativeDurations } from '@/lib/workshopUtils';
 
 const loadDefaultLibrary = async () => {
   try {
-    const locale = window.location.pathname.startsWith('/en') ? 'en' : 'de';
+    const locale = window.location.pathname.startsWith('/en') ? 'en' : 'fr';
     const path = locale === 'en' ? '/data/defaultLibrary.en.json' : '/data/defaultLibrary.json';
     const response = await fetch(path);
     if (!response.ok) throw new Error('Failed to load default library');
@@ -44,7 +44,7 @@ export const KEYS = {
   migrated: 'sp:_migrated_v1',
 } as const;
 
-const getLocale = () => (window.location.pathname.startsWith('/en') ? 'en' : 'de');
+const getLocale = () => (window.location.pathname.startsWith('/en') ? 'en' : 'fr');
 
 // ── Storage migration (legacy → sp: keys) ────────────────────────────────────
 
@@ -61,7 +61,7 @@ export const migrateStorageKeys = (): void => {
 
     if (localStorage.getItem(KEYS.migrated)) return;
 
-    for (const locale of ['de', 'en']) {
+    for (const locale of ['fr', 'en']) {
       const templatesOld = `workshop-templates-${locale}`;
       const libOld = `block-library-${locale}`;
       const libInitOld = `library-initialized-${locale}`;
@@ -307,7 +307,7 @@ export const deleteBlockFromLibrary = async (id: string): Promise<void> => {
 };
 
 export const clearAllData = async (): Promise<void> => {
-  for (const locale of ['de', 'en']) {
+  for (const locale of ['fr', 'en']) {
     localStorage.removeItem(KEYS.templates(locale));
     localStorage.removeItem(KEYS.lib(locale));
     localStorage.removeItem(KEYS.libInit(locale));

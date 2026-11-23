@@ -80,16 +80,16 @@ export interface WorkshopPrefillData {
   days?: WorkshopDay[];
 }
 
-export const DEFAULT_WORKSHOP_TITLE = 'Neuer Workshop';
+export const DEFAULT_WORKSHOP_TITLE = 'Nouvelle séance';
 
 export const MAX_DAYS = 14;
 
 export const DEFAULT_BLOCK_TYPES: BlockType[] = [
-  { id: 'input', name: '🎤 Vortrag/Input', color: '#004C8E' },
-  { id: 'activity', name: '🏃 Übung/Aktivität', color: '#6CC067' },
-  { id: 'discussion', name: '💬 Diskussion', color: '#41C8F4' },
+  { id: 'input', name: '🎤 Apport / Exposé', color: '#004C8E' },
+  { id: 'activity', name: '🏃 Exercice / Activité', color: '#6CC067' },
+  { id: 'discussion', name: '💬 Discussion', color: '#41C8F4' },
   { id: 'break', name: '☕ Pause', color: '#58889E' },
-  { id: 'energizer', name: '⚡ Energizer', color: '#DC8319' },
+  { id: 'energizer', name: '⚡ Énergiseur', color: '#DC8319' },
 ];
 
 export const DEFAULT_PERSONS: Person[] = [];

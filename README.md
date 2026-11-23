@@ -22,12 +22,15 @@ Ce projet est un dérivé de [Sessionplan](https://github.com/tim-peters/session
 | Domaine | Modification |
 |---|---|
 | Nom | « Session planification » (interface, métadonnées, manifeste PWA) |
+| Langue | Interface, contenus et adresses entièrement **en français** (langue par défaut, à la racine du site). L'anglais est conservé sous `/en`. L'allemand d'origine est remplacé (il reste dans l'historique git). Fichiers : `public/locales/fr/common.json`, `public/data/` |
 | Couleurs | Bleu CRFPE `#004C8E` et cyan `#41C8F4`, neutres `#2F3342` / `#EDEFF2` / `#D8D9DC`, palette d'équipes pour les types de blocs (`public/assets/ui-theme.css`) |
 | Typographie | Mulish (substitut libre de Bliss Pro), police intégrée dans `public/assets/` |
 | Formes | Rayons anguleux (6 px cartes, 3 px champs), pas de dégradé |
 | Logo et icônes | Logotype CRFPE (favicon, icônes PWA, en-tête latéral) |
 | Mode sombre | Dérivé du bleu CRFPE (la charte ne définit pas de mode sombre) |
 | Exemples | Les boutons « Exemple » de la page d'accueil pointaient vers des modèles absents de l'export public ; ils ouvrent maintenant le modèle fourni |
+
+Vocabulaire retenu : *séance* (session), *bloc*, *sous-groupes* (breakout), *salle* (lane), *mode direct* (live), *lien instantané* / *lien dynamique* (snapshot / dynamic link). Les textes de l'interface vouvoient l'utilisateur, comme le reste de la communication du CRFPE.
 
 Les identifiants techniques (clés `sp:*` du stockage local, chiffrement, API `data/sessions.php`) sont inchangés pour garantir un comportement identique.
 

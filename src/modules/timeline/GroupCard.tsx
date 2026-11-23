@@ -169,7 +169,7 @@ export const GroupCard = ({
                 />
                 <ContainerDurationInput item={item} onUpdate={onUpdate} className="w-10 h-6" />
               </div>
-            <span className="text-xs text-muted-foreground mr-2">Min.</span>
+            <span className="text-xs text-muted-foreground mr-2">{t('planner.totalMin')}</span>
             </div>
 
             {/* Expand/collapse - desktop position */}
@@ -197,7 +197,7 @@ export const GroupCard = ({
                     iconClassName="h-3.5 w-3.5"
                   />
                   <ContainerDurationInput item={item} onUpdate={onUpdate} className="w-12 h-6 print:w-8" />
-                  <span className="text-muted-foreground">Min.</span>
+                  <span className="text-muted-foreground">{t('planner.totalMin')}</span>
                 </div>
               </div>
               

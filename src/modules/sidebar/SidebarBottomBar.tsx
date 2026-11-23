@@ -71,14 +71,14 @@ export const SidebarLogo = ({ onCollapse }: { onCollapse: () => void }) => {
   return (
     <div className="border-b flex-shrink-0 bg-sidebar/40 z-10">
       <div className="flex items-center justify-between gap-0">
-        <div className="flex-1 min-w-0 p-5 sm:p-6 truncate">
-          <h2 className="text-xl font-semibold">
+        <div className="flex-1 min-w-0 p-5 sm:p-6">
+          <h2 className="text-lg font-semibold leading-tight">
             <a href={locale === 'en' ? '/en' : '/'} className="inline-flex items-center gap-2 hover:underline">
-              <img src="/pwa/favicon.svg" alt="" className="h-7 w-7 shrink-0 translate-y-3 -translate-x-1" aria-hidden="true" />
+              <img src="/pwa/favicon.svg" alt="" className="h-9 w-9 shrink-0 rounded-sm" aria-hidden="true" />
               <span>Session planification</span>
             </a>
           </h2>
-          <p className="text-sm text-muted-foreground -mt-1 pl-9">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t('sidebar.dragAndDrop')}
           </p>
         </div>

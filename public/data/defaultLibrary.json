@@ -2,28 +2,28 @@
     "blocks": [
         {
             "id": "default-block-1",
-            "name": "Begrüßung & Check-In",
+            "name": "Accueil et tour de table",
             "item": {
                 "id": "item-default-block-1",
                 "type": "block",
-                "title": "Begrüßung & Check-In",
+                "title": "Accueil et tour de table",
                 "duration": 15,
                 "blockTypeId": "input",
-                "notes": "Willkommensrunde mit Vorstellungsrunde der Teilnehmenden. \nDann [Check-In Frage](https://example.com/check-in)",
-                "material": "Namensschilder, Moderationskarten"
+                "notes": "Mot de bienvenue et tour de présentation des participants. \nPuis [question d'inclusion](https://example.com/check-in)",
+                "material": "Badges nominatifs, cartes cartonnées"
             }
         },
         {
             "id": "default-block-2",
-            "name": "Energizer",
+            "name": "Énergiseur",
             "item": {
                 "id": "item-default-block-2",
                 "type": "block",
-                "title": "Energizer",
+                "title": "Énergiseur",
                 "duration": 10,
                 "blockTypeId": "energizer",
-                "notes": "Kurze aktivierende Übung zur Auflockerung",
-                "material": "Entweder-Oder-Fragen -> [Generator](https://example.com/check-in)"
+                "notes": "Courte activité de mise en train pour dynamiser le groupe",
+                "material": "Questions “plutôt l’un ou l’autre” -> [générateur](https://example.com/check-in)"
             }
         },
         {
@@ -35,57 +35,57 @@
                 "title": "Pause",
                 "duration": 30,
                 "blockTypeId": "break",
-                "notes": "Kaffeepause mit Getränken und Snacks",
-                "material": "Kaffee, Tee, Snacks"
+                "notes": "Pause avec boissons et collations",
+                "material": "Café, thé, collations"
             }
         },
         {
             "id": "default-block-4",
-            "name": "Gruppenarbeit",
+            "name": "Travail en sous-groupes",
             "item": {
                 "id": "default-item-4",
                 "type": "block",
-                "title": "Gruppenarbeit",
+                "title": "Travail en sous-groupes",
                 "duration": 45,
                 "blockTypeId": "activity",
-                "notes": "Arbeit in Kleingruppen zu spezifischem Thema",
-                "material": "Flipcharts, Marker, Post-Its"
+                "notes": "Travail en petits groupes sur un thème précis",
+                "material": "Paperboards, marqueurs, notes adhésives"
             }
         },
         {
             "id": "default-block-5",
-            "name": "Präsentation der Ergebnisse",
+            "name": "Présentation des productions",
             "item": {
                 "id": "default-item-5",
                 "type": "block",
-                "title": "Präsentation der Ergebnisse",
+                "title": "Présentation des productions",
                 "duration": 30,
                 "blockTypeId": "activity",
-                "notes": "Vorstellung der Gruppenergebnisse im Plenum",
-                "material": "Beamer, Flipcharts"
+                "notes": "Restitution des productions des sous-groupes en grand groupe",
+                "material": "Vidéoprojecteur, paperboards"
             }
         },
         {
             "id": "default-block-6",
-            "name": "Reflexion & Feedback",
+            "name": "Réflexion et retours",
             "item": {
                 "id": "default-item-6",
                 "type": "block",
-                "title": "Reflexion & Feedback",
+                "title": "Réflexion et retours",
                 "duration": 20,
                 "blockTypeId": "discussion",
-                "notes": "Gemeinsame Reflexion der Lerninhalte und Feedback-Runde",
-                "material": "Feedback-Karten"
+                "notes": "Réflexion commune sur les contenus abordés et tour de retours",
+                "material": "Cartes de retour"
             }
         }
     ],
     "templates": [
         {
             "id": "default-template-1",
-            "name": "Halbtägiger Workshop (4 Stunden)",
+            "name": "Atelier d'une demi-journée (4 heures)",
             "data": {
                 "workshop": {
-                    "title": "Workshop",
+                    "title": "Atelier",
                     "date": "",
                     "location": "",
                     "participants": 0,
@@ -96,12 +96,12 @@
                 "blockTypes": [
                     {
                         "id": "input",
-                        "name": "🎤 Vortrag\/Input",
+                        "name": "🎤 Apport / Exposé",
                         "color": "#004C8E"
                     },
                     {
                         "id": "activity",
-                        "name": "🏃 Übung\/Aktivität",
+                        "name": "🏃 Exercice / Activité",
                         "color": "#6CC067"
                     },
                     {
@@ -111,12 +111,12 @@
                     },
                     {
                         "id": "discussion",
-                        "name": "💬 Diskussion",
+                        "name": "💬 Discussion",
                         "color": "#DC8319"
                     },
                     {
                         "id": "energizer",
-                        "name": "⚡ Energizer",
+                        "name": "⚡ Énergiseur",
                         "color": "#41C8F4"
                     }
                 ],
@@ -124,20 +124,20 @@
                     {
                         "id": "item-1770152421686",
                         "type": "block",
-                        "title": "Begrüßung & Agenda",
+                        "title": "Accueil et programme",
                         "duration": 15,
                         "blockTypeId": "",
-                        "notes": "Schneller Check-In, Frage generiert [hier mit](https://example.com/check-in)\nVorstellung und Überblick über den Tag",
-                        "material": "Agenda-Folien"
+                        "notes": "Tour de table rapide, question générée [ici](https://example.com/check-in)\nPrésentation et vue d'ensemble de la journée",
+                        "material": "Diapositives du programme"
                     },
                     {
                         "id": "item-2",
                         "type": "block",
-                        "title": "Einführung ins Thema",
+                        "title": "Introduction au thème",
                         "duration": 45,
                         "blockTypeId": "input",
-                        "notes": "Theoretische Grundlagen vermitteln",
-                        "material": "Präsentation"
+                        "notes": "Transmettre les bases théoriques",
+                        "material": "Présentation"
                     },
                     {
                         "id": "item-3",
@@ -146,21 +146,21 @@
                         "duration": 15,
                         "blockTypeId": "break",
                         "notes": "",
-                        "material": "Kaffee, Tee"
+                        "material": "Café, thé"
                     },
                     {
                         "id": "item-4",
                         "type": "block",
-                        "title": "Praktische Übung",
+                        "title": "Exercice pratique",
                         "duration": 60,
                         "blockTypeId": "activity",
-                        "notes": "Hands-on Übung in Kleingruppen",
-                        "material": "Arbeitsmaterialien"
+                        "notes": "Exercice pratique en petits groupes",
+                        "material": "Matériel de travail"
                     },
                     {
                         "id": "item-5",
                         "type": "block",
-                        "title": "Mittagspause",
+                        "title": "Pause déjeuner",
                         "duration": 60,
                         "blockTypeId": "break",
                         "notes": "",
@@ -169,30 +169,30 @@
                     {
                         "id": "item-6",
                         "type": "block",
-                        "title": "Ergebnisse & Diskussion",
+                        "title": "Résultats et discussion",
                         "duration": 45,
                         "blockTypeId": "discussion",
-                        "notes": "Vorstellung und Diskussion der Ergebnisse",
-                        "material": "Flipchart"
+                        "notes": "Présentation et discussion des résultats",
+                        "material": "Paperboard"
                     },
                     {
                         "id": "item-7",
                         "type": "block",
-                        "title": "Abschluss & Feedback",
+                        "title": "Clôture et retours",
                         "duration": 20,
                         "blockTypeId": "discussion",
-                        "notes": "Zusammenfassung und Feedback",
-                        "material": "Feedback-Bögen"
+                        "notes": "Synthèse et retours",
+                        "material": "Fiches de retour"
                     }
                 ]
             }
         },
         {
             "id": "default-template-2",
-            "name": "Ganztägiger Workshop (8 Stunden)",
+            "name": "Atelier d'une journée (8 heures)",
             "data": {
                 "workshop": {
-                    "title": "Intensiv-Workshop",
+                    "title": "Atelier intensif",
                     "description": "",
                     "date": "",
                     "startTime": "09:00",
@@ -204,12 +204,12 @@
                 "blockTypes": [
                     {
                         "id": "input",
-                        "name": "🎤 Vortrag\/Input",
+                        "name": "🎤 Apport / Exposé",
                         "color": "#004C8E"
                     },
                     {
                         "id": "activity",
-                        "name": "🏃 Übung\/Aktivität",
+                        "name": "🏃 Exercice / Activité",
                         "color": "#6CC067"
                     },
                     {
@@ -219,12 +219,12 @@
                     },
                     {
                         "id": "discussion",
-                        "name": "💬 Diskussion",
+                        "name": "💬 Discussion",
                         "color": "#DC8319"
                     },
                     {
                         "id": "energizer",
-                        "name": "⚡ Energizer",
+                        "name": "⚡ Énergiseur",
                         "color": "#41C8F4"
                     }
                 ],
@@ -233,22 +233,22 @@
                     {
                         "id": "item-1770152442848",
                         "type": "block",
-                        "title": "Ankommen & Begrüßung",
+                        "title": "Accueil et mise en route",
                         "duration": 30,
                         "blockTypeId": "input",
-                        "notes": "Warm-Up und Tagesagenda",
-                        "material": "[Check-In-Frage](https://example.com/check-in)"
+                        "notes": "Mise en train et programme de la journée",
+                        "material": "[Question d'inclusion](https://example.com/check-in)"
                     },
                     {
                         "id": "item-2",
                         "type": "group",
-                        "title": "Vormittags-Session 1",
+                        "title": "Matinée, séquence 1",
                         "duration": 90,
                         "children": [
                             {
                                 "id": "item-2-1",
                                 "type": "block",
-                                "title": "Theoretischer Input",
+                                "title": "Apport théorique",
                                 "duration": 45,
                                 "blockTypeId": "input",
                                 "notes": "",
@@ -257,7 +257,7 @@
                             {
                                 "id": "item-2-2",
                                 "type": "block",
-                                "title": "Erste Übung",
+                                "title": "Premier exercice",
                                 "duration": 45,
                                 "blockTypeId": "activity",
                                 "notes": "",
@@ -268,7 +268,7 @@
                     {
                         "id": "item-3",
                         "type": "block",
-                        "title": "Kaffeepause",
+                        "title": "Pause café",
                         "duration": 15,
                         "blockTypeId": "break",
                         "notes": "",
@@ -277,7 +277,7 @@
                     {
                         "id": "item-4",
                         "type": "block",
-                        "title": "Vertiefung",
+                        "title": "Approfondissement",
                         "duration": 60,
                         "blockTypeId": "activity",
                         "notes": "",
@@ -286,7 +286,7 @@
                     {
                         "id": "item-5",
                         "type": "block",
-                        "title": "Mittagspause",
+                        "title": "Pause déjeuner",
                         "duration": 60,
                         "blockTypeId": "",
                         "notes": "",
@@ -295,7 +295,7 @@
                     {
                         "id": "item-6",
                         "type": "breakout",
-                        "title": "Breakout-Session",
+                        "title": "Travail en sous-groupes",
                         "duration": 60,
                         "lanes": 3,
                         "sameInAllBreakouts": false,
@@ -303,7 +303,7 @@
                             {
                                 "id": "item-6-1",
                                 "type": "block",
-                                "title": "Thema A",
+                                "title": "Thème A",
                                 "duration": 60,
                                 "laneIndex": 0,
                                 "blockTypeId": "activity",
@@ -313,7 +313,7 @@
                             {
                                 "id": "item-6-2",
                                 "type": "block",
-                                "title": "Thema B",
+                                "title": "Thème B",
                                 "duration": 60,
                                 "laneIndex": 1,
                                 "blockTypeId": "activity",
@@ -323,7 +323,7 @@
                             {
                                 "id": "item-6-3",
                                 "type": "block",
-                                "title": "Thema C",
+                                "title": "Thème C",
                                 "duration": 60,
                                 "laneIndex": 2,
                                 "blockTypeId": "activity",
@@ -335,7 +335,7 @@
                     {
                         "id": "item-7",
                         "type": "block",
-                        "title": "Zusammenführung",
+                        "title": "Mise en commun",
                         "duration": 45,
                         "blockTypeId": "discussion",
                         "notes": "",
@@ -353,7 +353,7 @@
                     {
                         "id": "item-9",
                         "type": "block",
-                        "title": "Transfer & Ausblick",
+                        "title": "Transfert et perspectives",
                         "duration": 45,
                         "blockTypeId": "discussion",
                         "notes": "",
@@ -362,7 +362,7 @@
                     {
                         "id": "item-10",
                         "type": "block",
-                        "title": "Abschluss & Evaluation",
+                        "title": "Clôture et évaluation",
                         "duration": 30,
                         "blockTypeId": "",
                         "notes": "",

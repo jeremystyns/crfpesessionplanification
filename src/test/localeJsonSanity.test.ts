@@ -37,22 +37,22 @@ const collectDepth = (node: unknown): number => {
 };
 
 describe('locale JSON sanity (public/locales)', () => {
-  const de = JSON.parse(
-    readFileSync(join(process.cwd(), 'public/locales/de/common.json'), 'utf-8'),
+  const fr = JSON.parse(
+    readFileSync(join(process.cwd(), 'public/locales/fr/common.json'), 'utf-8'),
   ) as unknown;
   const en = JSON.parse(
     readFileSync(join(process.cwd(), 'public/locales/en/common.json'), 'utf-8'),
   ) as unknown;
 
   it('both locale files parse as valid JSON', () => {
-    expect(de).toBeTypeOf('object');
+    expect(fr).toBeTypeOf('object');
     expect(en).toBeTypeOf('object');
   });
 
   it('values are restricted to strings / objects / arrays (no functions, numbers, etc.)', () => {
     const offenders: string[] = [];
     for (const [locale, doc] of [
-      ['de', de],
+      ['fr', fr],
       ['en', en],
     ] as const) {
       walk(doc, (path, value) => {
@@ -68,7 +68,7 @@ describe('locale JSON sanity (public/locales)', () => {
 
   it(`nesting depth is <= ${MAX_DEPTH} so i18next doesn't recurse itself into trouble`, () => {
     for (const [locale, doc] of [
-      ['de', de],
+      ['fr', fr],
       ['en', en],
     ] as const) {
       const depth = collectDepth(doc);
@@ -82,7 +82,7 @@ describe('locale JSON sanity (public/locales)', () => {
     // as a nested lookup and would otherwise blow up).
     const offenders: string[] = [];
     for (const [locale, doc] of [
-      ['de', de],
+      ['fr', fr],
       ['en', en],
     ] as const) {
       walk(doc, (path, value) => {

@@ -21,8 +21,8 @@ export const META_CONFIG = {
   baseUrl: getBaseUrl(),
   siteName: 'Session planification',
   titleTemplate: '%s – Session planification',
-  defaultTitle: 'Workshop Agenda – Session Ablauf Planer',
-  defaultDescription: 'Kostenloser Ablauf Planer für Trainer, Coaches und Moderatoren. Erstelle professionelle Workshop-Agendas per Drag & Drop – ohne Registrierung, ohne Cloud, ohne Kosten.',
+  defaultTitle: 'Déroulé de séance – Session planification',
+  defaultDescription: 'Planificateur de déroulés de séances pour les formateurs, animateurs et intervenants du CRFPE. Construisez votre agenda par glisser-déposer – sans inscription, sans cloud, sans frais.',
   defaultOgImage: '/assets/preview.png',
   author: siteAuthor,
   organization: {
@@ -81,12 +81,12 @@ export function buildHreflangLinks(
     }
   }
 
-  // x-default: EN if a paired EN alternate exists, otherwise DE.
-  // For DE-only pages this resolves to the page's own DE URL, which is
+  // x-default: EN if a paired EN alternate exists, otherwise FR.
+  // For FR-only pages this resolves to the page's own FR URL, which is
   // the correct signal per Google's hreflang spec.
   const enUrl = urlMap['en'];
-  const deUrl = urlMap['de'];
-  const defaultLoc = enUrl ?? deUrl;
+  const frUrl = urlMap['fr'];
+  const defaultLoc = enUrl ?? frUrl;
   if (defaultLoc) {
     links.push({ hreflang: 'x-default', href: defaultLoc });
   }
@@ -95,7 +95,7 @@ export function buildHreflangLinks(
 }
 
 /**
- * Returns the og:locale string for a given locale (e.g. 'de_DE').
+ * Returns the og:locale string for a given locale (e.g. 'fr_FR').
  */
 export function getOgLocale(locale: Locale): string {
   return LOCALE_OG[locale];

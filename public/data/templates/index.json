@@ -1,9 +1,9 @@
 {
     "templates": [
         {
-            "slug": "design-thinking-workshop",
-            "title": "Design Thinking Workshop",
-            "excerpt": "Eintägiger Design Thinking Workshop mit allen fünf Phasen: Empathize, Define, Ideate, Prototype, Test."
+            "slug": "atelier-design-thinking",
+            "title": "Atelier Design Thinking",
+            "excerpt": "Atelier Design Thinking d'une journée avec les cinq phases : empathie, définition, idéation, prototypage, test."
         }
     ]
 }

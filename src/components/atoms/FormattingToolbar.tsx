@@ -43,19 +43,19 @@ interface ToolEntry {
 const TOOLS: ToolEntry[] = [
   {
     kind: 'bold',
-    title: 'Fett (Strg/Cmd+B)',
+    title: 'Gras (Ctrl/Cmd+B)',
     Icon: Bold,
     useLinkDisabled: false,
   },
   {
     kind: 'italic',
-    title: 'Kursiv (Strg/Cmd+I)',
+    title: 'Italique (Ctrl/Cmd+I)',
     Icon: Italic,
     useLinkDisabled: false,
   },
   {
     kind: 'link',
-    title: 'Link einfügen (Strg/Cmd+K)',
+    title: 'Insérer un lien (Ctrl/Cmd+K)',
     Icon: Link,
     useLinkDisabled: true,
   },

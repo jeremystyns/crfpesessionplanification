@@ -46,7 +46,7 @@ export interface CsvColumnLabels {
   all: string;
 }
 
-type Language = 'de' | 'en';
+type Language = 'fr' | 'en';
 
 const escapeCsvField = (value: string | null | undefined, delimiter: string): string => {
   const raw = value == null ? '' : String(value);
@@ -360,7 +360,7 @@ export const buildWorkshopCsv = (
   labels: CsvColumnLabels,
   language: Language,
 ): string => {
-  const delimiter = language === 'de' ? ';' : ',';
+  const delimiter = language === 'fr' ? ';' : ',';
   const blockTypeNameById = new Map(data.blockTypes.map((bt) => [bt.id, bt.name ?? '']));
   const personNameById = new Map(data.persons.map((p) => [p.id, p.name ?? '']));
 

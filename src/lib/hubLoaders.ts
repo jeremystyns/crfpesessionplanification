@@ -34,7 +34,7 @@ interface BlogIndexEntry {
   excerpt: string;
   publishedDate: string;
   tags?: string[];
-  /** Locale-specific category slug, e.g. "retrospektive" / "retrospective". */
+  /** Locale-specific category slug, e.g. "retrospective" / "retrospective". */
   category?: string;
 }
 
@@ -143,7 +143,7 @@ const RESOLVERS: Record<'templates' | 'blog' | 'landing', ItemResolver> = {
 /**
  * Builds a React Router loader for a hub page of the given content type.
  * The returned loader takes the hub slug as its second argument (matching the
- * existing `templateCategoryLoader(args, 'retrospektive')` shape).
+ * existing `templateCategoryLoader(args, 'retrospective')` shape).
  */
 export function createHubLoader<TItem = unknown>(
   contentType: 'templates' | 'blog' | 'landing',

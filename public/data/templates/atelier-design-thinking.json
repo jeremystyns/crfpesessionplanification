@@ -1,0 +1,55 @@
+{
+    "type": "template",
+    "slug": "atelier-design-thinking",
+    "title": "Exemple : atelier Design Thinking",
+    "metaTitle": "Exemple : atelier Design Thinking",
+    "metaDescription": "Exemple de modèle de séance pour un atelier Design Thinking.",
+    "heroTitle": "Exemple : atelier Design Thinking",
+    "heroDescription": "Exemple de description pour un modèle d'atelier.",
+    "ctaText": "Utiliser le modèle",
+    "prefillData": {
+        "workshopTitle": "Atelier Design Thinking (exemple)",
+        "workshopDescription": "Exemple de description pour un modèle d'atelier Design Thinking.",
+        "date": "",
+        "startTime": "09:00",
+        "targetDuration": null,
+        "durationLocked": null,
+        "blockTypes": [
+            {
+                "id": "input",
+                "name": "Apport / Exposé",
+                "color": "#004C8E"
+            },
+            {
+                "id": "break",
+                "name": "Pause",
+                "color": "#58889E"
+            }
+        ],
+        "persons": [],
+        "items": [
+            {
+                "id": "example-block-1",
+                "type": "block",
+                "title": "Exemple de bloc 1",
+                "duration": 30,
+                "blockTypeId": "input",
+                "notes": "Exemple de notes pour le bloc 1.",
+                "material": ""
+            },
+            {
+                "id": "example-block-2",
+                "type": "block",
+                "title": "Exemple de pause",
+                "duration": 15,
+                "blockTypeId": "break",
+                "notes": "",
+                "material": ""
+            }
+        ]
+    },
+    "lastModified": "2026-01-01",
+    "alternates": {
+        "en": "/en/templates/design-thinking-workshop"
+    }
+}

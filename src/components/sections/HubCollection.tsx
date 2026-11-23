@@ -90,7 +90,7 @@ export function HubCollection<TItem>({
   const { locale, publishAlternates } = useLocale();
 
   // Publish the locale counterpart URL so the Language Switcher can navigate
-  // between e.g. /templates/retrospektive and /en/templates/retrospective.
+  // between e.g. /templates/retrospective and /en/templates/retrospective.
   // useLayoutEffect (not useEffect) ensures alternates are in context before
   // any useEffect runs — specifically before App.tsx signals prerender ready
   // via rAF.

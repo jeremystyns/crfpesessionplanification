@@ -67,7 +67,7 @@ export const TimelineFooter = ({
           <DraggableAddButton
             type="new-block"
             icon={Plus}
-            label={t('block.newBlock').split(' ').at(-1)!}
+            label={t('sidebar.block')}
             shortcutId="addBlock"
             onClick={onAddBlock}
           />

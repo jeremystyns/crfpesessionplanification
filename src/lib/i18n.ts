@@ -2,7 +2,7 @@
  * i18n — Initialises i18next with HTTP backend for lazy-loading translations.
  *
  * Role: Defines the Locale type, configures i18next with the HTTP backend so
- *       each language bundle is only fetched when needed (no DE strings in EN
+ *       each language bundle is only fetched when needed (no FR strings in EN
  *       bundle and vice versa). The `common` namespace covers all shared UI
  *       strings (nav, footer, blog, templates, settings).
  *
@@ -13,42 +13,42 @@ import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
 
-export type Locale = 'de' | 'en';
+export type Locale = 'fr' | 'en';
 
-export const LOCALES: Locale[] = ['de', 'en'];
+export const LOCALES: Locale[] = ['fr', 'en'];
 
 /** Maps locale to BCP-47 language tag used in <html lang> and hreflang */
 export const LOCALE_LANG_TAG: Record<Locale, string> = {
-  de: 'de',
+  fr: 'fr',
   en: 'en',
 };
 
 /** Maps locale to Open Graph locale string */
 export const LOCALE_OG: Record<Locale, string> = {
-  de: 'de_DE',
+  fr: 'fr_FR',
   en: 'en_US',
 };
 
-/** URL prefix for each locale. DE has no prefix (root). */
+/** URL prefix for each locale. FR (default) has no prefix (root). */
 export const LOCALE_PREFIX: Record<Locale, string> = {
-  de: '',
+  fr: '',
   en: '/en',
 };
 
 /**
  * Derives the locale from a URL pathname.
- * /en → 'en'  |  /en/anything → 'en'  |  everything else → 'de'
+ * /en → 'en'  |  /en/anything → 'en'  |  everything else → 'fr'
  */
 export function getLocaleFromPathname(pathname: string): Locale {
   if (pathname === '/en' || pathname.startsWith('/en/')) {
     return 'en';
   }
-  return 'de';
+  return 'fr';
 }
 
 /**
  * Returns the content-data directory prefix for a given locale and content type.
- * DE paths: /data/blog/  — EN paths: /data/blog/en/
+ * FR paths: /data/blog/  — EN paths: /data/blog/en/
  */
 export function getContentDataPath(
   type: 'landing' | 'blog' | 'templates',
@@ -62,8 +62,8 @@ i18next
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    lng: 'de',
-    fallbackLng: 'de',
+    lng: 'fr',
+    fallbackLng: 'fr',
     defaultNS: 'common',
     ns: ['common'],
     backend: {

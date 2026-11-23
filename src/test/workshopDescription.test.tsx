@@ -67,9 +67,9 @@ describe('WorkshopDescription edit mode', () => {
     const textarea = document.querySelector('[data-session-description]') as HTMLTextAreaElement;
     textarea.setSelectionRange(0, 5);
     fireEvent.mouseUp(textarea);
-    expect(screen.queryByTitle(/Fett/)).toBeTruthy();
+    expect(screen.queryByTitle(/Gras/)).toBeTruthy();
 
-    fireEvent.click(screen.getByTitle(/Fett/) as HTMLButtonElement);
+    fireEvent.click(screen.getByTitle(/Gras/) as HTMLButtonElement);
 
     // Fallback path in jsdom (no execCommand): the new text is reported
     // through onChange → onUpdate exactly once.

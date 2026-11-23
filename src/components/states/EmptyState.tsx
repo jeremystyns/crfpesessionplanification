@@ -99,7 +99,7 @@ export const EmptyStateHero = ({ onAddBlock, landingPageContent, onReopenSession
           ) : (
             <img
             src={previewSrc}
-            alt="Session planification Workshop Agenda Example Preview"
+            alt="Aperçu d'un déroulé de séance dans Session planification"
             aria-hidden="true"
             width={536}
             height={516}

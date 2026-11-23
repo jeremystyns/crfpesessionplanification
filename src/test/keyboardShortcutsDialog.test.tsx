@@ -60,7 +60,7 @@ describe('useShortcutLabels', () => {
 });
 
 describe('translations', () => {
-  it.each(['de', 'en'])('%s names every shortcut and group', (language) => {
+  it.each(['fr', 'en'])('%s names every shortcut and group', (language) => {
     const { shortcuts } = JSON.parse(readFileSync(`public/locales/${language}/common.json`, 'utf8'));
     SHORTCUTS.forEach((shortcut) => expect(shortcuts.actions[shortcut.id]).toBeTruthy());
     SHORTCUT_GROUPS.forEach((group) => expect(shortcuts.groups[group]).toBeTruthy());

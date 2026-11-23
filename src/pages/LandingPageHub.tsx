@@ -1,6 +1,6 @@
 /**
  * LandingPageHub — Hub page for curated landing-page collections
- *                  (e.g. /landing-pages/workshops).
+ *                  (e.g. /landing-pages/ateliers).
  *
  * Role: Thin configuration + card renderer on top of `HubCollection`. The hub
  *       loader (`landingPageHubLoader`) is a thin wrapper around

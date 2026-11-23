@@ -4,147 +4,113 @@
   "alternates": {
     "en": "/en"
   },
-  "title": "Plane deine Sessions, Workshops oder Agenda kostenlos | Session planification",
-  "metaTitle": "Plane deine Sessions, Workshops oder Agenda kostenlos | Session planification",
-  "metaDescription": "Erstelle Workshop-Agendas mit einer intuitiven Timeline. Blöcke, Gruppen, Breakouts – alles per Drag & Drop. Speichern & Teilen per Link, ohne Account",
-  "heroTitle": "Plane deinen Workshop-Ablauf als *visuelle Timeline*",
-  "heroDescription": "Der kostenlose Session-Planer für alle. Einfach Agenda per Drag-and-Drop erstellen. Private by Design & komplett flexibel – für Workshops, Trainings und Seminare.",
-  "ctaText": "Session erstellen",
-  "exampleSlug": "templates/design-thinking-workshop",
+  "title": "Planifiez vos séances, ateliers et formations | Session planification",
+  "metaTitle": "Planifiez vos séances, ateliers et formations | Session planification",
+  "metaDescription": "Construisez le déroulé de vos séances sur une frise chronologique intuitive : blocs, groupes, sous-groupes, tout se fait par glisser-déposer. Enregistrement local et partage par lien, sans compte.",
+  "heroTitle": "Planifiez le déroulé de votre séance sur une *frise visuelle*",
+  "heroDescription": "L'outil du CRFPE pour construire l'agenda d'une séance par glisser-déposer. Confidentiel par conception et entièrement flexible : pour les ateliers, les formations et les séminaires.",
+  "ctaText": "Créer une séance",
+  "exampleSlug": "templates/atelier-design-thinking",
   "seoContent": {
     "sections": [
       {
-        "title": "Session planification Vorteile: Warum das Tool nutzen?",
-        "content": "<p>Schluss mit Notizen-Chaos und Excel-Tabellen! Sessionplan.de wurde speziell für die Bedürfnisse von Solo-Trainern und Workshop-Teams entwickelt:</p>
-<ul>
-<li>
-<strong>Visuelle Timeline</strong>: Strukturiere deinen Workshop-Ablauf übersichtlich auf einer interaktiven Zeitleiste</li>
-<li>
-<strong>Drag & Drop</strong>: Verschiebe Blöcke per Mausklick – die Zeiten passen sich automatisch an</li>
-<li>
-<strong>Keine Anmeldung nötig</strong>: Starte sofort, deine Daten bleiben lokal in deinem Browser</li>
-<li>
-<strong>Teilen per Link</strong>: Exportiere und teile deine Agenda einfach über einen einzigen Link</li>
-</ul>"
+        "title": "Session planification : pourquoi utiliser cet outil ?",
+        "content": "<p>Fini les notes éparpillées et les tableaux de calcul. Session planification est conçu pour les formatrices, les formateurs et les équipes pédagogiques qui préparent leurs séances :</p>\n<ul>\n<li>\n<strong>Frise visuelle</strong> : structurez le déroulé de votre séance sur une frise interactive</li>\n<li>\n<strong>Glisser-déposer</strong> : déplacez les blocs à la souris, les horaires se recalculent automatiquement</li>\n<li>\n<strong>Aucune inscription</strong> : démarrez tout de suite, vos données restent dans votre navigateur</li>\n<li>\n<strong>Partage par lien</strong> : exportez et partagez votre déroulé avec un simple lien</li>\n</ul>"
       },
       {
         "type": "features",
-        "title": "Funktionen für deine Workshop-Planung",
+        "title": "Des fonctions pour préparer vos séances",
         "items": [
           {
             "icon": "Mic",
-            "title": "Flexible Blocktypen",
-            "description": "Plane mit vordefinierten Kategorien wie Input, Übung, Diskussion, Pause und Energizer – oder erstelle deine eigenen."
+            "title": "Types de blocs flexibles",
+            "description": "Planifiez avec des catégories prédéfinies comme apport, exercice, discussion, pause et énergiseur, ou créez les vôtres."
           },
           {
             "icon": "Layers",
-            "title": "Gruppen & Breakouts",
-            "description": "Fasse zusammengehörige Blöcke in Gruppen zusammen oder plane parallele Sessions für verschiedene Teilnehmergruppen."
+            "title": "Groupes et sous-groupes",
+            "description": "Regroupez des blocs qui vont ensemble, ou prévoyez des temps parallèles pour différents sous-groupes de participants."
           },
           {
             "icon": "Calculator",
-            "title": "Automatische Zeitberechnung",
-            "description": "Definiere eine Startzeit und sieh sofort, wann jeder Block beginnt und endet – die Gesamtdauer wird automatisch berechnet."
+            "title": "Calcul automatique des horaires",
+            "description": "Indiquez une heure de début et voyez immédiatement quand chaque bloc commence et se termine. La durée totale se calcule toute seule."
           },
           {
             "icon": "Play",
-            "title": "Live-Modus",
-            "description": "Aktiviere den Live-Modus während deiner Session und sieh, welcher Block gerade läuft, wie viel Zeit bleibt und was als Nächstes kommt."
+            "title": "Mode direct",
+            "description": "Activez le mode direct pendant votre séance : le bloc en cours, le temps restant et la suite s'affichent en un coup d'œil."
           },
           {
             "icon": "Library",
-            "title": "Block-Bibliothek & Vorlagen",
-            "description": "Speichere häufig genutzte Blöcke in deiner Bibliothek und erstelle Vorlagen für wiederkehrende Formate."
+            "title": "Bibliothèque de blocs et modèles",
+            "description": "Enregistrez vos blocs les plus utilisés dans votre bibliothèque et créez des modèles pour les formats récurrents."
           },
           {
             "icon": "Share2",
-            "title": "Export & Teilen",
-            "description": "Teile deine komplette Agenda als Link oder sichere sie als JSON – lokal, ohne Cloud-Zwang."
+            "title": "Export et partage",
+            "description": "Partagez votre déroulé complet par lien ou sauvegardez-le en JSON, en local et sans obligation de passer par le cloud."
           }
         ]
       },
       {
-        "title": "Session planification vs. SessionLab – Der Vergleich",
-        "content": "<p>Warum Sessionplan.de die bessere Wahl für viele Trainer ist im <a href=\"/blog/workshop-planung-tools-vergleich\" title=\"Die besten Workshop-Planungstools im Vergleich\">schnellen Vergleich</a>:</p>
-<ul class=\"list-checkmark\">
-<li>
-<strong>Komplett kostenlos</strong> – SessionLab bietet nur begrenzte Free-Version</li>
-<li>
-<strong>Ohne Account</strong> – Keine Registrierung erforderlich</li>
-<li>
-<strong>Datenschutz</strong> – Deine Daten bleiben lokal, keine Cloud nötig</li>
-<li>
-<strong>Schneller Start</strong> – Sofort loslegen ohne Einarbeitung</li>
-</ul>"
-      },
-      {
-        "title": "Für wen eignet sich das Planungstool?",
-        "content": "<p>Sessionplan.de eignet sich ideal für:</p>
-<ul>
-<li>
-<strong>Trainer & Coaches</strong> – Seminare und Trainings professionell strukturieren</li>
-<li>
-<strong>Moderatoren & Facilitatoren</strong> – Meetings und Workshops visuell planen</li>
-<li>
-<strong>Scrum Master & Agile Coaches</strong> – Retrospektiven und Sprint Plannings vorbereiten</li>
-<li>
-<strong>Lehrkräfte & Dozenten</strong> – Unterrichtseinheiten und Kurse organisieren</li>
-</ul>"
+        "title": "À qui s'adresse cet outil ?",
+        "content": "<p>Session planification convient particulièrement à :</p>\n<ul>\n<li>\n<strong>Formatrices et formateurs</strong> : structurer des séances et des formations de façon professionnelle</li>\n<li>\n<strong>Animatrices et animateurs</strong> : préparer visuellement des réunions et des ateliers</li>\n<li>\n<strong>Équipes pédagogiques</strong> : construire ensemble une progression, une journée ou un module</li>\n<li>\n<strong>Intervenantes et intervenants</strong> : minuter une intervention et anticiper le matériel nécessaire</li>\n</ul>"
       },
       {
         "type": "checklist",
-        "title": "Kostenlos, werbefrei, datenschutzfreundlich",
+        "title": "Gratuit, sans publicité, respectueux de vos données",
         "items": [
           {
-            "label": "100% kostenlos",
-            "description": "Keine versteckten Kosten, kein Abo."
+            "label": "100 % gratuit",
+            "description": "Pas de frais cachés, pas d'abonnement."
           },
           {
-            "label": "Keine Registrierung",
-            "description": "Sofort loslegen ohne Account."
+            "label": "Aucune inscription",
+            "description": "Commencez tout de suite, sans compte."
           },
           {
-            "label": "Daten bleiben bei dir",
-            "description": "Standardmäßig alles lokal im Browser."
+            "label": "Vos données restent chez vous",
+            "description": "Par défaut, tout reste en local dans votre navigateur."
           },
           {
-            "label": "Werbefrei",
-            "description": "Fokus auf deine Planung."
+            "label": "Sans publicité",
+            "description": "L'attention reste sur votre préparation."
           }
         ]
       },
       {
         "type": "faq",
-        "title": "Häufige Fragen zum Session planification",
+        "title": "Questions fréquentes sur Session planification",
         "items": [
           {
-            "question": "Was kostet der Session Planer?",
-            "answer": "<p>Sessionplan.de ist komplett kostenlos – ohne versteckte Kosten, Abo-Modelle oder Premium-Features. Alle Funktionen stehen dir dauerhaft zur Verfügung.</p>"
+            "question": "Combien coûte Session planification ?",
+            "answer": "<p>L'outil est entièrement gratuit : pas de frais cachés, pas d'abonnement, pas de fonction payante. Toutes les fonctions restent disponibles en permanence.</p>"
           },
           {
-            "question": "Brauche ich einen Account oder Registrierung?",
-            "answer": "<p>Nein! Du kannst sofort starten ohne Anmeldung. Deine Workshop-Agendas werden standardmäßig lokal in deinem Browser gespeichert.</p>"
+            "question": "Ai-je besoin d'un compte ou d'une inscription ?",
+            "answer": "<p>Non. Vous pouvez commencer immédiatement, sans vous connecter. Par défaut, vos déroulés sont enregistrés localement dans votre navigateur.</p>"
           },
           {
-            "question": "Wie teile ich meine Workshop-Agenda mit anderen?",
-            "answer": "<p>Nutze die \"Teilen\"-Funktion, um einen Link zu generieren. Alternativ kannst du deine Agenda als JSON-Datei exportieren und per E-Mail versenden.</p>"
+            "question": "Comment partager mon déroulé avec d'autres personnes ?",
+            "answer": "<p>Utilisez la fonction “Partager” pour générer un lien. Vous pouvez aussi exporter votre déroulé en fichier JSON et l'envoyer par courriel.</p>"
           },
           {
-            "question": "Funktioniert sessionplan.de offline?",
-            "answer": "<p>Ja, nach dem ersten Laden läuft die Anwendung lokal in deinem Browser. Du kannst Workshops auch ohne Internetverbindung planen.</p>"
+            "question": "Session planification fonctionne-t-il hors ligne ?",
+            "answer": "<p>Oui. Après le premier chargement, l'application fonctionne localement dans votre navigateur. Vous pouvez préparer vos séances sans connexion Internet.</p>"
           },
           {
-            "question": "Kann ich meine Daten sichern?",
-            "answer": "<p>Absolut! Nutze den JSON-Export, um deine Workshop-Agendas lokal auf deinem Computer zu speichern und bei Bedarf wieder zu importieren.</p>"
+            "question": "Puis-je sauvegarder mes données ?",
+            "answer": "<p>Bien sûr. Utilisez l'export JSON pour enregistrer vos déroulés sur votre ordinateur, puis réimportez-les au besoin.</p>"
           }
         ]
       },
       {
         "type": "cta",
-        "title": "Jetzt Workshop-Zeitplan erstellen",
-        "buttonText": "Starte jetzt mit deiner Planung",
-        "buttonNote": "Für immer kostenlos und ohne Registrierung",
-        "content": "Erstelle deine erste professionelle Workshop-Agenda in wenigen Minuten. Einfach Blöcke hinzufügen, per Drag & Drop anordnen und los geht's!"
+        "title": "Créez le déroulé de votre prochaine séance",
+        "buttonText": "Commencez votre planification",
+        "buttonNote": "Gratuit et sans inscription",
+        "content": "Construisez votre premier déroulé de séance en quelques minutes : ajoutez des blocs, organisez-les par glisser-déposer, et c'est parti !"
       }
     ]
   },
@@ -155,28 +121,27 @@
         "@type": "WebApplication",
         "name": "Session planification",
         "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web Browser",
+        "operatingSystem": "Navigateur web",
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "EUR"
         },
-        "description": "Kostenloser Ablauf Planer für Trainer, Coaches und Moderatoren. Erstelle professionelle Workshop-Agendas per Drag & Drop – ohne Registrierung, ohne Cloud, ohne Kosten.",
+        "description": "Planificateur de déroulés de séances pour les formateurs, animateurs et intervenants du CRFPE. Construisez votre agenda par glisser-déposer, sans inscription, sans cloud, sans frais.",
         "featureList": [
-          "Visuelle Timeline",
-          "Drag & Drop",
-          "Keine Anmeldung nötig",
-          "Teilen per Link",
-          "Automatische Zeitberechnung",
-          "Block-Bibliothek & Vorlagen"
+          "Frise visuelle",
+          "Glisser-déposer",
+          "Aucune inscription",
+          "Partage par lien",
+          "Calcul automatique des horaires",
+          "Bibliothèque de blocs et modèles"
         ],
         "author": {
-          "@type": "Person",
-          "@id": "https://sessionplan.de/#person",
-          "name": "Session planification",
-          "url": "https://sessionplan.de/"
+          "@type": "Organization",
+          "name": "CRFPE",
+          "url": "https://www.crfpe.fr/"
         },
-        "applicationSubCategory": "Project Management"
+        "applicationSubCategory": "Gestion de projet"
       }
     ]
   }

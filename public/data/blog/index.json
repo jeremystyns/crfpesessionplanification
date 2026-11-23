@@ -1,15 +1,14 @@
 {
     "posts": [
         {
-            "slug": "gute-workshops-gestalten",
-            "title": "Gute Workshops gestalten: Der vollständige Praxisguide",
-            "excerpt": "Was macht einen wirklich guten Workshop aus? Dieser Praxisguide zeigt, wie du mit klarem Design, passenden Methoden und der richtigen Haltung Workshops gestaltest, die etwas bewegen.",
+            "slug": "bien-animer-des-ateliers",
+            "title": "Bien animer des ateliers : le guide pratique complet",
+            "excerpt": "Qu'est-ce qui fait un atelier réussi ? Ce guide pratique montre comment concevoir des ateliers qui font avancer le groupe, grâce à une conception claire, des méthodes adaptées et la bonne posture.",
             "publishedDate": "2026-05-08",
             "tags": [
-                "Workshop-Facilitation",
-                "Workshop-Methoden",
-                "Workshop-Planung",
-                "Moderation",
+                "Animation d'atelier",
+                "Méthodes d'atelier",
+                "Planification d'atelier",
                 "Facilitation"
             ]
         }

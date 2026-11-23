@@ -7,13 +7,13 @@
  *
  * Locale-specific fields: hubs are locale-scoped content (hubs index is loaded
  * per-locale), so the slug is whatever the current locale uses
- * (e.g. "retrospektive" in DE / "retrospective" in EN). Use `alternates` to
+ * (e.g. "rétrospective" in FR / "retrospective" in EN). Use `alternates` to
  * link to the counterpart path in other locales.
  */
 import { type Locale } from '@/lib/i18n';
 
 export interface Hub {
-  /** URL slug for the hub (locale-specific, e.g. "retrospektive" or "retrospective"). */
+  /** URL slug for the hub (locale-specific, e.g. "retrospective" or "retrospective"). */
   slug: string;
   /** Visible H1 / title. */
   title: string;
@@ -28,7 +28,7 @@ export interface Hub {
   /**
    * Locale-specific counterpart paths, e.g.
    *   { en: '/en/templates/retrospective' } (when current locale is DE)
-   *   { de: '/templates/retrospektive' }     (when current locale is EN)
+   *   { fr: '/templates/retrospective' }     (when current locale is EN)
    */
   alternates?: Partial<Record<Locale, string>>;
   /**

@@ -8,7 +8,7 @@ import {
 
 describe('getLocalePrefix', () => {
   it('returns empty for de', () => {
-    expect(getLocalePrefix('de')).toBe('');
+    expect(getLocalePrefix('fr')).toBe('');
   });
   it('returns /en for en', () => {
     expect(getLocalePrefix('en')).toBe('/en');
@@ -20,13 +20,13 @@ describe('getLocalizedPath', () => {
     expect(getLocalizedPath('en', '/blog')).toBe('/en/blog');
   });
   it('returns the original path for de', () => {
-    expect(getLocalizedPath('de', '/blog')).toBe('/blog');
+    expect(getLocalizedPath('fr', '/blog')).toBe('/blog');
   });
 });
 
 describe('getLocaleRoot', () => {
   it('returns / for de', () => {
-    expect(getLocaleRoot('de')).toBe('/');
+    expect(getLocaleRoot('fr')).toBe('/');
   });
   it('returns /en for en', () => {
     expect(getLocaleRoot('en')).toBe('/en');
@@ -36,7 +36,7 @@ describe('getLocaleRoot', () => {
 describe('createSymmetricAlternates', () => {
   it('creates de + en alternates for a path', () => {
     expect(createSymmetricAlternates('/blog')).toEqual({
-      de: '/blog',
+      fr: '/blog',
       en: '/en/blog',
     });
   });

@@ -16,7 +16,7 @@ const baseProps = () => ({
   getEditorShareUrl: () => editorUrl, getReadOnlyShareUrl: () => readerUrl,
   canEditServerSession: true, isLegacyServerSession: false,
   onMigrateLegacyLink: vi.fn(async () => editorUrl), legacyMigrationStatus: 'new' as const,
-  snapshotUrl: 'http://localhost:3000/#data=example', dateLocale: 'de-DE',
+  snapshotUrl: 'http://localhost:3000/#data=example', dateLocale: 'fr-FR',
   canUndo: false, onUndo: vi.fn(), onMenuClick: vi.fn(),
 });
 let clipboard: ReturnType<typeof vi.fn>;

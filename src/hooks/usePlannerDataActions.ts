@@ -71,7 +71,7 @@ export const usePlannerDataActions = ({ plan, loadWorkshop }: UsePlannerDataActi
         all: t('settings.csv.all'),
       };
       const displayed = withDisplayNames(plan, t);
-      const csv = buildWorkshopCsv(displayed, labels, i18n.language === 'de' ? 'de' : 'en');
+      const csv = buildWorkshopCsv(displayed, labels, i18n.language === 'fr' ? 'fr' : 'en');
       downloadWorkshopCsv(displayed.workshop.title, csv);
       armFeedbackValuableAction('csv-export');
       toast.success(t('planner.exportSuccess'));

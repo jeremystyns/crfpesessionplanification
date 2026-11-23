@@ -108,24 +108,24 @@ const router = createBrowserRouter([
         loader: blogIndexLoader,
       },
       {
-        path: "/blog/workshop-methoden",
+        path: "/blog/methodes-d-atelier",
         lazy: lazyPage(() => import("./pages/BlogCategory")),
-        loader: (args) => blogCategoryLoader(args, 'workshop-methoden'),
+        loader: (args) => blogCategoryLoader(args, 'methodes-d-atelier'),
       },
       {
-        path: "/blog/sessionplan-neuigkeiten",
+        path: "/blog/actualites",
         lazy: lazyPage(() => import("./pages/BlogCategory")),
-        loader: (args) => blogCategoryLoader(args, 'sessionplan-neuigkeiten'),
+        loader: (args) => blogCategoryLoader(args, 'actualites'),
       },
       {
-        path: "/blog/tool-tipps",
+        path: "/blog/astuces-outil",
         lazy: lazyPage(() => import("./pages/BlogCategory")),
-        loader: (args) => blogCategoryLoader(args, 'tool-tipps'),
+        loader: (args) => blogCategoryLoader(args, 'astuces-outil'),
       },
       {
-        path: "/blog/ki-im-workshop",
+        path: "/blog/ia-en-atelier",
         lazy: lazyPage(() => import("./pages/BlogCategory")),
-        loader: (args) => blogCategoryLoader(args, 'ki-im-workshop'),
+        loader: (args) => blogCategoryLoader(args, 'ia-en-atelier'),
       },
       {
         path: "/blog/:slug",
@@ -138,9 +138,9 @@ const router = createBrowserRouter([
         loader: templatesIndexLoader,
       },
       {
-        path: "/templates/retrospektive",
+        path: "/templates/retrospective",
         lazy: lazyPage(() => import("./pages/TemplateCategory")),
-        loader: (args) => templateCategoryLoader(args, 'retrospektive'),
+        loader: (args) => templateCategoryLoader(args, 'retrospective'),
       },
       {
         path: "/templates/liberating-structures",
@@ -148,14 +148,14 @@ const router = createBrowserRouter([
         loader: (args) => templateCategoryLoader(args, 'liberating-structures'),
       },
       {
-        path: "/templates/workshop",
+        path: "/templates/atelier",
         lazy: lazyPage(() => import("./pages/TemplateCategory")),
-        loader: (args) => templateCategoryLoader(args, 'workshop'),
+        loader: (args) => templateCategoryLoader(args, 'atelier'),
       },
       {
-        path: "/templates/entscheidung",
+        path: "/templates/decision",
         lazy: lazyPage(() => import("./pages/TemplateCategory")),
-        loader: (args) => templateCategoryLoader(args, 'entscheidung'),
+        loader: (args) => templateCategoryLoader(args, 'decision'),
       },
       {
         path: "/templates/:slug",
@@ -168,24 +168,24 @@ const router = createBrowserRouter([
         loader: landingPagesLoader,
       },
       {
-        path: "/landing-pages/workshops",
+        path: "/landing-pages/ateliers",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'workshops'),
+        loader: (args) => landingPageHubLoader(args, 'ateliers'),
       },
       {
-        path: "/landing-pages/events",
+        path: "/landing-pages/evenements",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'events'),
+        loader: (args) => landingPageHubLoader(args, 'evenements'),
       },
       {
-        path: "/landing-pages/feiern-feste",
+        path: "/landing-pages/fetes",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'feiern-feste'),
+        loader: (args) => landingPageHubLoader(args, 'fetes'),
       },
       {
-        path: "/landing-pages/bildung-unterricht",
+        path: "/landing-pages/education-enseignement",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'bildung-unterricht'),
+        loader: (args) => landingPageHubLoader(args, 'education-enseignement'),
       },
       {
         path: "/404",
@@ -251,7 +251,7 @@ const router = createBrowserRouter([
       {
         path: "/en/templates/workshop",
         lazy: lazyPage(() => import("./pages/TemplateCategory")),
-        loader: (args) => templateCategoryLoader(args, 'workshop'),
+        loader: (args) => templateCategoryLoader(args, 'atelier'),
       },
       {
         path: "/en/templates/decision",
@@ -269,14 +269,14 @@ const router = createBrowserRouter([
         loader: landingPagesLoader,
       },
       {
-        path: "/en/landing-pages/workshops",
+        path: "/en/landing-pages/ateliers",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'workshops'),
+        loader: (args) => landingPageHubLoader(args, 'ateliers'),
       },
       {
-        path: "/en/landing-pages/events",
+        path: "/en/landing-pages/evenements",
         lazy: lazyPage(() => import("./pages/LandingPageHub")),
-        loader: (args) => landingPageHubLoader(args, 'events'),
+        loader: (args) => landingPageHubLoader(args, 'evenements'),
       },
       {
         path: "/en/landing-pages/creative-production",

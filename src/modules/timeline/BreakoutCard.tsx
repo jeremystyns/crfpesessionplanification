@@ -157,7 +157,7 @@ export const BreakoutCard = ({
             iconClassName="h-3 w-3"
           />
           <ContainerDurationInput item={item} onUpdate={onUpdate} className="duration-input w-8 h-7 print:pb-0" />
-          <span className="text-xs text-muted-foreground">Min.</span>
+          <span className="text-xs text-muted-foreground">{t('planner.totalMin')}</span>
         </div>
       </div>
 
@@ -205,7 +205,7 @@ export const BreakoutCard = ({
               )}
               <div className="flex items-center gap-1">
                 <ContainerDurationInput item={item} onUpdate={onUpdate} className="w-12 h-6" />
-                <span className="text-muted-foreground">Min.</span>
+                <span className="text-muted-foreground">{t('planner.totalMin')}</span>
                 <DurationLockButton
                   isLocked={!!item.durationLocked}
                   onToggle={handleToggleDurationLock}

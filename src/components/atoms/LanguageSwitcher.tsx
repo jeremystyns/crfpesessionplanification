@@ -36,7 +36,7 @@ const variantStyles: Record<
   },
 };
 
-/** Shared DE/EN navigation used by the sidebar, content headers and footer. */
+/** Shared FR/EN navigation used by the sidebar, content headers and footer. */
 export const LanguageSwitcher = ({
   locale,
   getTargetUrl,
@@ -45,13 +45,13 @@ export const LanguageSwitcher = ({
   const { t } = useTranslation('common');
 
   if (variant === 'collapsed') {
-    const targetLocale = locale === 'de' ? 'en' : 'de';
+    const targetLocale = locale === 'fr' ? 'en' : 'fr';
     return (
       <Link
         to={getTargetUrl(targetLocale)}
         onClick={() => setSessionLanguageChoice(targetLocale)}
         className="icon-button text-xs font-semibold"
-        title={locale === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln'}
+        title={locale === 'fr' ? 'Switch to English' : 'Passer au français'}
       >
         <span>{locale.toUpperCase()}</span>
       </Link>
@@ -62,7 +62,7 @@ export const LanguageSwitcher = ({
 
   return (
     <div className={styles.container} aria-label={t('footer.language')}>
-      {(['de', 'en'] as Locale[]).map((targetLocale) => (
+      {(['fr', 'en'] as Locale[]).map((targetLocale) => (
         <Link
           key={targetLocale}
           to={getTargetUrl(targetLocale)}

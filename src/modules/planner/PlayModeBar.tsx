@@ -147,7 +147,7 @@ export const PlayModeBar = ({
               title={t('playMode.extend5Min')}
             >
               <ClockPlus className="h-3 w-3" />
-              5 <span className="hidden sm:inline">Min.</span>
+              5 <span className="hidden sm:inline">{t('planner.totalMin')}</span>
             </Button>
           )}
           <Button

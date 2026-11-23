@@ -190,7 +190,7 @@ export const BlockCard = ({
                   min={0}
                   onClick={(e) => e.stopPropagation()}
                 />
-                <span className="text-xs text-muted-foreground ml-2">Min.</span>
+                <span className="text-xs text-muted-foreground ml-2">{t('planner.totalMin')}</span>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ export const BlockCard = ({
                     onClick={(e) => e.stopPropagation()}
                   />
                   {/* Unit dropped on phones so time & duration fit one line in a half-width lane */}
-                  <span className="text-muted-foreground hidden sm:inline print:inline">Min.</span>
+                  <span className="text-muted-foreground hidden sm:inline print:inline">{t('planner.totalMin')}</span>
                 </div>
                 {/* Actions live here so the title keeps the full lane width */}
                 <div className="absolute top-0 right-0 hidden sm:block print:hidden">
@@ -308,7 +308,7 @@ export const BlockCard = ({
               className="duration-input w-8 h-7 print:pb-0"
               min={0}
             />
-            <span className="text-xs text-muted-foreground">Min.</span>
+            <span className="text-xs text-muted-foreground">{t('planner.totalMin')}</span>
           </div>
         </div>
       </div>
@@ -352,7 +352,7 @@ export const BlockCard = ({
                   className="w-12 h-6"
                   min={0}
                 />
-                <span className="text-muted-foreground">Min.</span>
+                <span className="text-muted-foreground">{t('planner.totalMin')}</span>
               </div>
             </div>
             <div className="flex justify-between gap-4 items-start">

@@ -119,7 +119,7 @@ export interface LandingPageContent {
   /**
    * Alternate URLs for other language versions of this page.
    * Keys are locale codes; values are the absolute path (no domain) for that locale.
-   * Example: { de: '/workshop-ablauf-planen', en: '/en/workshop-planning' }
+   * Example: { fr: '/creer-un-deroule-de-seance', en: '/en/workshop-planning' }
    */
   alternates?: Partial<Record<Locale, string>>;
 
