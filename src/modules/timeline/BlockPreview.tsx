@@ -1,6 +1,5 @@
-import { Button } from '@/components/primitives/button';
 import { useState } from 'react';
-import { AlignLeft, MapPin, Package, Plus, Target, type LucideIcon } from 'lucide-react';
+import { AlignLeft, MapPin, Package, Target, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { hasListSyntax, renderRichText } from '@/lib/textFormatting';
@@ -94,6 +93,7 @@ interface BlockPreviewProps {
   showFullText?: boolean;
   /** Conservé pour compatibilité : les champs sont désormais toujours empilés. */
   stackFields?: boolean;
+  /** Conservé pour compatibilité : les ajouts rapides au survol n'existent plus. */
   showEmptyPlaceholders?: boolean;
   onUpdate?: (updates: { objectives?: string; notes?: string; material?: string }) => void;
 }
@@ -141,7 +141,6 @@ export const BlockPreview = ({
   room,
   layout,
   showFullText = true,
-  showEmptyPlaceholders = true,
   onUpdate,
 }: BlockPreviewProps) => {
   const isMobile = useIsMobile();
@@ -161,7 +160,9 @@ export const BlockPreview = ({
     material: !!material || !!forced.material,
   };
 
-  if (!hasMeta && !active.objectives && !active.notes && !active.material && !canEdit) return null;
+  // Rien à montrer : pas de bloc vide. Objectifs, description et matériel s'ajoutent
+  // depuis la fenêtre d'édition (clic sur la carte ou menu « Modifier »).
+  if (!hasMeta && !active.objectives && !active.notes && !active.material) return null;
 
   const textField = (field: 'objectives' | 'notes', value: string | undefined) =>
     canEdit ? (
@@ -176,14 +177,6 @@ export const BlockPreview = ({
     ) : (
       <div className={showFullText ? 'whitespace-pre-wrap break-words' : 'line-clamp-2'}>{renderRichText(value || '')}</div>
     );
-
-  const candidates: FieldKey[] = organisational ? ['material'] : ['objectives', 'notes', 'material'];
-  const missing = candidates.filter((f) => !active[f]);
-  const addLabels: Record<FieldKey, string> = {
-    objectives: t('dialog.addObjectives'),
-    notes: t('dialog.addNotes'),
-    material: t('dialog.addMaterial'),
-  };
 
   return (
     <div className="relative mr-4 mt-3 text-sm text-[hsl(var(--content-text))]">
@@ -226,24 +219,6 @@ export const BlockPreview = ({
       )}
       </div>
 
-      {/* Ajouts rapides : posés dans la marge basse de la carte, sans en changer la hauteur. */}
-      {canEdit && showEmptyPlaceholders && missing.length > 0 && (
-        <div className="pointer-events-none absolute right-0 top-full z-10 flex gap-1 opacity-0 transition-opacity delay-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:delay-300 focus-within:pointer-events-auto focus-within:opacity-100 print:hidden">
-          {missing.map((field) => (
-            <Button
-              key={field}
-              variant="plain"
-              size="none"
-              type="button"
-              onClick={(e) => { e.stopPropagation(); force(field, true); }}
-              className="flex h-4 items-center gap-0.5 rounded-sm bg-card/90 px-1 text-[11px] leading-4 text-muted-foreground hover:text-foreground"
-            >
-              <Plus className="h-3 w-3 shrink-0" />
-              {addLabels[field]}
-            </Button>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
