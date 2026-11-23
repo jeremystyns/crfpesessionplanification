@@ -30,6 +30,18 @@ export interface PlayModeState {
   elapsedInCurrentBlock: number;
   currentBlockEffectiveDuration: number;
   soundPulse: number;
+  /** Temps en pause : le compte à rebours est figé jusqu'à `resume`. */
+  isPaused: boolean;
+  pause: () => void;
+  resume: () => void;
+  togglePause: () => void;
+  /** Passe au début de l'étape suivante / précédente (null : pas d'étape dans ce sens). */
+  canGoNext: boolean;
+  canGoPrevious: boolean;
+  goToNext: () => void;
+  goToPrevious: () => void;
+  /** Lance le live à partir d'un élément, ou, s'il tourne déjà, s'y rend (la pause est conservée). */
+  startFromItem: (itemId: string) => boolean;
   /** Minutes écoulées calculées à l'instant de l'appel (le tick de 5 s ne limite pas la précision). */
   getElapsedMinutes: () => number;
   activate: () => void;
@@ -48,6 +60,10 @@ export function usePlayMode(
   // Start of the scheduled window the user explicitly stopped — prevents its auto re-activation.
   const [stoppedWindow, setStoppedWindow] = useState<number | null>(null);
   const [soundPulse, setSoundPulse] = useState(0);
+  // Instant (ms) où le temps a été mis en pause ; null = le temps court.
+  const [pausedAt, setPausedAt] = useState<number | null>(null);
+  const pausedAtRef = useRef<number | null>(null);
+  pausedAtRef.current = pausedAt;
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), PLAY_MODE_TICK_MS);
@@ -84,18 +100,20 @@ export function usePlayMode(
   // Effective elapsed minutes:
   //  - Manual mode: from the moment the button was pressed
   //  - Auto mode: from the scheduled session start
+  // Le temps de référence est figé tant que le live est en pause.
+  const nowMs = pausedAt ?? now.getTime();
   const elapsedMinutes = useMemo(() => {
     if (manualStartedAt !== null) {
-      return Math.max(0, (now.getTime() - manualStartedAt.getTime()) / 60000);
+      return Math.max(0, (nowMs - manualStartedAt.getTime()) / 60000);
     }
     return Math.max(0, autoElapsedMinutes);
-  }, [manualStartedAt, now, autoElapsedMinutes]);
+  }, [manualStartedAt, nowMs, autoElapsedMinutes]);
 
   // Origine du temps écoulé : appui manuel sur « Live », sinon début programmé.
   const originRef = useRef<number | null>(null);
   originRef.current = manualStartedAt !== null ? manualStartedAt.getTime() : sessionStart ? sessionStart.getTime() : null;
   const getElapsedMinutes = useCallback(
-    () => (originRef.current === null ? 0 : Math.max(0, (Date.now() - originRef.current) / 60000)),
+    () => (originRef.current === null ? 0 : Math.max(0, ((pausedAtRef.current ?? Date.now()) - originRef.current) / 60000)),
     [],
   );
 
@@ -129,12 +147,87 @@ export function usePlayMode(
     // Start immediately from now, independent of scheduled time
     setManualStartedAt(new Date());
     setStoppedWindow(null);
+    setPausedAt(null);
   }, []);
 
   const deactivate = useCallback(() => {
     setManualStartedAt(null);
     setStoppedWindow(scheduledWindow);
+    setPausedAt(null);
   }, [scheduledWindow]);
+
+  const isActiveRef = useRef(isActive);
+  isActiveRef.current = isActive;
+  const sessionStartRef = useRef(sessionStart);
+  sessionStartRef.current = sessionStart;
+
+  const pause = useCallback(() => {
+    if (!isActiveRef.current || pausedAtRef.current !== null) return;
+    // Un live lancé par l'horaire programmé passe en mode manuel avec la même origine.
+    setManualStartedAt((prev) => prev ?? sessionStartRef.current);
+    setPausedAt(Date.now());
+  }, []);
+
+  const resume = useCallback(() => {
+    const at = pausedAtRef.current;
+    if (at === null) return;
+    const pausedFor = Date.now() - at;
+    // Décaler l'origine de la durée de la pause : le temps repart d'où il s'était arrêté.
+    setManualStartedAt((prev) => (prev ? new Date(prev.getTime() + pausedFor) : prev));
+    setPausedAt(null);
+  }, []);
+
+  const togglePause = useCallback(() => {
+    if (pausedAtRef.current !== null) resume();
+    else pause();
+  }, [pause, resume]);
+
+  /** Place le live à `minutes` depuis le début (la pause éventuelle est conservée). */
+  const seekTo = useCallback((minutes: number) => {
+    const base = pausedAtRef.current ?? Date.now();
+    setManualStartedAt(new Date(base - minutes * 60000));
+    setStoppedWindow(null);
+    setNow(new Date());
+  }, []);
+
+  // Débuts des étapes (éléments sans enfants), pour avancer ou reculer d'une étape.
+  const stepStarts = useMemo(() => {
+    const parents = new Set(flatBlocks.map((block) => block.parentId).filter(Boolean));
+    const starts = flatBlocks.filter((block) => !parents.has(block.id)).map((block) => block.startMin);
+    return [...new Set(starts)].sort((a, b) => a - b);
+  }, [flatBlocks]);
+
+  const nextTarget = isActive ? currentDisplay?.next?.startMin ?? null : null;
+  const previousTarget = useMemo(() => {
+    if (!isActive) return null;
+    const current = currentDisplay?.current ?? null;
+    const anchor = current ? current.startMin : elapsedMinutes;
+    const earlier = stepStarts.filter((start) => start < anchor - 1 / 60).pop();
+    if (earlier !== undefined) return earlier;
+    // Première étape : on la reprend depuis son début.
+    return current && elapsedMinutes - current.startMin > 3 / 60 ? current.startMin : null;
+  }, [isActive, currentDisplay, elapsedMinutes, stepStarts]);
+
+  const goToNext = useCallback(() => {
+    if (nextTarget !== null) seekTo(nextTarget);
+  }, [nextTarget, seekTo]);
+  const goToPrevious = useCallback(() => {
+    if (previousTarget !== null) seekTo(previousTarget);
+  }, [previousTarget, seekTo]);
+
+  const startFromItem = useCallback((itemId: string): boolean => {
+    const block = flatBlocks.find((candidate) => candidate.id === itemId);
+    if (!block) return false;
+    if (isActiveRef.current) {
+      seekTo(block.startMin);
+    } else {
+      setManualStartedAt(new Date(Date.now() - block.startMin * 60000));
+      setStoppedWindow(null);
+      setPausedAt(null);
+      setNow(new Date());
+    }
+    return true;
+  }, [flatBlocks, seekTo]);
 
   const previousAudioState = useRef<{
     isActive: boolean;
@@ -196,6 +289,15 @@ export function usePlayMode(
     elapsedInCurrentBlock,
     currentBlockEffectiveDuration,
     soundPulse,
+    isPaused: pausedAt !== null,
+    pause,
+    resume,
+    togglePause,
+    canGoNext: nextTarget !== null,
+    canGoPrevious: previousTarget !== null,
+    goToNext,
+    goToPrevious,
+    startFromItem,
     getElapsedMinutes,
     activate,
     deactivate,

@@ -44,6 +44,12 @@ const baseProps = (over: Partial<LiveViewProps> = {}): LiveViewProps => ({
   persons: [],
   soundsEnabled: true,
   soundPulse: 0,
+  isPaused: false,
+  onTogglePause: vi.fn(),
+  canPrevious: true,
+  canNext: true,
+  onPrevious: vi.fn(),
+  onNext: vi.fn(),
   onToggleSounds: vi.fn(),
   onExtend: vi.fn(),
   onStop: vi.fn(),
@@ -143,6 +149,78 @@ describe('LiveFocusView', () => {
   it('says so when an item has no sheet content', () => {
     render(<LiveFocusView {...baseProps({ currentItem: item({}) })} onMinimize={() => {}} />);
     expect(screen.getByText('live.sheetEmpty')).toBeTruthy();
+  });
+});
+
+describe('LiveFocusView step and pause controls', () => {
+  it('goes to the previous and next steps with the buttons and the arrow keys', () => {
+    const onPrevious = vi.fn();
+    const onNext = vi.fn();
+    render(<LiveFocusView {...baseProps({ onPrevious, onNext })} onMinimize={() => {}} />);
+    fireEvent.click(screen.getByTitle('live.previous'));
+    fireEvent.click(screen.getByTitle('live.nextStep'));
+    expect(onPrevious).toHaveBeenCalledTimes(1);
+    expect(onNext).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    fireEvent.keyDown(window, { key: 'ArrowLeft' });
+    expect(onNext).toHaveBeenCalledTimes(2);
+    expect(onPrevious).toHaveBeenCalledTimes(2);
+  });
+
+  it('disables a direction when there is no step that way, keys included', () => {
+    const onPrevious = vi.fn();
+    const onNext = vi.fn();
+    render(<LiveFocusView {...baseProps({ canPrevious: false, canNext: false, onPrevious, onNext })} onMinimize={() => {}} />);
+    expect(screen.getByTitle('live.previous')).toBeDisabled();
+    expect(screen.getByTitle('live.nextStep')).toBeDisabled();
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    fireEvent.keyDown(window, { key: 'ArrowLeft' });
+    expect(onNext).not.toHaveBeenCalled();
+    expect(onPrevious).not.toHaveBeenCalled();
+  });
+
+  it('pauses with the button or the space bar', () => {
+    const onTogglePause = vi.fn();
+    render(<LiveFocusView {...baseProps({ onTogglePause })} onMinimize={() => {}} />);
+    fireEvent.click(screen.getByTitle('live.pause'));
+    fireEvent.keyDown(window, { key: ' ' });
+    expect(onTogglePause).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not double the action when the space bar hits a focused button', () => {
+    const onTogglePause = vi.fn();
+    render(<LiveFocusView {...baseProps({ onTogglePause })} onMinimize={() => {}} />);
+    fireEvent.keyDown(screen.getByTitle('live.pause'), { key: ' ' });
+    expect(onTogglePause).not.toHaveBeenCalled();
+  });
+
+  it('shows the paused state and offers to resume', () => {
+    render(<LiveFocusView {...baseProps({ isPaused: true })} onMinimize={() => {}} />);
+    expect(screen.getAllByText('live.paused').length).toBeGreaterThan(0);
+    expect(screen.getByTitle('live.resume')).toBeTruthy();
+    expect(screen.queryByTitle('live.pause')).toBeNull();
+    expect(screen.getByRole('timer').className).not.toContain('critical');
+  });
+});
+
+describe('LiveFloatingCell step and pause controls', () => {
+  it('has the same previous, pause and next controls', () => {
+    const onPrevious = vi.fn();
+    const onNext = vi.fn();
+    const onTogglePause = vi.fn();
+    render(<LiveFloatingCell {...baseProps({ onPrevious, onNext, onTogglePause })} onExpand={() => {}} />);
+    fireEvent.click(screen.getByTitle('live.previous'));
+    fireEvent.click(screen.getByTitle('live.pause'));
+    fireEvent.click(screen.getByTitle('live.nextStep'));
+    expect(onPrevious).toHaveBeenCalledTimes(1);
+    expect(onTogglePause).toHaveBeenCalledTimes(1);
+    expect(onNext).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the paused state in its header', () => {
+    render(<LiveFloatingCell {...baseProps({ isPaused: true })} onExpand={() => {}} />);
+    expect(screen.getByTestId('live-floating-cell').textContent).toContain('live.paused');
+    expect(screen.getByTitle('live.resume')).toBeTruthy();
   });
 });
 

@@ -1,8 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Lock } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
+import { LiveStartButton } from './LiveStartButton';
 
 interface ItemStartTimeProps {
+  /** Élément concerné : permet le bouton « Live » à gauche de l'heure. */
+  itemId?: string;
   time: string;
   isFixed: boolean;
   onUnlock: () => void;
@@ -15,6 +18,7 @@ interface ItemStartTimeProps {
 
 /** An item's start time, opening the time field, plus the button that releases a fixed time. */
 export const ItemStartTime = ({
+  itemId,
   time,
   isFixed,
   onUnlock,
@@ -28,6 +32,7 @@ export const ItemStartTime = ({
 
   return (
     <div className={className}>
+      {itemId && <LiveStartButton itemId={itemId} />}
       {isFixed && (
         <Button
           variant="plain"

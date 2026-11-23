@@ -7,7 +7,7 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, BellOff, CheckCircle2, ChevronRight, ClockPlus, Hourglass, Maximize, Minimize, Minimize2, Radio, Square } from 'lucide-react';
+import { Bell, BellOff, CheckCircle2, ChevronRight, ClockPlus, Hourglass, Maximize, Minimize, Minimize2, Pause, Play, Radio, SkipBack, SkipForward, Square } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { useLiveClock, useSoundPulse } from '@/hooks/useLiveClock';
 import { useTypeTitleColor } from '@/hooks/useTypeTitleColor';
@@ -21,18 +21,21 @@ export const PRESSURE_BAR = {
   normal: 'bg-primary',
   warning: 'bg-[#DC8319]',
   critical: 'bg-[#E75145]',
+  paused: 'bg-muted-foreground/60',
 } as const;
 
 const PRESSURE_STROKE = {
   normal: 'stroke-primary',
   warning: 'stroke-[#DC8319]',
   critical: 'stroke-[#E75145]',
+  paused: 'stroke-muted-foreground/60',
 } as const;
 
 export const PRESSURE_TEXT = {
   normal: 'text-[hsl(var(--content-text))]',
   warning: 'text-[#B86A0C] dark:text-[#F99D1D]',
   critical: 'text-[#C00000] dark:text-[#F3A59F]',
+  paused: 'text-muted-foreground',
 } as const;
 
 interface LiveFocusViewProps extends LiveViewProps {
@@ -56,6 +59,12 @@ export const LiveFocusView = ({
   dayRoom,
   soundsEnabled,
   soundPulse,
+  isPaused,
+  onTogglePause,
+  canPrevious,
+  canNext,
+  onPrevious,
+  onNext,
   onToggleSounds,
   onExtend,
   onStop,
@@ -69,14 +78,26 @@ export const LiveFocusView = ({
   const nextColor = useTypeTitleColor(nextType?.color);
   const locale = i18n.language === 'en' ? 'en-GB' : 'fr-FR';
 
-  // Échap réduit la vue (la touche quitte d'abord le plein écran du navigateur).
+  // Échap réduit la vue (la touche quitte d'abord le plein écran du navigateur) ;
+  // ← / → changent d'étape, Espace met en pause ou reprend.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !document.fullscreenElement) onMinimize();
+      if (event.key === 'Escape' && !document.fullscreenElement) {
+        onMinimize();
+        return;
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target instanceof Element ? event.target : null;
+      // Les flèches fonctionnent même après un clic sur un bouton ; elles restent au champ de saisie.
+      if (target?.closest('input[type="text"], input:not([type]), textarea, select')) return;
+      if (event.key === 'ArrowRight' && canNext) { event.preventDefault(); onNext(); }
+      else if (event.key === 'ArrowLeft' && canPrevious) { event.preventDefault(); onPrevious(); }
+      // Espace active déjà un bouton ou une case qui a le focus : on ne double pas l'action.
+      else if (event.key === ' ' && !target?.closest('button, [role="checkbox"], a')) { event.preventDefault(); onTogglePause(); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onMinimize]);
+  }, [onMinimize, onNext, onPrevious, onTogglePause, canNext, canPrevious]);
 
   const [browserFullscreen, setBrowserFullscreen] = useState(false);
   useEffect(() => {
@@ -92,7 +113,9 @@ export const LiveFocusView = ({
     else void document.documentElement.requestFullscreen?.().catch(() => undefined);
   };
 
-  const { mode, pressure } = clock;
+  const { mode } = clock;
+  // En pause, le compte à rebours est grisé : la couleur d'urgence ne s'applique plus.
+  const pressure = isPaused ? 'paused' : clock.pressure;
   const sheetItem = mode === 'running' ? currentItem : mode === 'waiting' ? nextItem : null;
   const waitingFor = mode === 'waiting' ? display.next : null;
   const title = mode === 'running' ? currentItem?.title ?? display.label ?? '' : waitingFor?.title ?? '';
@@ -126,16 +149,35 @@ export const LiveFocusView = ({
       </div>
 
       <header className="flex shrink-0 flex-wrap items-center gap-3 border-b px-4 py-2 sm:px-8">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-primary-text">
-          <Radio className="h-3.5 w-3.5 animate-pulse" aria-hidden />
-          {t('live.badge')}
+        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-wide',
+          isPaused ? 'bg-[#DC8319]/15 text-[#8A4F00] dark:text-[#F99D1D]' : 'bg-primary/10 text-primary-text')}>
+          {isPaused ? <Pause className="h-3.5 w-3.5" aria-hidden /> : <Radio className="h-3.5 w-3.5 animate-pulse" aria-hidden />}
+          {t(isPaused ? 'live.paused' : 'live.badge')}
         </span>
         {dayLabel && (
           <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">{dayLabel}</span>
         )}
         <span className="text-sm font-medium tabular-nums text-muted-foreground" title={t('live.clock')}>{nowClock}</span>
 
-        <div className="ml-auto flex items-center gap-1.5">
+        <div className="ml-auto flex flex-wrap items-center gap-1.5">
+          {/* Étape précédente · pause · étape suivante */}
+          <div className="flex items-center gap-1 rounded-lg border bg-card p-0.5" role="group" aria-label={t('live.stepControls')}>
+            <Button variant="ghost" size="icon" className={iconButton} onClick={onPrevious} disabled={!canPrevious}
+              title={t('live.previous')} aria-label={t('live.previous')}>
+              <SkipBack className="h-4 w-4" />
+            </Button>
+            {mode !== 'ended' && (
+              <Button variant={isPaused ? 'default' : 'ghost'} size="sm" className="h-9 gap-1.5 px-3" onClick={onTogglePause}
+                title={t(isPaused ? 'live.resume' : 'live.pause')} aria-pressed={isPaused}>
+                {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                <span className="hidden sm:inline">{t(isPaused ? 'live.resumeShort' : 'live.pauseShort')}</span>
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" className={iconButton} onClick={onNext} disabled={!canNext}
+              title={t('live.nextStep')} aria-label={t('live.nextStep')}>
+              <SkipForward className="h-4 w-4" />
+            </Button>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -229,7 +271,12 @@ export const LiveFocusView = ({
                     pressure === 'critical' && 'animate-pulse')}>
                     {formatCountdown(countdownSeconds)}
                   </span>
-                  {mode === 'running' && (
+                  {isPaused ? (
+                    <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#DC8319]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#8A4F00] dark:text-[#F99D1D]">
+                      <Pause className="h-3 w-3" aria-hidden />
+                      {t('live.paused')}
+                    </span>
+                  ) : mode === 'running' && (
                     <span className="mt-2 text-sm tabular-nums text-muted-foreground">
                       {t('live.range', { start: startClock, end: endClock })}
                     </span>

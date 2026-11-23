@@ -19,6 +19,14 @@ export interface LiveViewProps {
   dayRoom?: string;
   soundsEnabled: boolean;
   soundPulse: number;
+  /** Temps en pause. */
+  isPaused: boolean;
+  onTogglePause: () => void;
+  /** Étape précédente / suivante (désactivées quand il n'y en a pas). */
+  canPrevious: boolean;
+  canNext: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
   onToggleSounds: () => void;
   onExtend: () => void;
   onStop: () => void;

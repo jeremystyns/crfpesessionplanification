@@ -124,6 +124,7 @@ export const BreakoutCard = ({
   const maxBlocksInLane = blocksInLanes && Math.max(...blocksInLanes);
 
   const startTimeProps = {
+    itemId: item.id,
     isFixed: !!item.fixedStartTime,
     onUnlock: () => onUpdate({ fixedStartTime: undefined }),
     onEdit: onEditDetailsOnTime ?? onEditDetails,

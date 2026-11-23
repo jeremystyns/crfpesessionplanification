@@ -51,6 +51,7 @@ import { Timeline } from '@/modules/timeline/Timeline';
 import { Sidebar } from '@/modules/sidebar/Sidebar';
 import { DragOverlayContent } from '@/modules/timeline/DragOverlayContent';
 import { findAncestorTitles } from '@/lib/liveFocus';
+import { LiveStartContext } from '@/contexts/LiveStartContext';
 import { LiveFocusView } from '@/modules/planner/live/LiveFocusView';
 import { LiveFloatingCell } from '@/modules/planner/live/LiveFloatingCell';
 import { PageFooter } from '../layout/PageFooter';
@@ -265,6 +266,12 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
         dayRoom: liveDay.workshop.room,
         soundsEnabled: playModeSounds,
         soundPulse: playMode.soundPulse,
+        isPaused: playMode.isPaused,
+        onTogglePause: playMode.togglePause,
+        canPrevious: playMode.canGoPrevious,
+        canNext: playMode.canGoNext,
+        onPrevious: playMode.goToPrevious,
+        onNext: playMode.goToNext,
         onToggleSounds: () => preferences.setPlayModeSounds(!playModeSounds),
         onExtend: () => {
           const currentBlock = liveDisplay.current;
@@ -468,6 +475,7 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
       {planHasItems && (
         <Helmet><title>{formatTitle(getWorkshopTitle(activeDay.workshop.title, t))}</title></Helmet>
       )}
+      <LiveStartContext.Provider value={{ isLive: playMode.isActive, startFrom: (itemId) => { playMode.startFromItem(itemId); } }}>
       <DragDropProvider value={{ activeId, activeData, activeParentId, dropIndicator }}>
         {/* Planner chrome stays at the top; page-provided empty content follows it. */}
         <div
@@ -641,6 +649,7 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
 
       </div>
       </DragDropProvider>
+      </LiveStartContext.Provider>
 
       {/* Drag Overlay */}
       <DragOverlay>

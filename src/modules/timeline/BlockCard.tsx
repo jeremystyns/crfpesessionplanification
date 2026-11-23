@@ -92,6 +92,7 @@ export const BlockCard = ({
   };
 
   const startTimeProps = {
+    itemId: item.id,
     isFixed: !!item.fixedStartTime,
     onUnlock: () => onUpdate({ fixedStartTime: undefined }),
     onEdit: onEditDetailsOnTime ?? onEditDetails,

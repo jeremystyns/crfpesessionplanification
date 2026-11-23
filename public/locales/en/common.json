@@ -590,6 +590,16 @@
     "placeSection": "Venue and layout",
     "people": "People",
     "floatingCell": "Live mode, minimised",
-    "dragHandle": "Move the cell (drag, or keyboard arrow keys)"
+    "dragHandle": "Move the cell (drag, or keyboard arrow keys)",
+    "pause": "Pause (Space)",
+    "resume": "Resume (Space)",
+    "pauseShort": "Pause",
+    "resumeShort": "Resume",
+    "paused": "Paused",
+    "previous": "Previous step (←)",
+    "nextStep": "Next step (→)",
+    "stepControls": "Step navigation",
+    "startHere": "Start live mode from this item",
+    "goHere": "Jump to this item in live mode"
   }
 }

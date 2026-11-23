@@ -590,6 +590,16 @@
     "placeSection": "Lieu et disposition",
     "people": "Personnes",
     "floatingCell": "Mode direct réduit",
-    "dragHandle": "Déplacer la cellule (glisser, ou flèches du clavier)"
+    "dragHandle": "Déplacer la cellule (glisser, ou flèches du clavier)",
+    "pause": "Mettre en pause (Espace)",
+    "resume": "Reprendre (Espace)",
+    "pauseShort": "Pause",
+    "resumeShort": "Reprendre",
+    "paused": "En pause",
+    "previous": "Étape précédente (←)",
+    "nextStep": "Étape suivante (→)",
+    "stepControls": "Navigation entre les étapes",
+    "startHere": "Lancer le direct à partir de cet élément",
+    "goHere": "Aller à cet élément dans le direct"
   }
 }

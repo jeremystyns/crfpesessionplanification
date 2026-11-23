@@ -24,7 +24,10 @@ export function useLiveDay(
   const liveDay = useMemo(() => projectDay(plan, liveDayId), [plan, liveDayId]);
   const liveDayDuration = calculateEffectiveDuration(liveDay.items, liveDay.workshop.startTime);
   const basePlayMode = usePlayMode(liveDay, liveDayDuration, soundsEnabled);
-  const { activate: activateDay, deactivate: deactivateDay } = basePlayMode;
+  const { activate: activateDay, deactivate: deactivateDay, startFromItem: startItem } = basePlayMode;
+  // Départ demandé depuis un élément d'un autre jour que celui qui tourne : on attend que
+  // le live ait basculé sur le jour visible avant de se placer sur l'élément.
+  const [pendingStartId, setPendingStartId] = useState<string | null>(null);
 
   // Only a multi-day plan can tell: collapsing to one day drops the stored day IDs.
   const manualDayDeleted = manualDayId !== null && isMultiDay(plan)
@@ -36,6 +39,12 @@ export function useLiveDay(
     deactivateDay();
   }, [manualDayDeleted, deactivateDay]);
 
+  useEffect(() => {
+    if (pendingStartId === null || liveDayId !== activeDayId || manualDayId !== activeDayId) return;
+    startItem(pendingStartId);
+    setPendingStartId(null);
+  }, [pendingStartId, liveDayId, activeDayId, manualDayId, startItem]);
+
   return {
     liveDayId,
     playMode: {
@@ -46,7 +55,16 @@ export function useLiveDay(
       },
       deactivate: () => {
         setManualDayId(null);
+        setPendingStartId(null);
         deactivateDay();
+      },
+      startFromItem: (itemId: string) => {
+        // Le live tourne déjà sur ce jour : on s'y rend (la pause est conservée).
+        if (basePlayMode.isActive && liveDayId === activeDayId) return startItem(itemId);
+        setManualDayId(activeDayId);
+        if (liveDayId === activeDayId) return startItem(itemId);
+        setPendingStartId(itemId);
+        return true;
       },
     },
   };

@@ -109,6 +109,7 @@ export const GroupCard = ({
   const durationDifference = item.duration - calculateChildrenDuration(item.children);
   const totalBlocks = item.children?.length || 0;
   const startTimeProps = {
+    itemId: item.id,
     isFixed: !!item.fixedStartTime,
     onUnlock: () => onUpdate({ fixedStartTime: undefined }),
     onEdit: onEditDetailsOnTime ?? onEditDetails,

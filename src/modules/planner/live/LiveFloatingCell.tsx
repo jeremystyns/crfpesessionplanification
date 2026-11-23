@@ -8,7 +8,7 @@
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronRight, ClockPlus, GripVertical, Maximize2, Radio, Square } from 'lucide-react';
+import { ChevronRight, ClockPlus, GripVertical, Maximize2, Pause, Play, Radio, SkipBack, SkipForward, Square } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { useLiveClock } from '@/hooks/useLiveClock';
 import { useTypeTitleColor } from '@/hooks/useTypeTitleColor';
@@ -51,6 +51,12 @@ export const LiveFloatingCell = ({
   currentItem,
   currentType,
   nextItem,
+  isPaused,
+  onTogglePause,
+  canPrevious,
+  canNext,
+  onPrevious,
+  onNext,
   onExtend,
   onStop,
   onExpand,
@@ -122,7 +128,8 @@ export const LiveFloatingCell = ({
     storePosition(next);
   };
 
-  const { mode, pressure } = clock;
+  const { mode } = clock;
+  const pressure = isPaused ? 'paused' : clock.pressure;
   const running = mode === 'running';
   const title = running ? currentItem?.title ?? display.label ?? '' : mode === 'waiting' ? display.next?.title ?? '' : t('playMode.sessionEnded');
   const remainingPct = running ? Math.round((1 - clock.progress) * 100) : mode === 'ended' ? 0 : 100;
@@ -152,8 +159,8 @@ export const LiveFloatingCell = ({
         className="flex cursor-grab touch-none items-center gap-1.5 bg-primary px-1.5 py-1 text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-        <Radio className="h-3.5 w-3.5 shrink-0 animate-pulse" aria-hidden />
-        <span className="text-[11px] font-bold uppercase tracking-wide">{t('live.badge')}</span>
+        {isPaused ? <Pause className="h-3.5 w-3.5 shrink-0" aria-hidden /> : <Radio className="h-3.5 w-3.5 shrink-0 animate-pulse" aria-hidden />}
+        <span className="text-[11px] font-bold uppercase tracking-wide">{t(isPaused ? 'live.paused' : 'live.badge')}</span>
         {dayLabel && <span className="truncate rounded-full bg-primary-foreground/20 px-1.5 text-[11px]">{dayLabel}</span>}
         <span className="ml-auto flex items-center">
           {running && (
@@ -204,6 +211,24 @@ export const LiveFloatingCell = ({
             </div>
           </div>
         )}
+
+        {/* Étape précédente · pause · étape suivante */}
+        <div className="flex items-center justify-center gap-1" role="group" aria-label={t('live.stepControls')}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onPrevious} disabled={!canPrevious}
+            title={t('live.previous')} aria-label={t('live.previous')}>
+            <SkipBack className="h-4 w-4" />
+          </Button>
+          {mode !== 'ended' && (
+            <Button variant={isPaused ? 'default' : 'secondary'} size="icon" className="h-8 w-10" onClick={onTogglePause}
+              title={t(isPaused ? 'live.resume' : 'live.pause')} aria-label={t(isPaused ? 'live.resume' : 'live.pause')} aria-pressed={isPaused}>
+              {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </Button>
+          )}
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onNext} disabled={!canNext}
+            title={t('live.nextStep')} aria-label={t('live.nextStep')}>
+            <SkipForward className="h-4 w-4" />
+          </Button>
+        </div>
 
         {nextTitle && (
           <p className="flex items-center gap-1 border-t pt-2 text-xs text-muted-foreground">
