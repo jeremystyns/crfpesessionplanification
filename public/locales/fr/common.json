@@ -563,5 +563,33 @@
     "table": "Autour d'une table",
     "islands": "En îlots",
     "free": "Libre"
+  },
+  "live": {
+    "title": "Mode direct",
+    "badge": "En direct",
+    "clock": "Heure actuelle",
+    "progress": "Avancement de l'élément en cours",
+    "remaining": "Temps restant",
+    "startsIn": "Début dans",
+    "startsAt": "Début à {{time}}",
+    "startsAtIn": "Début à {{time}} (dans {{in}})",
+    "range": "{{start}} → {{end}}",
+    "next": "Ensuite",
+    "nextNone": "Dernier élément de la séance.",
+    "waiting": "En attente du prochain élément",
+    "endedHint": "Tous les éléments de la séance sont passés.",
+    "closeLive": "Fermer le mode direct",
+    "minimize": "Réduire en cellule flottante (Échap)",
+    "minimizeShort": "Réduire",
+    "stopShort": "Arrêter",
+    "expand": "Agrandir en plein écran",
+    "fullscreen": "Plein écran du navigateur",
+    "exitFullscreen": "Quitter le plein écran du navigateur",
+    "sheet": "Fiche de l'élément",
+    "sheetEmpty": "Aucune fiche détaillée pour cet élément.",
+    "placeSection": "Lieu et disposition",
+    "people": "Personnes",
+    "floatingCell": "Mode direct réduit",
+    "dragHandle": "Déplacer la cellule (glisser, ou flèches du clavier)"
   }
 }

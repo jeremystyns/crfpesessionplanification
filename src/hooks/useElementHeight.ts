@@ -3,7 +3,7 @@
  *
  * Role: small utility used by overlays/strips that need to position themselves
  *       relative to a dynamic sibling (e.g. a sticky header that grows with
- *       banners, PlayModeBar, etc.). Size changes are tracked via
+ *       banners, the live view, etc.). Size changes are tracked via
  *       ResizeObserver (fast path) plus a lightweight watchdog interval
  *       (fallback path).
  *

@@ -563,5 +563,33 @@
     "table": "Around a table",
     "islands": "Islands",
     "free": "Free"
+  },
+  "live": {
+    "title": "Live mode",
+    "badge": "Live",
+    "clock": "Current time",
+    "progress": "Progress of the current item",
+    "remaining": "Time left",
+    "startsIn": "Starts in",
+    "startsAt": "Starts at {{time}}",
+    "startsAtIn": "Starts at {{time}} (in {{in}})",
+    "range": "{{start}} → {{end}}",
+    "next": "Next",
+    "nextNone": "Last item of the session.",
+    "waiting": "Waiting for the next item",
+    "endedHint": "All items of the session are over.",
+    "closeLive": "Close live mode",
+    "minimize": "Shrink to a floating cell (Esc)",
+    "minimizeShort": "Shrink",
+    "stopShort": "Stop",
+    "expand": "Expand to full screen",
+    "fullscreen": "Browser full screen",
+    "exitFullscreen": "Exit browser full screen",
+    "sheet": "Item sheet",
+    "sheetEmpty": "No detailed sheet for this item.",
+    "placeSection": "Venue and layout",
+    "people": "People",
+    "floatingCell": "Live mode, minimised",
+    "dragHandle": "Move the cell (drag, or keyboard arrow keys)"
   }
 }

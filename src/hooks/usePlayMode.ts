@@ -30,6 +30,8 @@ export interface PlayModeState {
   elapsedInCurrentBlock: number;
   currentBlockEffectiveDuration: number;
   soundPulse: number;
+  /** Minutes écoulées calculées à l'instant de l'appel (le tick de 5 s ne limite pas la précision). */
+  getElapsedMinutes: () => number;
   activate: () => void;
   deactivate: () => void;
 }
@@ -88,6 +90,14 @@ export function usePlayMode(
     }
     return Math.max(0, autoElapsedMinutes);
   }, [manualStartedAt, now, autoElapsedMinutes]);
+
+  // Origine du temps écoulé : appui manuel sur « Live », sinon début programmé.
+  const originRef = useRef<number | null>(null);
+  originRef.current = manualStartedAt !== null ? manualStartedAt.getTime() : sessionStart ? sessionStart.getTime() : null;
+  const getElapsedMinutes = useCallback(
+    () => (originRef.current === null ? 0 : Math.max(0, (Date.now() - originRef.current) / 60000)),
+    [],
+  );
 
   const flatBlocks = useMemo(() => {
     const sessionStartMinutes = startTime ? timeToMinutes(startTime) : undefined;
@@ -186,6 +196,7 @@ export function usePlayMode(
     elapsedInCurrentBlock,
     currentBlockEffectiveDuration,
     soundPulse,
+    getElapsedMinutes,
     activate,
     deactivate,
   };

@@ -1,0 +1,13 @@
+import { useEffect, useState } from 'react';
+
+/** Heure courante (ms), rafraîchie toutes les `intervalMs` tant que `enabled`. */
+export const useNow = (intervalMs = 1000, enabled = true): number => {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!enabled) return;
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), intervalMs);
+    return () => window.clearInterval(id);
+  }, [intervalMs, enabled]);
+  return now;
+};

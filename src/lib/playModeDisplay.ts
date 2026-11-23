@@ -22,7 +22,7 @@ function breakoutChildLabel(parentTitle: string, children: FlatBlock[]): string 
 }
 
 /**
- * Resolves the current and next display items for the PlayModeBar.
+ * Resolves the current and next display items for the live views (full screen and floating cell).
  *
  * - For groups/breakouts: drills into the active child(ren) for "current".
  * - "next" shows the next child within the group/breakout if one exists;

@@ -50,15 +50,17 @@ import { WorkshopHeader } from '@/modules/planner/WorkshopHeader';
 import { Timeline } from '@/modules/timeline/Timeline';
 import { Sidebar } from '@/modules/sidebar/Sidebar';
 import { DragOverlayContent } from '@/modules/timeline/DragOverlayContent';
-import { PlayModeBar } from '@/modules/planner/PlayModeBar';
+import { findAncestorTitles } from '@/lib/liveFocus';
+import { LiveFocusView } from '@/modules/planner/live/LiveFocusView';
+import { LiveFloatingCell } from '@/modules/planner/live/LiveFloatingCell';
 import { PageFooter } from '../layout/PageFooter';
 import { useLiveDay } from '@/hooks/useLiveDay';
-import { getAllItems, getDayLabel, hasAnyItems } from '@/lib/workshop-days';
+import { getAllItems, getDayLabel, hasAnyItems, projectDay } from '@/lib/workshop-days';
 import { DayBoxes } from '@/modules/planner/DayBoxes';
 import { DayStrip } from '@/modules/planner/DayStrip';
 import { DayControls } from '@/modules/planner/DayControls';
 import { focusLastBlockTitleInput, scrollToLastBlock } from '@/lib/domUtils';
-import { createBlockOfType, createItemFromLibrary, createNewBreakout, createNewGroup, getWorkshopTitle } from '@/lib/workshopUtils';
+import { createBlockOfType, createItemFromLibrary, createNewBreakout, createNewGroup, findItemById, getWorkshopTitle } from '@/lib/workshopUtils';
 import { HeaderActionButtons } from '@/modules/planner/HeaderActionButtons';
 import { PlannerLoadingScreen } from '@/modules/planner/PlannerLoadingScreen';
 import { SyncStatusBanners } from '@/modules/planner/SyncStatusBanners';
@@ -207,7 +209,7 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
 
   // Ref + observed height of the sticky planner chrome. The TimeVisualizationStrip
   // positions itself just below this element so it never collides with the
-  // header, PlayModeBar, or incoming-update banners.
+  // header, the live floating cell, or incoming-update banners.
   const plannerHeaderRef = useRef<HTMLDivElement | null>(null);
   const plannerHeaderHeight = useElementHeight(plannerHeaderRef);
   const plannerControlsRef = useRef<HTMLDivElement | null>(null);
@@ -233,6 +235,46 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
   const { playMode, liveDayId } = useLiveDay(plan, activeDayId, playModeSounds);
   const liveDayLabel = multiDay && playMode.isActive
     ? getDayLabel(days, liveDayId, t)
+    : null;
+
+  // Mode Live : plein écran par défaut au démarrage, réductible en cellule flottante.
+  const [liveView, setLiveView] = useState<'full' | 'floating'>('full');
+  useEffect(() => {
+    if (playMode.isActive) setLiveView('full');
+  }, [playMode.isActive]);
+  const liveDay = useMemo(() => projectDay(plan, liveDayId), [plan, liveDayId]);
+  const liveDisplay = playMode.currentDisplay;
+  const liveCurrentItem = liveDisplay?.current ? findItemById(liveDay.items, liveDisplay.current.id) : null;
+  const liveNextItem = liveDisplay?.next ? findItemById(liveDay.items, liveDisplay.next.id) : null;
+  const liveParentTitle = liveDisplay?.current
+    ? (findAncestorTitles(liveDay.items, liveDisplay.current.id) ?? []).filter(Boolean).join(' › ') || null
+    : null;
+  const liveTypeOf = (item: typeof liveCurrentItem) => liveDay.blockTypes.find((bt) => bt.id === item?.blockTypeId);
+  const liveViewProps = liveDisplay
+    ? {
+        dayLabel: liveDayLabel,
+        display: liveDisplay,
+        getElapsedMinutes: playMode.getElapsedMinutes,
+        currentItem: liveCurrentItem,
+        currentType: liveTypeOf(liveCurrentItem),
+        parentTitle: liveParentTitle,
+        nextItem: liveNextItem,
+        nextType: liveTypeOf(liveNextItem),
+        persons: liveDay.persons ?? [],
+        dayLocation: liveDay.workshop.location,
+        dayRoom: liveDay.workshop.room,
+        soundsEnabled: playModeSounds,
+        soundPulse: playMode.soundPulse,
+        onToggleSounds: () => preferences.setPlayModeSounds(!playModeSounds),
+        onExtend: () => {
+          const currentBlock = liveDisplay.current;
+          if (currentBlock) {
+            updateItem(currentBlock.id, { duration: currentBlock.endMin - currentBlock.startMin + LIVE_MODE_EXTENSION_MINUTES });
+          }
+        },
+        onStop: playMode.deactivate,
+        onUpdateItem: updateItem,
+      }
     : null;
   const dayTabsProps = {
     days,
@@ -493,26 +535,6 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
               onSetPlayModeSounds={preferences.setPlayModeSounds}
             />
           </div>
-          {playMode.isActive && (
-            <PlayModeBar
-              dayLabel={liveDayLabel}
-              label={playMode.currentDisplay?.label ?? null}
-              prevLabel={playMode.currentDisplay?.prevLabel ?? null}
-              nextLabel={playMode.currentDisplay?.nextLabel ?? null}
-              elapsedInCurrentBlock={playMode.elapsedInCurrentBlock}
-              currentBlockDuration={playMode.currentBlockEffectiveDuration}
-              soundPulse={playMode.soundPulse}
-              onExtendBlock={() => {
-                const currentBlock = playMode.currentDisplay?.current;
-                if (currentBlock) {
-                  updateItem(currentBlock.id, { duration: currentBlock.endMin - currentBlock.startMin + LIVE_MODE_EXTENSION_MINUTES });
-                }
-              }}
-              soundsEnabled={playModeSounds}
-              onToggleSounds={() => preferences.setPlayModeSounds(!playModeSounds)}
-              onDeactivate={playMode.deactivate}
-            />
-          )}
           <SyncStatusBanners
             serverKey={serverKey}
             incomingUpdate={!!incomingUpdate}
@@ -650,6 +672,15 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
       {/* Optional in-app feedback prompt (card + dialog). Rendered last so
           its fixed-position layer sits above every planner surface; the hook
           keeps the variant `hidden` when FEEDBACK_API_URL is not configured. */}
+      {/* Mode Live : plein écran par défaut, ou cellule flottante déplaçable */}
+      {playMode.isActive && liveViewProps && (
+        liveView === 'full' ? (
+          <LiveFocusView {...liveViewProps} onMinimize={() => setLiveView('floating')} />
+        ) : (
+          <LiveFloatingCell {...liveViewProps} onExpand={() => setLiveView('full')} />
+        )
+      )}
+
       <FeedbackPromptLayer
         variant={feedbackPrompt.state}
         cardCountdownMs={feedbackPrompt.cardCountdownMs}

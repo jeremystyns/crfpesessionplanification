@@ -28,6 +28,8 @@ interface MaterialChecklistProps {
   /** Saisie d'une nouvelle entrée ouverte (pilotée par le parent, avec MaterialAddButton). */
   adding?: boolean;
   onAddingChange?: (adding: boolean) => void;
+  /** `lg` : lecture à distance (vue Live). */
+  size?: 'sm' | 'lg';
   className?: string;
 }
 
@@ -62,6 +64,7 @@ export const MaterialChecklist = ({
   editable = false,
   adding: addingProp,
   onAddingChange,
+  size = 'sm',
   className,
 }: MaterialChecklistProps) => {
   const { t } = useTranslation('common');
@@ -97,7 +100,7 @@ export const MaterialChecklist = ({
   const showAddInput = editable && (adding || entries.length === 0);
 
   return (
-    <ul className={cn('grid gap-y-1', TEXT, className)}>
+    <ul className={cn('grid gap-y-1', size === 'lg' ? 'gap-y-2 text-lg leading-7' : TEXT, className)}>
       {entries.map((entry, index) => (
         <li key={index} className="group/entry flex min-h-6 items-center gap-2">
           <Checkbox
@@ -105,7 +108,7 @@ export const MaterialChecklist = ({
             onCheckedChange={() => toggle(index)}
             onClick={(e) => e.stopPropagation()}
             aria-label={t('material.toggle', { name: entry.text })}
-            className="h-4 w-4 border-current"
+            className={cn('border-current', size === 'lg' ? 'h-5 w-5' : 'h-4 w-4')}
             disabled={!onChange}
           />
           {editable && editingIndex === index ? (
