@@ -64,10 +64,11 @@ const Index = () => {
       />
       <WorkshopPlanner
         prefillData={content.prefillData}
-        renderEmptyState={({ onAddBlock, onReopenSession }) => (
+        renderEmptyState={({ onAddBlock, onImportFile, onReopenSession }) => (
           <>
             <EmptyStateHero
               onAddBlock={onAddBlock}
+              onImportFile={onImportFile}
               landingPageContent={content}
               onReopenSession={onReopenSession}
             />

@@ -61,11 +61,13 @@ interface DayButtonProps {
   className?: string;
   onClick: () => void;
   onKeyDown: KeyboardEventHandler<HTMLButtonElement>;
+  /** Journée unique : le libellé s'affiche mais ne se modifie pas. */
+  readOnly?: boolean;
   children?: ReactNode;
 }
 
 export const DayButton = forwardRef<HTMLButtonElement, DayButtonProps>(
-  ({ days, index, isActive, isLive, dateLocale, className, onClick, onKeyDown, children }, ref) => {
+  ({ days, index, isActive, isLive, dateLocale, className, onClick, onKeyDown, readOnly = false, children }, ref) => {
     const { t } = useTranslation('common');
     const { withHint, hintAttrs } = useShortcutLabels();
     const day = days[index];
@@ -84,12 +86,14 @@ export const DayButton = forwardRef<HTMLButtonElement, DayButtonProps>(
         aria-current={isActive ? 'true' : undefined}
         title={index < 9 ? withHint(hint, 'selectDay', index + 1) : hint}
         {...(index < 9 ? hintAttrs('selectDay', index + 1) : {})}
-        onClick={onClick}
+        onClick={readOnly ? undefined : onClick}
         onKeyDown={onKeyDown}
+        tabIndex={readOnly ? -1 : undefined}
         className={cn(
           // The focus ring stays inside: the day's box clips everything beyond its edge.
           'relative flex items-center gap-1.5 self-stretch hover:text-foreground focus-visible:-outline-offset-2',
-          isActive && 'editable-field cursor-text',
+          isActive && !readOnly && 'editable-field cursor-text',
+          readOnly && 'cursor-default',
           className,
         )}
       >

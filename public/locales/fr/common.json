@@ -352,7 +352,15 @@
     "stopLiveMode": "Arrêter le mode direct",
     "setDateTime": "Indiquez la date et l'heure pour démarrer le mode direct",
     "lockDuration": "Verrouiller (fixer la durée cible)",
-    "unlockDuration": "Déverrouiller (réactiver le calcul automatique)"
+    "unlockDuration": "Déverrouiller (réactiver le calcul automatique)",
+    "participants": "Participants",
+    "participantsPlaceholder": "Nombre",
+    "location": "Lieu",
+    "locationPlaceholder": "Nom du lieu",
+    "room": "Salle",
+    "roomPlaceholder": "Numéro ou nom de la salle",
+    "infoCardLabel": "Description et organisation de la séance",
+    "displayOptions": "Options d'affichage"
   },
   "block": {
     "newBlock": "Nouveau bloc",
@@ -475,7 +483,8 @@
       "monthlyUsers": "Plus de {{value}} utilisateurs par mois",
       "disclosureLabel": "À propos de ces notes",
       "disclosure": "Les notes sont envoyées de façon anonyme via le formulaire de retour du planificateur. Elles ne sont pas vérifiées."
-    }
+    },
+    "openFile": "Ouvrir un fichier"
   },
   "sessionHistory": {
     "title": "Vos séances",

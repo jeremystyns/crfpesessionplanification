@@ -2,17 +2,10 @@ import { Button } from '@/components/primitives/button';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download, FileSpreadsheet, Keyboard, MessageSquare, Printer, RotateCcw, Sparkles, Upload } from 'lucide-react';
-import { Switch } from '@/components/primitives/switch';
 import { ThemeToggle } from './atoms/ThemeToggle';
 import { armFeedbackValuableAction } from '@/hooks/useFeedbackPrompt';
 
 interface SettingsPanelProps {
-  showFullPreviewText?: boolean;
-  onSetShowFullPreviewText?: (value: boolean) => void;
-  playModeSounds?: boolean;
-  onSetPlayModeSounds?: (value: boolean) => void;
-  timeVisualizationStrip?: boolean;
-  onSetTimeVisualizationStrip?: (value: boolean) => void;
   onExport?: () => void;
   onExportCsv?: () => void;
   onImport?: (file: File) => void;
@@ -25,12 +18,6 @@ interface SettingsPanelProps {
 }
 
 export const SettingsPanel = ({
-  showFullPreviewText,
-  onSetShowFullPreviewText,
-  playModeSounds,
-  onSetPlayModeSounds,
-  timeVisualizationStrip,
-  onSetTimeVisualizationStrip,
   onExport,
   onExportCsv,
   onImport,
@@ -49,48 +36,6 @@ export const SettingsPanel = ({
       className="absolute bottom-full left-0 right-0 bg-popover border-y shadow-[0_-4px_16px_rgba(0,0,0,0.08)] overflow-y-auto z-20"
     >
       <div className="py-2 space-y-1">
-        {onSetTimeVisualizationStrip && (
-          <div className="px-3 py-2 flex items-center justify-between gap-3">
-            <label htmlFor="time-visualization-strip-toggle" className="text-sm cursor-pointer">
-              {t('settings.timeVisualizationStrip')}
-            </label>
-            <Switch
-              id="time-visualization-strip-toggle"
-              checked={timeVisualizationStrip ?? false}
-              onCheckedChange={(checked) => onSetTimeVisualizationStrip(checked)}
-            />
-          </div>
-        )}
-
-        {onSetShowFullPreviewText && (
-          <div className="px-3 py-2 flex items-center justify-between gap-3">
-            <label htmlFor="truncate-description-toggle" className="text-sm cursor-pointer">
-              {t('settings.truncateDescription')}
-            </label>
-            <Switch
-              id="truncate-description-toggle"
-              checked={!(showFullPreviewText ?? true)}
-              onCheckedChange={(checked) => {
-                const newValue = !checked;
-                onSetShowFullPreviewText(newValue);
-              }}
-            />
-          </div>
-        )}
-
-        {onSetPlayModeSounds && (
-          <div className="px-3 py-2 flex items-center justify-between gap-3">
-            <label htmlFor="play-mode-sounds-toggle" className="text-sm cursor-pointer">
-              {t('settings.playModeSounds')}
-            </label>
-            <Switch
-              id="play-mode-sounds-toggle"
-              checked={playModeSounds ?? false}
-              onCheckedChange={(checked) => onSetPlayModeSounds(checked)}
-            />
-          </div>
-        )}
-
         <ThemeToggle />
 
         <div className="border-t pt-1 mt-1">

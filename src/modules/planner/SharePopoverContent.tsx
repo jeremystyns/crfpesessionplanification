@@ -60,26 +60,6 @@ export const SharePopoverContent = ({
             copiedLabel={t('planner.copyLinkCopied')}
             onClick={onCopyEditorLink}
           />
-          <Separator className="!my-5 sm:!my-2"  />
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="server-mode-toggle" className="text-sm font-medium">
-              {t('planner.permanentLink')}*
-            </Label>
-            {isEnablingServerMode ? (
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                {t('planner.permanentLinkCreating')}
-              </p>
-            ) : (
-              <Switch
-                id="server-mode-toggle"
-                checked={!!serverKey}
-                disabled={isEnablingServerMode}
-                onCheckedChange={onToggleServerMode}
-              />
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">* {t('planner.permanentLinkSyncsNote')}</p>
         </div>
       )}
 

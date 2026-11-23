@@ -8,7 +8,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu } from 'lucide-react';
+import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu, ListCollapse, ChartNoAxesGantt, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { Badge } from '@/components/primitives/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/primitives/tooltip';
@@ -55,7 +55,37 @@ interface HeaderActionButtonsProps {
   /** Notifies the parent when the share popover opens or closes (used by
    *  the optional feedback prompt to gate exit-intent / card eligibility). */
   onSharePopoverOpenChange?: (open: boolean) => void;
+  /** Affichage : descriptions tronquées, frise du temps, notifications sonores. */
+  showFullPreviewText?: boolean;
+  onSetShowFullPreviewText?: (value: boolean) => void;
+  timeVisualizationStrip?: boolean;
+  onSetTimeVisualizationStrip?: (value: boolean) => void;
+  playModeSounds?: boolean;
+  onSetPlayModeSounds?: (value: boolean) => void;
 }
+
+interface DisplayToggleProps {
+  pressed: boolean;
+  label: string;
+  icon: React.ReactNode;
+  onToggle: () => void;
+  className?: string;
+}
+
+/** Bouton d'option d'affichage : icône seule, état exposé par aria-pressed. */
+const DisplayToggle = ({ pressed, label, icon, onToggle, className }: DisplayToggleProps) => (
+  <Button
+    variant="ghost"
+    size="sm"
+    onClick={onToggle}
+    aria-pressed={pressed}
+    aria-label={label}
+    title={label}
+    className={cn(pressed && 'bg-accent text-primary-text', className)}
+  >
+    {icon}
+  </Button>
+);
 
 const PrintPlanButton = () => {
   const { t } = useTranslation('common');
@@ -112,6 +142,12 @@ export const HeaderActionButtons = ({
   hasActions = true,
   isReadOnly = false,
   onSharePopoverOpenChange,
+  showFullPreviewText = true,
+  onSetShowFullPreviewText,
+  timeVisualizationStrip = false,
+  onSetTimeVisualizationStrip,
+  playModeSounds = false,
+  onSetPlayModeSounds,
 }: HeaderActionButtonsProps) => {
   const { t } = useTranslation('common');
   const isMobile = useIsMobile();
@@ -270,6 +306,36 @@ export const HeaderActionButtons = ({
             <Undo2 className="h-4 w-4" />
           </Button>
         )}
+        {/* Options d'affichage, avant le bouton de lecture. */}
+        <div className="flex items-center" role="group" aria-label={t('planner.displayOptions')}>
+          {onSetShowFullPreviewText && (
+            <DisplayToggle
+              pressed={!showFullPreviewText}
+              label={t('settings.truncateDescription')}
+              icon={<ListCollapse className="h-4 w-4" />}
+              onToggle={() => onSetShowFullPreviewText(!showFullPreviewText)}
+            />
+          )}
+          {onSetTimeVisualizationStrip && (
+            <DisplayToggle
+              pressed={timeVisualizationStrip}
+              label={t('settings.timeVisualizationStrip')}
+              icon={<ChartNoAxesGantt className="h-4 w-4" />}
+              onToggle={() => onSetTimeVisualizationStrip(!timeVisualizationStrip)}
+              // La frise du temps n'existe qu'à partir de la largeur lg.
+              className="hidden lg:inline-flex"
+            />
+          )}
+          {onSetPlayModeSounds && (
+            <DisplayToggle
+              pressed={playModeSounds}
+              label={t('settings.playModeSounds')}
+              icon={playModeSounds ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              onToggle={() => onSetPlayModeSounds(!playModeSounds)}
+            />
+          )}
+        </div>
+        <Separator orientation="vertical" className="mx-1 hidden h-5 self-center md:block" />
         <Button
           variant={playMode.isActive ? 'default' : 'ghost'}
           size="sm"

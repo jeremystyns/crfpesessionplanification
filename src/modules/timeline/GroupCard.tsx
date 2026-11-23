@@ -133,9 +133,10 @@ export const GroupCard = ({
           onClick={onEditDetails}
           {...hoverHandlers}
           className={cn(
-            'group-title-area group cursor-pointer bg-block-group-bg border-2 border-dashed border-block-group/60 p-4 hover:bg-block-group/10 transition-colors print:border-gray-200 print:pr-1',
+            // En-tête sur fond bleu CRFPE #0e4e86, texte blanc (variables de thème redéfinies dans index.css).
+            'group-title-area group-header group cursor-pointer border-2 border-dashed border-[#0e4e86] p-4 transition-colors print:border-gray-200 print:pr-1',
             'relative',
-            isExpanded ? 'rounded-t-lg border-b-block-group/40' : 'rounded-lg',
+            isExpanded ? 'rounded-t-lg' : 'rounded-lg',
             playState === 'current' && 'border-primary',
           )}
           style={{ borderBottomStyle: isExpanded ? 'solid' : 'dashed', borderBottomWidth: isExpanded ? '.5px' : '2px' }}
@@ -209,15 +210,16 @@ export const GroupCard = ({
                     onCreateBelow={onCreateBelow}
                     onDeleteAndFocusPrev={onDeleteAndFocusPrev}
                     placeholderKey="block.groupTitlePlaceholder"
+                    className="text-lg font-bold"
                     onClick={(e) => e.stopPropagation()}
                   />
                 </div>
                 <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:justify-end">
                   {/* Group type label - mobile: text flush with the title above */}
                   <span
-                    className="inline-block -ml-2 sm:ml-0 text-xs px-2 py-0.5 rounded-full font-medium bg-block-group-bg text-block-group-foreground"
+                    className="inline-block -ml-2 sm:ml-0 text-xs px-2 py-0.5 rounded-full font-medium bg-white/15 text-white print:bg-transparent print:text-foreground"
                   >
-                    Gruppe
+                    {t('sidebar.group')}
                     {totalBlocks > 0 && (
                       <>
                         {' • '}
@@ -252,10 +254,10 @@ export const GroupCard = ({
           ref={setDroppableRef}
           className={cn(
             'group-children-area pt-6 pb-4 px-8 print:px-0 print:pr-1',
-            'border-2 border-dashed border-block-group/60 border-t-0 rounded-b-lg  print:border-gray-200',
+            'border-2 border-dashed border-[#0e4e86] border-t-0 rounded-b-lg  print:border-gray-200',
             'bg-block-group-bg',
             playState === 'current' && 'border-primary',
-            isOver && 'border-block-group/90 bg-block-group/10',
+            isOver && 'bg-block-group/10',
             (!item.children || item.children.length === 0) && 'min-h-[120px] sm:pl-40 '
           )}
         >

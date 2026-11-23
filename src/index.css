@@ -216,6 +216,31 @@
     @apply bg-card;
   }
 
+  /* En-tête d'un groupe : fond bleu #0e4e86, texte blanc. On redéfinit les
+     variables de thème dans la zone pour que tous les composants enfants
+     (icônes, badges, aperçus de notes, menus) deviennent lisibles sur ce fond.
+     À l'impression, on revient au rendu clair (les fonds ne s'impriment pas
+     toujours). */
+  @media screen {
+    .group-header {
+      background-color: #0e4e86;
+      color: #fff;
+      --foreground: 0 0% 100%;
+      --card-foreground: 0 0% 100%;
+      --muted-foreground: 208 70% 90%;
+      --primary-text: 0 0% 100%;
+      --muted: 208 76% 28%;
+      --accent: 208 76% 34%;
+      --accent-active: 208 76% 40%;
+      --border: 208 60% 60%;
+      --input: 208 60% 60%;
+      --ring: 0 0% 100%;
+    }
+    .group-header:hover {
+      background-color: #0b4378;
+    }
+  }
+
   .group-children-area {
     @apply relative;
   }

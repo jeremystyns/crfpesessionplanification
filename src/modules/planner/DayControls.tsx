@@ -8,7 +8,7 @@
  */
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, CalendarPlus, Clock, Lock, Unlock } from 'lucide-react';
+import { Calendar, Clock, Lock, Unlock } from 'lucide-react';
 import { WorkshopMetadata } from '@/types/workshop';
 import { formatDuration } from '@/lib/workshopStorage';
 import { parseDuration } from '@/lib/workshopUtils';
@@ -24,8 +24,6 @@ interface DayControlsProps {
   onUpdate: (updates: Partial<WorkshopMetadata>) => void;
   startTimePopoverOpen?: boolean;
   onStartTimePopoverOpenChange?: (open: boolean) => void;
-  /** Adds a second day; offered next to the open date popover. */
-  onAddDay?: () => void;
   /** Foreground instead of muted icons, for the day box's grey background. */
   strongIcons?: boolean;
 }
@@ -36,7 +34,6 @@ export const DayControls = ({
   onUpdate,
   startTimePopoverOpen,
   onStartTimePopoverOpenChange,
-  onAddDay,
   strongIcons = false,
 }: DayControlsProps) => {
   const { t } = useTranslation('common');
@@ -69,22 +66,6 @@ export const DayControls = ({
             onChange={(e) => onUpdate({ date: e.target.value || null })}
             className="h-8 w-36 text-sm"
           />
-          {onAddDay && (
-            // Next to the popover box, but part of it: a click here must not dismiss it first.
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setDatePopoverOpen(false);
-                onAddDay();
-              }}
-              className="absolute left-full top-1/2 ml-2 h-8 w-8 -translate-y-1/2 rounded-xl border bg-popover text-muted-foreground shadow-md"
-              title={withHint(t('days.add'), 'addDay')}
-              aria-label={t('days.add')}
-            >
-              <CalendarPlus className="h-4 w-4" />
-            </Button>
-          )}
         </PopoverContent>
       </Popover>
       {/* Time popover */}

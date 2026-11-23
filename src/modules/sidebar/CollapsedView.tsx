@@ -1,5 +1,5 @@
 import { Button } from '@/components/primitives/button';
-import { FolderPlus, MoreHorizontal, SquareSplitHorizontal } from 'lucide-react';
+import { FolderPlus, MoreHorizontal, PanelLeft, SquareSplitHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { BlockType } from '@/types/workshop';
 import {
@@ -27,6 +27,16 @@ export const CollapsedView = ({
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex flex-col items-center py-2 gap-0.5">
+        {/* Même bouton que l'en-tête du menu déployé, mais en tête du rail réduit. */}
+        <Button variant="plain" size="none"
+          onClick={onExpand}
+          className="icon-button mx-auto"
+          title={t('settings.expand')}
+          aria-label={t('settings.expand')}
+        >
+          <PanelLeft className="h-5 w-5 text-muted-foreground" />
+        </Button>
+        <div className="w-6 border-t my-1" role="separator" />
         {blockTypes.map((type, index) => (
           <DraggableBlockTypeDot
             key={type.id}

@@ -98,6 +98,7 @@ interface WorkshopPlannerProps {
 
 interface EmptyStateRenderProps {
   onAddBlock: () => void;
+  onImportFile: (file: File) => void;
   onReopenSession: ReturnType<typeof useWorkshop>['loadSessionFromHistory'];
 }
 
@@ -201,6 +202,8 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
   const totalDuration = calculateEffectiveDuration(activeDay.items, activeDay.workshop.startTime);
   const planHasItems = hasAnyItems(plan);
   const multiDay = days.length > 1;
+  // Dès qu'il y a des blocs, le jour en cours a sa propre cartouche (même avec un seul jour).
+  const dayLayout = planHasItems;
 
   // Ref + observed height of the sticky planner chrome. The TimeVisualizationStrip
   // positions itself just below this element so it never collides with the
@@ -439,13 +442,12 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
               startTimePopoverOpen={startTimePopoverOpen}
               onStartTimePopoverOpenChange={setStartTimePopoverOpen}
               asHeading={planHasItems}
-              titleOnly={multiDay && !isMobile}
-              dayTabs={multiDay && isMobile ? <DayStrip {...dayTabsProps} /> : null}
-              onAddDay={planHasItems && !multiDay ? addDay : undefined}
+              titleOnly={dayLayout && !isMobile}
+              dayTabs={dayLayout && isMobile ? <DayStrip {...dayTabsProps} /> : null}
               printDayLabel={multiDay ? getDayLabel(days, activeDayId, t) : undefined}
               onMenuClick={handleMenuClick}
             />
-            {multiDay && !isMobile && (
+            {dayLayout && !isMobile && (
               <DayBoxes
                 {...dayTabsProps}
                 activeControls={
@@ -483,6 +485,12 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
               isSidebarCollapsed={sidebarCollapsed}
               hasActions={planHasItems}
               onSharePopoverOpenChange={setSharePopoverOpen}
+              showFullPreviewText={showFullPreviewText}
+              onSetShowFullPreviewText={preferences.setShowFullPreviewText}
+              timeVisualizationStrip={timeVisualizationStrip}
+              onSetTimeVisualizationStrip={preferences.setTimeVisualizationStrip}
+              playModeSounds={playModeSounds}
+              onSetPlayModeSounds={preferences.setPlayModeSounds}
             />
           </div>
           {playMode.isActive && (
@@ -521,6 +529,7 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
             <div key={emptyStateRevision} className="contents">
               {renderEmptyState({
                 onAddBlock: handleAddEmptyStateBlock,
+                onImportFile: (file) => void dataActions.handleImport(file),
                 onReopenSession: loadSessionFromHistory,
               })}
             </div>
@@ -544,12 +553,6 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
         onAddPerson={addPerson}
         onUpdatePerson={updatePerson}
         onDeletePerson={deletePerson}
-        showFullPreviewText={showFullPreviewText}
-        onSetShowFullPreviewText={preferences.setShowFullPreviewText}
-        playModeSounds={playModeSounds}
-        onSetPlayModeSounds={preferences.setPlayModeSounds}
-        timeVisualizationStrip={timeVisualizationStrip}
-        onSetTimeVisualizationStrip={preferences.setTimeVisualizationStrip}
         onExport={dataActions.handleExport}
         onExportCsv={dataActions.handleExportCsv}
         onImport={dataActions.handleImport}
@@ -596,6 +599,10 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
             date={activeDay.workshop.date}
             description={activeDay.workshop.description}
             onUpdateDescription={(desc) => updateMetadata({ description: desc })}
+            participants={activeDay.workshop.participants}
+            location={activeDay.workshop.location}
+            room={activeDay.workshop.room}
+            onUpdateDetails={updateMetadata}
             onAddStartTimeClick={handleOpenStartTime}
             editingItem={editingItem}
             onEditingItemChange={setEditingItem}

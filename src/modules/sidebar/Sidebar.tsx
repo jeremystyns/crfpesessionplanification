@@ -36,12 +36,6 @@ interface SidebarProps {
   onAddPerson: (person: Omit<Person, 'id'>) => void;
   onUpdatePerson: (id: string, updates: Partial<Omit<Person, 'id'>>) => void;
   onDeletePerson: (id: string) => void;
-  showFullPreviewText?: boolean;
-  onSetShowFullPreviewText?: (value: boolean) => void;
-  playModeSounds?: boolean;
-  onSetPlayModeSounds?: (value: boolean) => void;
-  timeVisualizationStrip?: boolean;
-  onSetTimeVisualizationStrip?: (value: boolean) => void;
   onExport?: () => void;
   onExportCsv?: () => void;
   onImport?: (file: File) => Promise<void>;
@@ -73,12 +67,6 @@ export const Sidebar = ({
   onAddPerson,
   onUpdatePerson,
   onDeletePerson,
-  showFullPreviewText,
-  onSetShowFullPreviewText,
-  playModeSounds,
-  onSetPlayModeSounds,
-  timeVisualizationStrip,
-  onSetTimeVisualizationStrip,
   onExport,
   onExportCsv,
   onImport,
@@ -347,12 +335,6 @@ export const Sidebar = ({
         >
           {expandedSections.settings && !collapsed && (
             <SettingsPanel
-              showFullPreviewText={showFullPreviewText}
-              onSetShowFullPreviewText={onSetShowFullPreviewText}
-              playModeSounds={playModeSounds}
-              onSetPlayModeSounds={onSetPlayModeSounds}
-              timeVisualizationStrip={timeVisualizationStrip}
-              onSetTimeVisualizationStrip={onSetTimeVisualizationStrip}
               onExport={onExport}
               onExportCsv={onExportCsv}
               onImport={onImport}

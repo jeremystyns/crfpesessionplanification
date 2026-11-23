@@ -73,12 +73,26 @@ describe('consistent sharing controls', () => {
     await waitFor(() => expect(clipboard).toHaveBeenLastCalledWith(editorUrl));
   });
 
-  it('copies the newly activated view URL instead of an old callback URL', async () => {
-    const props = baseProps();
-    render(<HeaderActionButtons {...props} serverKey={null} canEditServerSession={false} getReadOnlyShareUrl={() => 'http://localhost:3000/#data=old'} />);
+  it('no longer offers to activate a dynamic link from a local session', async () => {
+    render(<HeaderActionButtons {...baseProps()} serverKey={null} canEditServerSession={false} />);
     fireEvent.click(screen.getByTitle('planner.shareOptions'));
-    fireEvent.click(screen.getByRole('switch', { name: 'planner.permanentLink*' }));
-    await waitFor(() => expect(clipboard).toHaveBeenLastCalledWith(readerUrl));
+    expect(screen.queryByRole('switch', { name: 'planner.permanentLink*' })).not.toBeInTheDocument();
+    expect(screen.queryByText('planner.permanentLink*')).not.toBeInTheDocument();
+    // The snapshot link stays available.
+    expect(screen.getByRole('button', { name: 'planner.copyLink' })).toBeInTheDocument();
+  });
+
+  it('puts the display options in the action bar, before the play button', () => {
+    const onTruncate = vi.fn(); const onStrip = vi.fn(); const onSounds = vi.fn();
+    render(<HeaderActionButtons {...baseProps()} showFullPreviewText timeVisualizationStrip={false} playModeSounds={false}
+      onSetShowFullPreviewText={onTruncate} onSetTimeVisualizationStrip={onStrip} onSetPlayModeSounds={onSounds} />);
+    const truncate = screen.getByRole('button', { name: 'settings.truncateDescription' });
+    const play = document.querySelector('[data-play-mode-trigger]')!;
+    expect(truncate.compareDocumentPosition(play) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(truncate).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(truncate); expect(onTruncate).toHaveBeenCalledWith(false);
+    fireEvent.click(screen.getByRole('button', { name: 'settings.timeVisualizationStrip' })); expect(onStrip).toHaveBeenCalledWith(true);
+    fireEvent.click(screen.getByRole('button', { name: 'settings.playModeSounds' })); expect(onSounds).toHaveBeenCalledWith(true);
   });
 
   it('copies the migration result and shows copied only after clipboard success; failure can be retried without migration', async () => {

@@ -36,6 +36,12 @@ export interface WorkshopMetadata {
   startTime: string | null;
   targetDuration?: number; // Target duration in minutes
   durationLocked?: boolean; // If true, target duration is set
+  /** Nombre de participants attendus (par jour). */
+  participants?: number;
+  /** Nom du lieu (par jour). */
+  location?: string;
+  /** Salle (par jour). */
+  room?: string;
   lastModified?: string;
 }
 
@@ -53,6 +59,9 @@ export interface WorkshopDay {
   startTime?: string | null;
   targetDuration?: number;
   durationLocked?: boolean;
+  participants?: number;
+  location?: string;
+  room?: string;
   items?: WorkshopItem[];
 }
 

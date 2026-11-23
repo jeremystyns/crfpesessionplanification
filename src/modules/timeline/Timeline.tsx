@@ -34,6 +34,10 @@ interface TimelineProps {
   date?: string | null;
   description?: string;
   onUpdateDescription?: (desc: string) => void;
+  participants?: number;
+  location?: string;
+  room?: string;
+  onUpdateDetails?: (updates: { participants?: number; location?: string; room?: string }) => void;
   onAddStartTimeClick?: () => void;
   editingItem: WorkshopItem | null;
   onEditingItemChange: (item: WorkshopItem | null) => void;
@@ -60,6 +64,10 @@ export const Timeline = ({
   date,
   description,
   onUpdateDescription,
+  participants,
+  location,
+  room,
+  onUpdateDetails,
   onAddStartTimeClick,
   editingItem,
   onEditingItemChange,
@@ -120,6 +128,10 @@ export const Timeline = ({
             onAddStartTimeClick={onAddStartTimeClick}
             showFullText={showFullPreviewText}
             onUpdate={onUpdateDescription}
+            participants={participants}
+            location={location}
+            room={room}
+            onUpdateDetails={onUpdateDetails}
           />
         </div>
       )}

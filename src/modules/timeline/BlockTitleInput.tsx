@@ -9,6 +9,7 @@ interface BlockTitleInputProps {
   onCreateBelow?: (item: WorkshopItem) => void;
   onDeleteAndFocusPrev?: (item: WorkshopItem) => void;
   placeholderKey?: 'block.titlePlaceholder' | 'block.groupTitlePlaceholder' | 'block.breakoutTitlePlaceholder';
+  /** Typographie du titre (appliquée au champ et à son double invisible). */
   className?: string;
   testIdAttr?: boolean;
   onClick?: (e: React.MouseEvent) => void;
@@ -65,7 +66,7 @@ export const BlockTitleInput = ({
           input for the `.editable-field:hover ~` CSS hook. */}
       <span
         aria-hidden
-        className="editable-field-sizer invisible pointer-events-none absolute top-0 left-0 -mx-1 mt-[2px] px-1 font-medium truncate"
+        className={cn('editable-field-sizer invisible pointer-events-none absolute top-0 left-0 -mx-1 mt-[2px] px-1 font-medium truncate', className)}
       >
         {item.title || t(placeholderKey)}
         <EditableFieldPencil className="ml-1 visible" />

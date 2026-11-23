@@ -23,13 +23,16 @@ export interface ResolvedDay {
   startTime: string | null;
   targetDuration?: number;
   durationLocked?: boolean;
+  participants?: number;
+  location?: string;
+  room?: string;
   items: WorkshopItem[];
 }
 
-export type DayMetaUpdates = Partial<Pick<ResolvedDay, 'title' | 'description' | 'date' | 'startTime' | 'targetDuration' | 'durationLocked'>>;
+export type DayMetaUpdates = Partial<Pick<ResolvedDay, 'title' | 'description' | 'date' | 'startTime' | 'targetDuration' | 'durationLocked' | 'participants' | 'location' | 'room'>>;
 
 /** Metadata fields that belong to a day; the rest (e.g. the title) stays plan-wide. */
-const DAY_METADATA_KEYS = new Set(['description', 'date', 'startTime', 'targetDuration', 'durationLocked']);
+const DAY_METADATA_KEYS = new Set(['description', 'date', 'startTime', 'targetDuration', 'durationLocked', 'participants', 'location', 'room']);
 
 /** Display label of a day: its title, or "Day n". */
 export const getDayLabel = (days: ResolvedDay[], dayId: string | null, t: TFunction): string => {
@@ -57,6 +60,9 @@ export const getDays = (data: WorkshopData): ResolvedDay[] => {
     startTime: data.workshop.startTime,
     targetDuration: data.workshop.targetDuration,
     durationLocked: data.workshop.durationLocked,
+    participants: data.workshop.participants,
+    location: data.workshop.location,
+    room: data.workshop.room,
     items: data.items,
   };
   return [
@@ -69,6 +75,9 @@ export const getDays = (data: WorkshopData): ResolvedDay[] => {
       startTime: day.startTime ?? null,
       targetDuration: day.targetDuration,
       durationLocked: day.durationLocked,
+      participants: day.participants,
+      location: day.location,
+      room: day.room,
       items: day.items ?? [],
     })),
   ];
@@ -85,6 +94,9 @@ const withDayMetadata = (metadata: WorkshopMetadata, day: ResolvedDay): Workshop
     startTime: day.startTime,
     targetDuration: day.targetDuration,
     durationLocked: day.durationLocked,
+    participants: day.participants,
+    location: day.location,
+    room: day.room,
   });
 
 const toStoredDay = (day: ResolvedDay): WorkshopDay =>
@@ -96,6 +108,9 @@ const toStoredDay = (day: ResolvedDay): WorkshopDay =>
     startTime: day.startTime,
     targetDuration: day.targetDuration,
     durationLocked: day.durationLocked,
+    participants: day.participants,
+    location: day.location,
+    room: day.room,
     items: day.items,
   });
 
@@ -224,6 +239,10 @@ export const addDay = (
       description: '',
       date: candidate && !usedDates.has(candidate) ? candidate : null,
       startTime: previous.startTime,
+      // Le lieu, la salle et l'effectif changent rarement d'un jour à l'autre.
+      participants: previous.participants,
+      location: previous.location,
+      room: previous.room,
       items: [],
     };
   });

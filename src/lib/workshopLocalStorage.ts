@@ -524,6 +524,9 @@ const isWorkshopDay = (value: unknown): boolean => {
     (value.startTime === undefined || value.startTime === null || typeof value.startTime === 'string') &&
     (value.targetDuration === undefined || typeof value.targetDuration === 'number') &&
     (value.durationLocked === undefined || typeof value.durationLocked === 'boolean') &&
+    (value.participants === undefined || typeof value.participants === 'number') &&
+    (value.location === undefined || typeof value.location === 'string') &&
+    (value.room === undefined || typeof value.room === 'string') &&
     (value.items === undefined || (Array.isArray(value.items) && value.items.every(isWorkshopItem)))
   );
 };

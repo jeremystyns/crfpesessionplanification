@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { WorkshopMetadata } from '@/types/workshop';
 import { formatDuration } from '@/lib/workshopStorage';
 import { getWorkshopTitle } from '@/lib/workshopUtils';
-import { CalendarPlus, PanelLeft } from 'lucide-react';
+import { PanelLeft } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { EditableFieldPencil } from '@/components/atoms/EditableFieldPencil';
 import { DayControls } from '@/modules/planner/DayControls';
@@ -23,8 +23,6 @@ interface WorkshopHeaderProps {
   titleOnly?: boolean;
   /** Day tab strip of a multi-day plan on mobile, part of the header card. */
   dayTabs?: ReactNode;
-  /** Turns a single-day plan into a multi-day plan. */
-  onAddDay?: () => void;
   /** Name of the active day of a multi-day plan; the day tabs are not printed. */
   printDayLabel?: string;
 }
@@ -40,7 +38,6 @@ export const WorkshopHeader = ({
   asHeading = false,
   titleOnly = false,
   dayTabs,
-  onAddDay,
   printDayLabel,
 }: WorkshopHeaderProps) => {
   const { t } = useTranslation('common');
@@ -69,7 +66,9 @@ export const WorkshopHeader = ({
               variant="ghost"
               size="icon"
               onClick={onMenuClick}
-              className={cn('hidden md:flex shrink-0 print:hidden h-8 w-8 -ml-1', !isSidebarCollapsed && 'lg:hidden')}
+              // Sous lg, le menu est un tiroir ouvert par ce bouton. Dès lg, le bouton vit dans le menu
+              // déployé (en haut à droite) ou dans le rail réduit (en premier).
+              className="hidden md:flex lg:hidden shrink-0 print:hidden h-8 w-8 -ml-1"
             >
               <PanelLeft className="h-5 w-5" />
             </Button>
@@ -129,29 +128,12 @@ export const WorkshopHeader = ({
               onUpdate={onUpdate}
               startTimePopoverOpen={startTimePopoverOpen}
               onStartTimePopoverOpenChange={onStartTimePopoverOpenChange}
-              onAddDay={onAddDay}
             />
           )}
         </div>
       </div>
       {dayTabs}
     </header>
-    {onAddDay && (
-      // Reaches across the row gap, so the pointer can travel from the header to the button.
-      <div className="-ml-3 hidden items-center self-stretch pl-3 opacity-0 transition-opacity hover:opacity-100 hover:delay-300 focus-within:opacity-100 peer-hover:opacity-100 peer-hover:delay-300 md:flex print:hidden [@media(hover:none)]:opacity-100">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onAddDay}
-          className="h-8 w-8 rounded-xl border bg-card/60 text-muted-foreground shadow-sm backdrop-blur"
-          title={withHint(t('days.add'), 'addDay')}
-          aria-label={t('days.add')}
-          {...hintAttrs('addDay')}
-        >
-          <CalendarPlus className="h-4 w-4" />
-        </Button>
-      </div>
-    )}
     </>
   );
 };

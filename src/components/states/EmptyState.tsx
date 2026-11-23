@@ -1,8 +1,7 @@
 import { withBase } from '@/lib/basePath';
-import { ChevronDown, Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ChevronDown, FolderOpen, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Badge } from '@/components/primitives/badge';
 import { Button } from '@/components/primitives/button';
@@ -17,6 +16,8 @@ import { parseFormatting } from '@/lib/textFormatting';
 
 interface EmptyStateHeroProps {
   onAddBlock: () => void;
+  /** Ouvre un fichier de séance (JSON) déjà enregistré. */
+  onImportFile?: (file: File) => void;
   landingPageContent?: LandingPageContent;
   onReopenSession?: (entry: SessionHistoryEntry) => void;
 }
@@ -26,8 +27,9 @@ const renderWithPrimary = (text: string) =>
     i % 2 === 1 ? <span key={i} className="text-primary-text">{part}</span> : part
   );
 
-export const EmptyStateHero = ({ onAddBlock, landingPageContent, onReopenSession }: EmptyStateHeroProps) => {
+export const EmptyStateHero = ({ onAddBlock, onImportFile, landingPageContent, onReopenSession }: EmptyStateHeroProps) => {
   const { t } = useTranslation('common');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const emptyStateContent = landingPageContent?.type === 'template' && landingPageContent.emptyStateFallback
     ? landingPageContent.emptyStateFallback
     : landingPageContent;
@@ -35,7 +37,6 @@ export const EmptyStateHero = ({ onAddBlock, landingPageContent, onReopenSession
   const heroTitle = emptyStateContent?.heroTitle || 'Workshop Agenda erstellen';
   const heroDescription = emptyStateContent?.heroDescription || 'Plane deine Agenda visuell auf einer Timeline.';
   const ctaText = emptyStateContent?.ctaText || 'Session erstellen';
-  const exampleSlug = emptyStateContent?.exampleSlug;
 
   // Show session history list instead of the preview image when sessions exist.
   // Always start with false (matching the prerendered DOM, which always has an
@@ -83,11 +84,31 @@ export const EmptyStateHero = ({ onAddBlock, landingPageContent, onReopenSession
             <Plus className="h-4 w-4" />
             {ctaText}
           </Button>
-          {exampleSlug && (
+          {onImportFile && (
             <>
-            <Button variant="secondary" size="lg" className={`mt-2${hasSessions ? ' hidden lg:inline-flex' : ''}`} asChild>
-              <Link to={`/${exampleSlug}`}>{t('emptyState.openExample')}</Link>
-            </Button>
+              <Button
+                variant="secondary"
+                size="lg"
+                className={`mt-2 gap-2${hasSessions ? ' hidden lg:inline-flex' : ''}`}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <FolderOpen className="h-4 w-4" />
+                {t('emptyState.openFile')}
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                aria-label={t('emptyState.openFile')}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    onImportFile(file);
+                    e.target.value = '';
+                  }
+                }}
+              />
             </>
           )}
           {landingPageContent?.siteStats && (

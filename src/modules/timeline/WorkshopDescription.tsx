@@ -1,4 +1,6 @@
+import { DoorOpen, MapPin, Users } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
+import { Input } from '@/components/primitives/input';
 import { useTranslation } from 'react-i18next';
 import { FormattedTextField } from '@/components/atoms/FormattedTextField';
 import { EditableFieldPencil } from '@/components/atoms/EditableFieldPencil';
@@ -15,9 +17,47 @@ interface WorkshopDescriptionProps {
   onAddStartTimeClick?: () => void;
   showFullText?: boolean;
   onUpdate?: (desc: string) => void;
+  /** Nombre de participants, lieu et salle du jour affiché. */
+  participants?: number;
+  location?: string;
+  room?: string;
+  onUpdateDetails?: (updates: { participants?: number; location?: string; room?: string }) => void;
 }
 
-export const WorkshopDescription = ({ description, date, startTime, onAddStartTimeClick, showFullText = false, onUpdate }: WorkshopDescriptionProps) => {
+interface DetailFieldProps {
+  id: string;
+  icon: typeof Users;
+  label: string;
+  children: React.ReactNode;
+}
+
+const DetailField = ({ id, icon: Icon, label, children }: DetailFieldProps) => (
+  <div className="grid gap-1">
+    <label htmlFor={id} className="flex items-center gap-1.5 text-xs font-semibold text-primary-text">
+      <Icon className="h-3.5 w-3.5" aria-hidden />
+      {label}
+    </label>
+    {children}
+  </div>
+);
+
+/**
+ * Cartouche de la séance (ou du jour) : description, nombre de participants,
+ * lieu et salle. Distincte des blocs par un fond teinté et un filet d'accent
+ * de 4 px en haut (charte CRFPE : pas de bordure latérale colorée).
+ */
+export const WorkshopDescription = ({
+  description,
+  date,
+  startTime,
+  onAddStartTimeClick,
+  showFullText = false,
+  onUpdate,
+  participants,
+  location,
+  room,
+  onUpdateDetails,
+}: WorkshopDescriptionProps) => {
   const { t } = useTranslation('common');
   const { withHint, hintAttrs } = useShortcutLabels();
   const {
@@ -43,6 +83,12 @@ export const WorkshopDescription = ({ description, date, startTime, onAddStartTi
           )}
         </div>
       )}
+      <section
+        aria-label={t('planner.infoCardLabel')}
+        data-testid="session-info-card"
+        className="w-full flex-1 min-w-0 overflow-hidden rounded-md border border-t-4 border-t-primary bg-[#b7ddff]/30 shadow-sm dark:bg-primary/15 print:border-gray-300 print:bg-transparent print:shadow-none"
+      >
+        <div className="flex flex-col gap-3 p-3">
       <div className="w-full sm:w-auto flex-1 min-w-0">
         {editing ? (
           // Padding + min height live on this wrapper (not on the textarea)
@@ -101,6 +147,45 @@ export const WorkshopDescription = ({ description, date, startTime, onAddStartTi
           </p>
         )}
       </div>
+      {onUpdateDetails && (
+        <div className="grid gap-2.5 border-t border-primary/20 pt-3 sm:grid-cols-[7rem_minmax(0,1fr)_minmax(0,1fr)]">
+          <DetailField id="session-participants" icon={Users} label={t('planner.participants')}>
+            <Input
+              id="session-participants"
+              type="number"
+              min={0}
+              inputMode="numeric"
+              value={participants ?? ''}
+              placeholder={t('planner.participantsPlaceholder')}
+              onChange={(e) => {
+                const n = Number.parseInt(e.target.value, 10);
+                onUpdateDetails({ participants: Number.isFinite(n) && n >= 0 ? n : undefined });
+              }}
+              className="h-8 bg-card text-sm"
+            />
+          </DetailField>
+          <DetailField id="session-location" icon={MapPin} label={t('planner.location')}>
+            <Input
+              id="session-location"
+              value={location ?? ''}
+              placeholder={t('planner.locationPlaceholder')}
+              onChange={(e) => onUpdateDetails({ location: e.target.value })}
+              className="h-8 bg-card text-sm"
+            />
+          </DetailField>
+          <DetailField id="session-room" icon={DoorOpen} label={t('planner.room')}>
+            <Input
+              id="session-room"
+              value={room ?? ''}
+              placeholder={t('planner.roomPlaceholder')}
+              onChange={(e) => onUpdateDetails({ room: e.target.value })}
+              className="h-8 bg-card text-sm"
+            />
+          </DetailField>
+        </div>
+      )}
+        </div>
+      </section>
     </div>
   );
 };

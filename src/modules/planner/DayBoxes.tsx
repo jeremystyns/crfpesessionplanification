@@ -38,6 +38,8 @@ export const DayBoxes = ({ activeControls, ...props }: DayBoxesProps) => {
   const listRef = useRef<HTMLDivElement | null>(null);
   const collapsed = !useDayBoxesFit(containerRef, listRef);
   const canAdd = days.length < MAX_DAYS;
+  // Une seule journée : même présentation qu'avec plusieurs, mais son libellé et son menu n'ont pas d'objet.
+  const single = days.length === 1;
 
   return (
     // Takes all free space, which is what the boxes are measured against. Collapsed,
@@ -45,7 +47,7 @@ export const DayBoxes = ({ activeControls, ...props }: DayBoxesProps) => {
     <div
       ref={containerRef}
       className={cn(
-        'hidden min-w-0 peer-hover:[&_[data-day-add]:enabled]:opacity-100 md:flex',
+        'hidden min-w-0 md:flex',
         collapsed ? 'flex-[1_1_auto]' : 'flex-[1_1_0%]',
       )}
     >
@@ -105,10 +107,11 @@ export const DayBoxes = ({ activeControls, ...props }: DayBoxesProps) => {
                     dateLocale={dateLocale}
                     onClick={() => tabs.handleDayClick(day)}
                     onKeyDown={(event) => tabs.handleDayKeyDown(event, index)}
-                    className={cn('rounded-xl pl-3.5 hover:bg-transparent active:bg-transparent', isActive ? 'pr-6' : 'pr-4')}
+                    readOnly={single}
+                    className={cn('rounded-xl pl-3.5 hover:bg-transparent active:bg-transparent', isActive && !single ? 'pr-6' : 'pr-4')}
                   >
                     {/* In the right padding, so the box width does not change on hover. */}
-                    {isActive && <EditableFieldPencil className="absolute right-1.5 top-1/2 mt-0 -translate-y-1/2" />}
+                    {isActive && !single && <EditableFieldPencil className="absolute right-1.5 top-1/2 mt-0 -translate-y-1/2" />}
                   </DayButton>
                 )}
                 {collapsed && isActive && !isRenaming && (
@@ -127,16 +130,18 @@ export const DayBoxes = ({ activeControls, ...props }: DayBoxesProps) => {
                 {/* Darkens instead of painting a solid colour, so the box stays translucent. */}
                 <div className={cn('flex items-center gap-2 self-stretch pl-2 pr-1.5', isActive && 'bg-black/5 dark:bg-black/25')}>
                   {isActive && activeControls}
-                  <DayOptionsMenu
-                    days={days}
-                    index={index}
-                    // The hovered box already has the accent background.
-                    triggerClassName={cn(!isActive && 'hover:bg-foreground/10')}
-                    onRename={tabs.startRename}
-                    onDuplicate={onDuplicate}
-                    onMove={onMove}
-                    onDelete={tabs.requestRemove}
-                  />
+                  {!single && (
+                    <DayOptionsMenu
+                      days={days}
+                      index={index}
+                      // The hovered box already has the accent background.
+                      triggerClassName={cn(!isActive && 'hover:bg-foreground/10')}
+                      onRename={tabs.startRename}
+                      onDuplicate={onDuplicate}
+                      onMove={onMove}
+                      onDelete={tabs.requestRemove}
+                    />
+                  )}
                 </div>
               </div>
             );
@@ -149,7 +154,7 @@ export const DayBoxes = ({ activeControls, ...props }: DayBoxesProps) => {
             disabled={!canAdd}
             onClick={() => onAdd()}
             data-day-add=""
-            className="mt-[7px] h-8 w-8 shrink-0 rounded-xl border bg-card/60 text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity focus-visible:opacity-100 disabled:opacity-0 group-hover/days:opacity-100 group-hover/days:disabled:opacity-50 [@media(hover:none)]:opacity-100"
+            className="mt-[7px] h-8 w-8 shrink-0 rounded-xl border bg-card/60 text-muted-foreground shadow-sm backdrop-blur disabled:opacity-50"
             title={canAdd ? withHint(t('days.add'), 'addDay') : t('days.maxReached', { count: MAX_DAYS })}
             aria-label={t('days.add')}
             {...hintAttrs('addDay')}

@@ -26,6 +26,7 @@ export const DayStrip = (props: DayTabsProps) => {
   const { withHint, hintAttrs } = useShortcutLabels();
   const tabs = useDayTabs(props);
   const canAdd = days.length < MAX_DAYS;
+  const single = days.length === 1;
 
   return (
     <div className="order-first flex items-end gap-1 border-b bg-muted/40 px-2 pt-1.5 print:hidden">
@@ -68,12 +69,13 @@ export const DayStrip = (props: DayTabsProps) => {
                   dateLocale={dateLocale}
                   onClick={() => tabs.handleDayClick(day)}
                   onKeyDown={(event) => tabs.handleDayKeyDown(event, index)}
+                  readOnly={single}
                   className={cn('rounded-t-lg py-1.5 pl-3', isActive ? 'pr-1 hover:bg-transparent active:bg-transparent' : 'pr-3')}
                 >
                   {date && <span className="hidden text-xs text-muted-foreground sm:inline">{date}</span>}
                 </DayButton>
               )}
-              {isActive && !isRenaming && (
+              {isActive && !isRenaming && !single && (
                 <DayOptionsMenu
                   days={days}
                   index={index}

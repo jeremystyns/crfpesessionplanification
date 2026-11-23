@@ -234,6 +234,32 @@ describe('DayTabs when the boxes do not fit', () => {
   });
 });
 
+describe('DayTabs with a single day', () => {
+  const single = [day('only', 'Journée')];
+
+  it('shows the same box as a multi-day plan, with a static label and its controls', () => {
+    renderBoxes({ days: single, activeDayId: 'only', activeControls: <input aria-label="controls" /> });
+
+    const box = boxOf('days.label|Journée');
+    expect(within(box).getByLabelText('controls')).toBeTruthy();
+    // Nothing to rename, move or delete on the only day.
+    expect(menuOf(box)).toHaveLength(0);
+    fireEvent.click(dayButton('days.label|Journée'));
+    expect(screen.queryByRole('textbox', { name: 'days.rename' })).toBeNull();
+  });
+
+  it('always shows the add-day button next to the box', () => {
+    const onAdd = vi.fn();
+    renderBoxes({ days: single, activeDayId: 'only', onAdd });
+
+    const add = document.querySelector('[data-day-add]') as HTMLButtonElement;
+    expect(add).not.toBeNull();
+    expect(add.className).not.toContain('opacity-0');
+    fireEvent.click(add);
+    expect(onAdd).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('DayTabs title', () => {
   const titleInput = () => screen.queryByRole('textbox', { name: 'days.rename' }) as HTMLInputElement | null;
 
@@ -324,36 +350,10 @@ describe('WorkshopHeader', () => {
     expect(container.querySelector('[data-start-time-trigger]')).not.toBeNull();
   });
 
-  it('offers a further day next to the open date popover', async () => {
-    const onAddDay = vi.fn();
-    const { container } = renderHeader({ onAddDay });
-    const inHeaderRow = () => container.querySelectorAll('[data-date-trigger] ~ button:not([data-start-time-trigger])');
-    const inPopover = () => document.querySelector('[data-radix-popper-content-wrapper] button') as HTMLButtonElement | null;
+  it('no longer hides the add-day button in the header: days are added from the day boxes', () => {
+    const { container } = renderHeader();
 
-    expect(inPopover()).toBeNull();
-    expect(inHeaderRow()).toHaveLength(0);
-
-    fireEvent.click(container.querySelector('[data-date-trigger]') as HTMLElement);
-    const button = await waitFor(() => {
-      expect(inPopover()).not.toBeNull();
-      return inPopover()!;
-    });
-    expect(button.textContent).toBe('');
-    expect(button.getAttribute('aria-label')).toBeTruthy();
-
-    fireEvent.click(button);
-    expect(onAddDay).toHaveBeenCalledTimes(1);
-    await waitFor(() => expect(inPopover()).toBeNull());
-  });
-
-  it('offers a further day next to the header', () => {
-    const onAddDay = vi.fn();
-    const { container } = renderHeader({ onAddDay });
-
-    const button = container.querySelector('header + div button') as HTMLButtonElement;
-    expect(button.textContent).toBe('');
-    expect(button.getAttribute('aria-label')).toBeTruthy();
-    fireEvent.click(button);
-    expect(onAddDay).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('header + div button')).toBeNull();
+    expect(container.querySelector('[data-date-trigger] ~ button:not([data-start-time-trigger])')).toBeNull();
   });
 });

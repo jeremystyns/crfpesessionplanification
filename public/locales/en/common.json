@@ -352,7 +352,15 @@
     "stopLiveMode": "Stop Live Mode",
     "setDateTime": "Set date and time to start Live Mode",
     "lockDuration": "Lock (set target duration)",
-    "unlockDuration": "Unlock (enable auto-update)"
+    "unlockDuration": "Unlock (enable auto-update)",
+    "participants": "Participants",
+    "participantsPlaceholder": "Number",
+    "location": "Venue",
+    "locationPlaceholder": "Venue name",
+    "room": "Room",
+    "roomPlaceholder": "Room number or name",
+    "infoCardLabel": "Session description and logistics",
+    "displayOptions": "Display options"
   },
   "block": {
     "newBlock": "New Block",
@@ -475,7 +483,8 @@
       "monthlyUsers": "{{value}}+ monthly users",
       "disclosureLabel": "About these ratings",
       "disclosure": "Ratings are submitted anonymously through the feedback form in the planner. I do not verify them."
-    }
+    },
+    "openFile": "Open a file"
   },
   "sessionHistory": {
     "title": "Your sessions",
