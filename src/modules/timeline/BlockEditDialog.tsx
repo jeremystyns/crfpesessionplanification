@@ -417,7 +417,7 @@ export const BlockEditDialog = ({
   );
 
   const formContent = (
-    <div className="grid gap-6 py-4 md:grid-cols-2 md:gap-8">
+    <div className="grid gap-6 py-4 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-8">
       {leftColumn}
       {rightColumn}
     </div>
@@ -457,7 +457,7 @@ export const BlockEditDialog = ({
 
   return (
     <Dialog open={!!item} onOpenChange={() => onClose()}>
-      <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-5xl flex-col overflow-hidden">
+      <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-6xl flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>{getDialogTitle()}</DialogTitle>
         </DialogHeader>

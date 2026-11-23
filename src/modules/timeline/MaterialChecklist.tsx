@@ -7,6 +7,8 @@
  * retirée. Le bouton « Ajouter » vit dans la ligne du sous-titre (voir
  * MaterialAddButton) : la liste n'a donc pas de ligne de plus ; la saisie
  * d'une nouvelle entrée n'apparaît, dans la grille, que pendant l'ajout.
+ * Une seule colonne pleine largeur : un intitulé long ne passe à la ligne que
+ * s'il dépasse vraiment la largeur disponible.
  * Used by: BlockPreview (cartes de la frise), BlockEditDialog (édition)
  */
 import { useState } from 'react';
@@ -95,7 +97,7 @@ export const MaterialChecklist = ({
   const showAddInput = editable && (adding || entries.length === 0);
 
   return (
-    <ul className={cn('grid gap-x-6 gap-y-1 sm:grid-cols-2', TEXT, className)}>
+    <ul className={cn('grid gap-y-1', TEXT, className)}>
       {entries.map((entry, index) => (
         <li key={index} className="group/entry flex min-h-6 items-center gap-2">
           <Checkbox
