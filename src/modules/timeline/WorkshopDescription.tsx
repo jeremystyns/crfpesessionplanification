@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FormattedTextField } from '@/components/atoms/FormattedTextField';
 import { EditableFieldPencil } from '@/components/atoms/EditableFieldPencil';
 import { EmptyStartTimeButton } from './atoms/EmptyStartTimeButton';
+import { CalendarLeaf } from './CalendarLeaf';
 import { parseFormatting } from '@/lib/textFormatting';
 import { useClickToEdit } from '@/hooks/useClickToEdit';
 import { cn } from '@/lib/utils';
@@ -73,11 +74,7 @@ export const WorkshopDescription = ({
     <div className="flex flex-col sm:flex-row items-start gap-2">
       {(date || !startTime) && (
         <div className="flex flex-row items-center sm:flex-col sm:items-stretch gap-2 sm:gap-0.5 shrink-0 mt-0.5 md:w-[6rem] md:-ml-[8rem] md:mr-8 md:text-right">
-          {date && (
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            {new Date(date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-          </span>
-          )}
+          {date && <CalendarLeaf date={date} className="md:ml-auto" />}
           {!startTime && (
             <EmptyStartTimeButton onClick={onAddStartTimeClick} className="sm:self-end sm:mt-0.5" />
           )}
@@ -119,7 +116,7 @@ export const WorkshopDescription = ({
             ref={previewRef}
             onClick={startEditing}
             className={cn(
-              'px-2 py-1 text-left w-full text-sm text-muted-foreground hover:text-foreground hover:bg-inherit transition-colors print:hidden',
+              'px-2 py-1 text-left w-full text-sm text-[hsl(var(--content-text))] hover:bg-inherit transition-colors print:hidden',
               onUpdate && 'editable-field',
             )}
             data-session-description

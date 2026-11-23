@@ -229,6 +229,8 @@
       --foreground: 0 0% 100%;
       --card-foreground: 0 0% 100%;
       --muted-foreground: 208 70% 90%;
+      --content-text: 0 0% 100%;
+      --content-subtitle: 208 70% 90%;
       --primary-text: 0 0% 100%;
       --muted: 208 76% 28%;
       --accent: 208 76% 34%;

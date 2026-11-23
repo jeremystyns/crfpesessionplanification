@@ -42,6 +42,10 @@
     --muted: 216 16% 94%;
     --muted-foreground: 222 12% 38%;
 
+    /* Contenus des éléments (objectifs, description, matériel) : presque noir ; sous-titres : gris foncé */
+    --content-text: 228 28% 9%;
+    --content-subtitle: 228 12% 27%;
+
     --accent: 216 16% 90%;
     --accent-active: 216 16% 83%;
     --accent-foreground: 228 17% 22%;
@@ -119,6 +123,9 @@
 
     --muted: 212 30% 17%;
     --muted-foreground: 214 15% 72%;
+
+    --content-text: 216 20% 94%;
+    --content-subtitle: 214 15% 78%;
 
     --accent: 212 30% 23%;
     --accent-active: 212 30% 29%;

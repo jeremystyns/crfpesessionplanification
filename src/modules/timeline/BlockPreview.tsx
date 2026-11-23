@@ -99,7 +99,7 @@ interface BlockPreviewProps {
 }
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <p className="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{children}</p>
+  <p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-[hsl(var(--content-subtitle))]">{children}</p>
 );
 
 /** Lieu, salle et disposition de la phase, en pastilles. */
@@ -178,25 +178,27 @@ export const BlockPreview = ({
   };
 
   return (
-    <div className="relative mr-4 mt-2 space-y-2 text-sm text-muted-foreground">
-      {hasMeta && <ItemMetaChips location={location} room={room} layout={layout} />}
+    <div className="relative mr-4 mt-3 text-sm text-[hsl(var(--content-text))]">
+      {hasMeta && <div className="mb-3"><ItemMetaChips location={location} room={room} layout={layout} /></div>}
+      {/* Objectifs, description et matériel : espacés et séparés par un filet discret. */}
+      <div className="divide-y divide-border/70">
 
       {active.objectives && (
-        <section aria-label={t('dialog.objectives')}>
+        <section aria-label={t('dialog.objectives')} className="py-3 first:pt-0 last:pb-0">
           <SectionTitle>{t('dialog.objectives')}</SectionTitle>
           {textField('objectives', objectives)}
         </section>
       )}
 
       {active.notes && (
-        <section aria-label={t('dialog.notes')}>
+        <section aria-label={t('dialog.notes')} className="py-3 first:pt-0 last:pb-0">
           <SectionTitle>{t('dialog.notes')}</SectionTitle>
           {textField('notes', notes)}
         </section>
       )}
 
       {active.material && (
-        <section aria-label={t('dialog.material')}>
+        <section aria-label={t('dialog.material')} className="py-3 first:pt-0 last:pb-0">
           <SectionTitle>
             {t('dialog.material')}
             <MaterialCounter value={material || ''} />
@@ -207,10 +209,11 @@ export const BlockPreview = ({
             editable={canEdit}
             startAdding={!!forced.material && !material}
             onStopAdding={() => force('material', false)}
-            className="text-foreground"
+            className="text-[hsl(var(--content-text))]"
           />
         </section>
       )}
+      </div>
 
       {/* Ajouts rapides : posés dans la marge basse de la carte, sans en changer la hauteur. */}
       {canEdit && showEmptyPlaceholders && missing.length > 0 && (

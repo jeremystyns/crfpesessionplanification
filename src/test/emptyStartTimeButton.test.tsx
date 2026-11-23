@@ -59,7 +59,8 @@ describe('empty start time button', () => {
 
     const button = emptyButton()!;
     const row = button.parentElement!;
-    expect(row).toBe(screen.getByText(/2026/).parentElement);
+    // La date est un feuillet de calendrier (un bouton) posé dans la même rangée.
+    expect(screen.getByText(/2026/).closest('button')?.parentElement).toBe(row);
     expect(row.className).toContain('flex-row');
     expect(row.className).toContain('items-center');
     expect(button.className).toContain('[@media(pointer:coarse)]:!min-h-6');
