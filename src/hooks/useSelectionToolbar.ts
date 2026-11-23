@@ -27,7 +27,8 @@
 import { RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   findActiveRegions,
-  FormatKind,
+  getListKind,
+  type ToolbarKind,
 } from '@/lib/textFormatting';
 import {
   getCursorCoordinates,
@@ -52,7 +53,7 @@ export interface UseSelectionToolbarResult {
   toolbarPosition: { left: number; top: number; below: boolean };
   toolbarVisible: boolean;
   linkDisabled: boolean;
-  activeFormats: FormatKind[];
+  activeFormats: ToolbarKind[];
   updateSelectionState: () => void;
   scheduleSelectionStateUpdate: () => void;
   setToolbarHovered: (v: boolean) => void;
@@ -72,7 +73,7 @@ export const useSelectionToolbar = ({
   // content like `*_hello_*` it has BOTH — every enclosing button shows
   // pressed and clicking any one toggles just that layer off, leaving the
   // surrounding chain intact.
-  const [activeFormats, setActiveFormats] = useState<FormatKind[]>([]);
+  const [activeFormats, setActiveFormats] = useState<ToolbarKind[]>([]);
   const [positionVersion, setPositionVersion] = useState(0);
   // selectionVersion is bumped on every selection change (mouseup, select,
   // keyup, pointerup, deferred handleChange). The placement effect
@@ -236,7 +237,17 @@ export const useSelectionToolbar = ({
     // pressed, clicking any one toggles just that layer off.
     if (el) {
       const regions = findActiveRegions(el.value, el.selectionStart, el.selectionEnd);
-      setActiveFormats(regions.map((r) => r.kind));
+      const active: ToolbarKind[] = regions.map((r) => r.kind);
+      // Listes : actives quand toutes les lignes (non vides) touchées sont du même type.
+      const lineStart = el.value.lastIndexOf('\n', el.selectionStart - 1) + 1;
+      const nextBreak = el.value.indexOf('\n', el.selectionEnd);
+      const lines = el.value.slice(lineStart, nextBreak === -1 ? el.value.length : nextBreak).split('\n').filter((l) => l.trim() !== '');
+      const kinds = new Set(lines.map(getListKind));
+      if (lines.length > 0 && kinds.size === 1) {
+        const [only] = [...kinds];
+        if (only) active.push(only);
+      }
+      setActiveFormats(active);
     } else {
       setActiveFormats([]);
     }

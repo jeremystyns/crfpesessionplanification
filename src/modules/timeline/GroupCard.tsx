@@ -242,7 +242,16 @@ export const GroupCard = ({
                 </div>
               </div>
 
-              <BlockPreview notes={item.notes} material={item.material} showFullText={showFullPreviewText} onUpdate={onUpdate} />
+              <BlockPreview
+                objectives={item.objectives}
+                notes={item.notes}
+                material={item.material}
+                location={item.location}
+                room={item.room}
+                layout={item.layout}
+                showFullText={showFullPreviewText}
+                onUpdate={onUpdate}
+              />
             </div>
           </div>
         </div>

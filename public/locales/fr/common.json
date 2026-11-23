@@ -412,9 +412,9 @@
     "fixedStartTimeActive": "Fixe",
     "lockStartTime": "Fixer une heure de début",
     "persons": "Personnes",
-    "notes": "Notes",
-    "notesPlaceholder": "Notes sur ce bloc…",
-    "addNotes": "Ajouter des notes",
+    "notes": "Description",
+    "notesPlaceholder": "Description de la phase…",
+    "addNotes": "Ajouter une description",
     "material": "Matériel",
     "materialPlaceholder": "Matériel nécessaire…",
     "addMaterial": "Ajouter du matériel",
@@ -431,7 +431,16 @@
     "templateLoaded": "Modèle chargé",
     "templateSaved": "Enregistré comme modèle",
     "savedToLibrary": "Enregistré dans la bibliothèque",
-    "addedFromLibrary": "Bloc ajouté depuis la bibliothèque"
+    "addedFromLibrary": "Bloc ajouté depuis la bibliothèque",
+    "objectives": "Objectifs",
+    "objectivesPlaceholder": "Ce que les participants sauront ou sauront faire à l'issue de cette phase…",
+    "addObjectives": "Ajouter des objectifs",
+    "materialHint": "Cochez le matériel au fur et à mesure : coché = prêt.",
+    "placeSection": "Lieu et disposition",
+    "placeHint": "À renseigner seulement si cette phase se déroule ailleurs ou autrement que le reste de la séance.",
+    "sameAsSession": "Comme la séance",
+    "layout": "Disposition de la salle",
+    "layoutNone": "Non précisée"
   },
   "playMode": {
     "sessionEnded": "Séance terminée",
@@ -536,5 +545,21 @@
     "break": "☕ Pause",
     "discussion": "💬 Discussion",
     "energizer": "⚡ Énergiseur"
+  },
+  "material": {
+    "readyCount": "{{ready}} sur {{total}} prêts",
+    "toggle": "Matériel prêt : {{name}}",
+    "remove": "Retirer {{name}}",
+    "addPlaceholder": "Ajouter du matériel puis Entrée…"
+  },
+  "layouts": {
+    "conference": "Conférence",
+    "theatre": "Théâtre",
+    "class": "Classe",
+    "circle": "En cercle",
+    "u": "En U",
+    "table": "Autour d'une table",
+    "islands": "En îlots",
+    "free": "Libre"
   }
 }

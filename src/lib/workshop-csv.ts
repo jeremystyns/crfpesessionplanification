@@ -8,7 +8,7 @@
  * CSV contract:
  *  - UTF-8 with BOM (`\uFEFF`) so Excel auto-detects encoding.
  *  - CRLF line endings (RFC 4180).
- *  - Delimiter is dynamic: `;` for `de`, `,` otherwise.
+ *  - Delimiter is dynamic: `;` for `fr`, `,` otherwise.
  *  - One row per visible element. Groups/breakouts emit a summary row
  *    followed by their children. Breakout children are emitted lane-major.
  *  - When `metadata.startTime` is set, columns `Von` and `Bis` carry absolute
@@ -22,6 +22,7 @@ import { WorkshopData, WorkshopItem } from '@/types/workshop';
 import { timeToMinutes } from '@/lib/playModeUtils';
 import { formatMinAsHHMM } from '@/lib/clock-time';
 import { getDays } from '@/lib/workshop-days';
+import { materialToPlainText } from '@/lib/material';
 
 export interface CsvColumnLabels {
   nr: string;
@@ -167,7 +168,7 @@ const mkRow = (
     title: item.title ?? '',
     breakoutGroup,
     people,
-    material: item.material ?? '',
+    material: materialToPlainText(item.material),
     notes: item.notes ?? '',
     countsTowardTotal,
   };

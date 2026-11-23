@@ -1,14 +1,19 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { WorkshopItem } from '@/types/workshop';
 import { autoLinkUrls } from '@/lib/textFormatting';
+import { cleanMaterial } from '@/lib/material';
 
 const toFormData = (item: WorkshopItem): Partial<WorkshopItem> => ({
   title: item.title,
   duration: item.duration,
   durationLocked: item.durationLocked,
   blockTypeId: item.blockTypeId,
+  objectives: item.objectives,
   notes: item.notes,
   material: item.material,
+  location: item.location,
+  room: item.room,
+  layout: item.layout,
   lanes: item.lanes,
   sameInAllBreakouts: item.sameInAllBreakouts,
   personIds: item.personIds || [],
@@ -35,10 +40,11 @@ export const useBlockFormState = (item: WorkshopItem | null, onSave: (updates: P
   );
 
   const handleSave = useCallback(() => {
-    onSave(formData);
+    // Les entrées de matériel laissées vides ne sont pas enregistrées.
+    onSave({ ...formData, material: cleanMaterial(formData.material) });
   }, [formData, onSave]);
 
-  const handleTextareaBlur = useCallback((field: 'notes' | 'material', value: string) => {
+  const handleTextareaBlur = useCallback((field: 'objectives' | 'notes' | 'material', value: string) => {
     const newValue = autoLinkUrls(value);
     if (newValue !== value) {
       setFormData(prev => ({ ...prev, [field]: newValue }));

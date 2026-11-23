@@ -1,7 +1,8 @@
 /**
  * textFormatting — Lightweight markdown-like text renderer.
  *
- * Role: Parses *bold*, _italic_, and [text](url) patterns in block notes and
+ * Role: Parses *bold*, _italic_, ==surlignage== and [text](url) patterns, plus
+ *       les listes (lignes `- ` à puces, `1. ` numérotées), in block notes and
  *       material fields and returns React nodes. Used in BlockPreview to render
  *       rich text without a full markdown library.
  *
@@ -30,7 +31,10 @@ import { ReactNode, createElement } from 'react';
 // as parseFormatting / tokenizeFormatting. URL validity here MUST match
 // parseFormatting: a link whose URL fails `new URL(...)` or whose protocol
 // is not http/https renders as raw text, not as an anchor.
-export const FORMATTING_REGEX = /(\*(.+?)\*)|(_(.+?)_)|(\[(.+?)\]\((.+?)\))/g;
+export const FORMATTING_REGEX = /(\*(.+?)\*)|(_(.+?)_)|(\[(.+?)\]\((.+?)\))|(==(.+?)==)/g;
+
+/** Classes du surlignage jaune ; le texte reste sombre pour rester lisible sur le jaune. */
+const HIGHLIGHT_CLASS = 'rounded-sm bg-yellow-200 px-0.5 text-neutral-900';
 
 const isValidHttpUrl = (rawUrl: string): boolean => {
   try {
@@ -91,6 +95,15 @@ const parseFormattingInner = (text: string, enclosing: FormatKind[], keyRef: Par
           hasFormatMatch(content) ? parseFormattingInner(content, [...enclosing, 'italic'], keyRef) : content,
         ),
       );
+    } else if (match[8]) {
+      const content = match[9];
+      parts.push(
+        createElement(
+          'mark',
+          { key: keyRef.key++, className: HIGHLIGHT_CLASS },
+          hasFormatMatch(content) ? parseFormattingInner(content, [...enclosing, 'highlight'], keyRef) : content,
+        ),
+      );
     } else if (match[5]) {
       if (!isValidHttpUrl(match[7])) {
         parts.push(match[0]);
@@ -125,6 +138,93 @@ const parseFormattingInner = (text: string, enclosing: FormatKind[], keyRef: Par
   return parts.length > 0 ? parts : [text];
 };
 
+// ── Listes ─────────────────────────────────────────────────────────────────
+//
+// Syntaxe par ligne : `- texte` ou `• texte` (puces), `1. texte` (numérotée).
+// Les lignes consécutives du même type forment une seule liste.
+
+export type ListKind = 'bullets' | 'numbers';
+
+/** Boutons de la barre de mise en forme : formats en ligne et listes. */
+export type ToolbarKind = FormatKind | ListKind;
+
+const LIST_LINE = /^(?:(?:[-•]\s+)|(?:\d+[.)]\s+))/;
+const BULLET_LINE = /^(?:[-•]\s+)/;
+
+/** Type de liste d'une ligne, ou null si ce n'est pas une ligne de liste. */
+export const getListKind = (line: string): ListKind | null =>
+  BULLET_LINE.test(line) ? 'bullets' : LIST_LINE.test(line) ? 'numbers' : null;
+
+/** Longueur du préfixe de liste (`- `, `12. `…) d'une ligne, 0 sans liste. */
+export const getListPrefixLength = (line: string): number => LIST_LINE.exec(line)?.[0].length ?? 0;
+
+export const hasListSyntax = (text: string): boolean => text.split('\n').some((line) => getListKind(line) !== null);
+
+/**
+ * Texte tel qu'affiché (sans préfixes de liste ni retours à la ligne autour
+ * des listes) avec, pour chaque caractère, sa position dans le texte brut.
+ * Retourne null quand le texte ne contient aucune liste.
+ */
+const stripListSyntax = (text: string): { text: string; toRaw: number[] } | null => {
+  if (!hasListSyntax(text)) return null;
+  const lines = text.split('\n');
+  let out = '';
+  const toRaw: number[] = [];
+  let rawOffset = 0;
+  lines.forEach((line, i) => {
+    const kind = getListKind(line);
+    const prefix = kind ? getListPrefixLength(line) : 0;
+    for (let c = prefix; c < line.length; c += 1) {
+      out += line[c];
+      toRaw.push(rawOffset + c);
+    }
+    const nextKind = i < lines.length - 1 ? getListKind(lines[i + 1]) : null;
+    // Le retour à la ligne disparaît entre deux lignes dont l'une est une liste.
+    if (i < lines.length - 1 && !kind && !nextKind) {
+      out += '\n';
+      toRaw.push(rawOffset + line.length);
+    }
+    rawOffset += line.length + 1;
+  });
+  return { text: out, toRaw };
+};
+
+/**
+ * Comme parseFormatting, mais les lignes de liste deviennent de vraies listes
+ * (<ul> / <ol>). À rendre dans un conteneur <div> (pas un <p>). Sans liste,
+ * le résultat est identique à celui de parseFormatting.
+ */
+export const renderRichText = (text: string): ReactNode[] => {
+  if (!hasListSyntax(text)) return parseFormatting(text);
+
+  const lines = text.split('\n');
+  const nodes: ReactNode[] = [];
+  let key = 0;
+  let i = 0;
+  while (i < lines.length) {
+    const kind = getListKind(lines[i]);
+    let j = i;
+    if (kind) {
+      while (j < lines.length && getListKind(lines[j]) === kind) j += 1;
+      const items = lines.slice(i, j).map((line) =>
+        createElement('li', { key: key++ }, parseFormatting(line.slice(getListPrefixLength(line)))),
+      );
+      nodes.push(
+        createElement(
+          kind === 'bullets' ? 'ul' : 'ol',
+          { key: key++, className: kind === 'bullets' ? 'list-disc pl-5' : 'list-decimal pl-5' },
+          items,
+        ),
+      );
+    } else {
+      while (j < lines.length && getListKind(lines[j]) === null) j += 1;
+      nodes.push(createElement('span', { key: key++ }, parseFormatting(lines.slice(i, j).join('\n'))));
+    }
+    i = j;
+  }
+  return nodes;
+};
+
 /**
  * Converts bare URLs in text to markdown link format [url](url).
  * URLs already wrapped in markdown links are left untouched.
@@ -134,7 +234,7 @@ export const autoLinkUrls = (value: string): string => {
   return value.replace(urlRegex, (url) => `[${url}](${url})`);
 };
 
-export type FormatKind = 'bold' | 'italic' | 'link';
+export type FormatKind = 'bold' | 'italic' | 'link' | 'highlight';
 
 /**
  * A flat token used by the FormattedTextField backdrop. The optional
@@ -150,6 +250,7 @@ export type FormatToken =
   | { kind: 'bold'; text: string; styles?: FormatKind[] }
   | { kind: 'italic'; text: string; styles?: FormatKind[] }
   | { kind: 'link-text'; text: string; styles?: FormatKind[] }
+  | { kind: 'highlight'; text: string; styles?: FormatKind[] }
   | { kind: 'link-url'; text: string; styles?: undefined };
 
 /**
@@ -210,6 +311,17 @@ const tokenizeFormattingInner = (text: string, enclosing: FormatKind[]): FormatT
         tokens.push(token);
       }
       tokens.push({ kind: 'marker', text: '_' });
+    } else if (match[8]) {
+      tokens.push({ kind: 'marker', text: '==' });
+      const content = match[9];
+      if (hasFormatMatch(content)) {
+        tokens.push(...tokenizeFormattingInner(content, [...enclosing, 'highlight']));
+      } else {
+        const token: FormatToken = { kind: 'highlight', text: content };
+        if (enclosing.length > 0) token.styles = [...enclosing];
+        tokens.push(token);
+      }
+      tokens.push({ kind: 'marker', text: '==' });
     } else if (match[5]) {
       if (!isValidHttpUrl(match[7])) {
         // Renders as raw text (mirrors parseFormatting). pushPlain threads
@@ -298,6 +410,14 @@ const findFormatRegionsInner = (text: string, baseOffset: number): FormatRegion[
       const contentEnd = contentStart + content.length;
       const regionEnd = regionStart + match[0].length;
       regions.push({ kind: 'italic', regionStart, contentStart, contentEnd, regionEnd, content });
+      regions.push(...findFormatRegionsInner(content, contentStart));
+    } else if (match[8]) {
+      const content = match[9];
+      const regionStart = baseOffset + match.index;
+      const contentStart = regionStart + 2; // marqueur `==` de deux caractères
+      const contentEnd = contentStart + content.length;
+      const regionEnd = regionStart + match[0].length;
+      regions.push({ kind: 'highlight', regionStart, contentStart, contentEnd, regionEnd, content });
       regions.push(...findFormatRegionsInner(content, contentStart));
     } else if (match[5]) {
       if (!isValidHttpUrl(match[7])) continue;
@@ -416,6 +536,8 @@ const computeRenderedWidth = (text: string): number => {
       width += computeRenderedWidth(match[2]);
     } else if (match[3]) {
       width += computeRenderedWidth(match[4]);
+    } else if (match[8]) {
+      width += computeRenderedWidth(match[9]);
     } else if (match[5]) {
       if (!isValidHttpUrl(match[7])) {
         width += match[0].length;
@@ -472,6 +594,22 @@ const buildRenderedSegments = (text: string): RenderedSegment[] => {
         rawEnd: contentEnd,
         snapStartRaw: regionStart,
         snapEndRaw: regionEnd,
+        renderedStart: renderedCursor,
+        renderedEnd: renderedCursor + contentRenderedWidth,
+      });
+      rawCursor = match.index + match[0].length;
+      renderedCursor += contentRenderedWidth;
+    } else if (match[8]) {
+      const content = match[9];
+      const contentStart = match.index + 2;
+      const contentEnd = contentStart + content.length;
+      const contentRenderedWidth = computeRenderedWidth(content);
+      segments.push({
+        kind: 'highlight',
+        rawStart: contentStart,
+        rawEnd: contentEnd,
+        snapStartRaw: match.index,
+        snapEndRaw: match.index + match[0].length,
         renderedStart: renderedCursor,
         renderedEnd: renderedCursor + contentRenderedWidth,
       });
@@ -534,6 +672,21 @@ export const mapRenderedRangeToRaw = (
   renderedStart: number,
   renderedEnd: number,
 ): { start: number; end: number } => {
+  // Avec des listes, le texte affiché n'a ni les préfixes `- ` / `1. ` ni les
+  // retours à la ligne autour des listes : on cartographie sur le texte
+  // « nu », puis on revient aux positions du texte brut.
+  const stripped = stripListSyntax(text);
+  if (stripped) {
+    const inner = mapRenderedRangeToRaw(stripped.text, renderedStart, renderedEnd);
+    const back = (index: number, isEnd: boolean): number => {
+      if (index <= 0) return isEnd ? 0 : stripped.toRaw[0] ?? 0;
+      if (index >= stripped.text.length) return text.length;
+      return isEnd ? stripped.toRaw[index - 1] + 1 : stripped.toRaw[index];
+    };
+    const start = back(inner.start, false);
+    const end = back(inner.end, true);
+    return { start: Math.min(start, end), end: Math.max(start, end) };
+  }
   const segments = buildRenderedSegments(text);
 
   let totalRendered = 0;

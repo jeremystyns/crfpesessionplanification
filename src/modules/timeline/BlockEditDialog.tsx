@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { getBlockTypeName, parseDuration } from '@/lib/workshopUtils';
-import { WorkshopItem, BlockType, Person } from '@/types/workshop';
+import { WorkshopItem, BlockType, Person, RoomLayout } from '@/types/workshop';
 import { useBlockFormState } from '@/hooks/useBlockFormState';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ import { Input } from '@/components/primitives/input';
 import { Label } from '@/components/primitives/label';
 import { Switch } from '@/components/primitives/switch';
 import { FormattedTextField } from '@/components/atoms/FormattedTextField';
-import { Lock, Unlock, Trash2 } from 'lucide-react';
+import { Lock, Unlock, Trash2, MapPin, DoorOpen } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -32,6 +32,9 @@ import {
 } from '@/components/primitives/select';
 import { PersonAvatar } from '@/components/atoms/PersonAvatar';
 import { DEBOUNCE_TIMES } from '@/lib/timing';
+import { ROOM_LAYOUTS } from '@/types/workshop';
+import { ROOM_LAYOUT_ICONS } from '@/lib/roomLayout';
+import { MaterialChecklist } from './MaterialChecklist';
 
 interface BlockEditDialogProps {
   item: WorkshopItem | null;
@@ -106,8 +109,8 @@ export const BlockEditDialog = ({
     });
   };
 
-  const formContent = (
-    <div className="space-y-4 py-4">
+  const leftColumn = (
+    <div className="space-y-4">
       {/* Title */}
       <div className="space-y-2">
         <Label htmlFor="title">{t('dialog.title')}</Label>
@@ -287,7 +290,86 @@ export const BlockEditDialog = ({
         </div>
       )}
 
-      {/* Notes */}
+      {/* Lieu, salle et disposition propres à cette phase */}
+      <fieldset className="space-y-3 rounded-md border bg-muted/30 p-3">
+        <legend className="px-1 text-sm font-medium">{t('dialog.placeSection')}</legend>
+        <p className="text-xs text-muted-foreground">{t('dialog.placeHint')}</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="item-location" className="flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" aria-hidden />
+              {t('planner.location')}
+            </Label>
+            <Input
+              id="item-location"
+              value={formData.location || ''}
+              onChange={(e) => handleFieldChange('location', e.target.value || undefined)}
+              placeholder={t('dialog.sameAsSession')}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="item-room" className="flex items-center gap-1.5">
+              <DoorOpen className="h-3.5 w-3.5" aria-hidden />
+              {t('planner.room')}
+            </Label>
+            <Input
+              id="item-room"
+              value={formData.room || ''}
+              onChange={(e) => handleFieldChange('room', e.target.value || undefined)}
+              placeholder={t('dialog.sameAsSession')}
+            />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="item-layout">{t('dialog.layout')}</Label>
+          <Select
+            value={formData.layout || 'none'}
+            onValueChange={(value) => handleFieldChange('layout', value === 'none' ? undefined : (value as RoomLayout))}
+          >
+            <SelectTrigger id="item-layout">
+              <SelectValue placeholder={t('dialog.layoutNone')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">{t('dialog.layoutNone')}</SelectItem>
+              {ROOM_LAYOUTS.map((layout) => {
+                const Icon = ROOM_LAYOUT_ICONS[layout];
+                return (
+                  <SelectItem key={layout} value={layout}>
+                    <span className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" aria-hidden />
+                      {t(`layouts.${layout}`)}
+                    </span>
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+      </fieldset>
+    </div>
+  );
+
+  const rightColumn = (
+    <div className="space-y-4">
+      {/* Objectifs, avant la description */}
+      <div className="space-y-2">
+        <Label htmlFor="objectives">{t('dialog.objectives')}</Label>
+        <FormattedTextField
+          id="objectives"
+          value={formData.objectives || ''}
+          onChange={(v) => setFormData(prev => ({ ...prev, objectives: v }))}
+          onBlur={(v) => {
+            handleTextareaBlur('objectives', v);
+            if (isMobile) autoSave({ ...formData, objectives: v });
+          }}
+          placeholder={t('dialog.objectivesPlaceholder')}
+          multiline
+          rows={3}
+          toolbarSize="sm"
+        />
+      </div>
+
+      {/* Description */}
       <div className="space-y-2">
         <Label htmlFor="notes">{t('dialog.notes')}</Label>
         <FormattedTextField
@@ -300,28 +382,28 @@ export const BlockEditDialog = ({
           }}
           placeholder={t('dialog.notesPlaceholder')}
           multiline
-          rows={4}
+          rows={6}
           toolbarSize="sm"
         />
       </div>
 
-      {/* Material */}
+      {/* Matériel : liste à cocher, coché = prêt */}
       <div className="space-y-2">
-        <Label htmlFor="material">{t('dialog.material')}</Label>
-        <FormattedTextField
-          id="material"
+        <Label>{t('dialog.material')}</Label>
+        <p className="text-xs text-muted-foreground">{t('dialog.materialHint')}</p>
+        <MaterialChecklist
           value={formData.material || ''}
-          onChange={(v) => setFormData(prev => ({ ...prev, material: v }))}
-          onBlur={(v) => {
-            handleTextareaBlur('material', v);
-            if (isMobile) autoSave({ ...formData, material: v });
-          }}
-          placeholder={t('dialog.materialPlaceholder')}
-          multiline
-          rows={2}
-          toolbarSize="sm"
+          onChange={(v) => handleFieldChange('material', v)}
+          editable
         />
       </div>
+    </div>
+  );
+
+  const formContent = (
+    <div className="grid gap-6 py-4 md:grid-cols-2 md:gap-8">
+      {leftColumn}
+      {rightColumn}
     </div>
   );
 
@@ -359,7 +441,7 @@ export const BlockEditDialog = ({
 
   return (
     <Dialog open={!!item} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-lg flex flex-col overflow-hidden">
+      <DialogContent className="flex max-h-[92vh] w-[96vw] max-w-5xl flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>{getDialogTitle()}</DialogTitle>
         </DialogHeader>

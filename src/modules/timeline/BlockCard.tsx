@@ -12,6 +12,7 @@ import { BlockTypeSelector } from './BlockTypeSelector';
 import { cn } from '@/lib/utils';
 import { parseDuration } from '@/lib/workshopUtils';
 import { BlockPreview } from './BlockPreview';
+import { useTypeTitleColor } from '@/hooks/useTypeTitleColor';
 import { PlayState } from '@/lib/playModeUtils';
 import { useIsStripHighlighted, useHoverHighlightHandlers } from '@/hooks/useHoverHighlight';
 
@@ -62,6 +63,7 @@ export const BlockCard = ({
   playState,
 }: BlockCardProps) => {
   const { t } = useTranslation('common');
+  const titleColor = useTypeTitleColor(blockType?.color);
   // Cross-highlight with the time-visualization strip. The card shows the
   // `time-card-highlight` outline only when the hover originated in the
   // strip (so the timeline's own native CSS hover is the sole affordance
@@ -107,8 +109,12 @@ export const BlockCard = ({
   );
   const preview = (
     <BlockPreview
+      objectives={item.objectives}
       notes={item.notes}
       material={item.material}
+      location={item.location}
+      room={item.room}
+      layout={item.layout}
       showFullText={showFullPreviewText}
       stackFields={stackPreviewFields}
       showEmptyPlaceholders={parentType !== 'breakout'}
@@ -121,6 +127,8 @@ export const BlockCard = ({
       onUpdate={onUpdate}
       onCreateBelow={onCreateBelow}
       onDeleteAndFocusPrev={onDeleteAndFocusPrev}
+      className="font-bold"
+      color={titleColor}
       onClick={(e) => e.stopPropagation()}
     />
   );
@@ -159,8 +167,8 @@ export const BlockCard = ({
         {colorIndicator}
 
         <div className={cn(
-          'flex items-start gap-1 p-4 pl-2 pr-0',
-          stackTimeAboveTitle ? 'sm:gap-2 sm:pl-4 sm:pr-2' : 'sm:gap-3 sm:pl-5 sm:pr-4',
+          'flex items-start gap-1 p-4 pl-4 pr-0',
+          stackTimeAboveTitle ? 'sm:gap-2 sm:pl-6 sm:pr-2' : 'sm:gap-3 sm:pl-7 sm:pr-4',
         )}>
           {/* Drag handle for reordering */}
           <DragHandle label={t('actions.move')} attributes={attributes} listeners={listeners} />
@@ -237,7 +245,7 @@ export const BlockCard = ({
                   <span className="font-medium text-primary-text">{timeDisplay}</span>
                 )}
                 {timeDisplay && <span className="text-muted-foreground">•</span>}
-                <span className="text-foreground">{item.duration} Min.</span>
+                <span className="text-foreground">{item.duration} {t('planner.totalMin')}</span>
               </div>
             )}
             
@@ -326,7 +334,7 @@ export const BlockCard = ({
       >
         {colorIndicator}
 
-        <div className="flex items-start gap-3 p-4 pl-5">
+        <div className="flex items-start gap-3 p-4 pl-7">
           {/* Drag handle */}
           <DragHandle label={t('actions.move')} attributes={attributes} listeners={listeners} />
 

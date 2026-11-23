@@ -10,6 +10,10 @@ export interface Person {
   color: string;
 }
 
+/** Disposition de la salle pour une phase. */
+export const ROOM_LAYOUTS = ['conference', 'theatre', 'class', 'circle', 'u', 'table', 'islands', 'free'] as const;
+export type RoomLayout = (typeof ROOM_LAYOUTS)[number];
+
 export interface WorkshopItem {
   id: string;
   type: 'block' | 'group' | 'breakout';
@@ -18,8 +22,16 @@ export interface WorkshopItem {
   duration: number;
   durationLocked?: boolean; // For groups: if true, duration is not auto-updated
   fixedStartTime?: string; // Optional fixed absolute start time "HH:MM". If set, block starts at this clock time.
-  notes: string;
+  /** Objectifs de la phase (texte mis en forme), affichés avant la description. */
+  objectives?: string;
+  notes: string; // Description
+  /** Liste de matériel : une ligne `[ ] texte` (à préparer) ou `[x] texte` (prêt) par entrée. */
   material: string;
+  /** Lieu et salle de cette phase, quand ils diffèrent de ceux de la journée. */
+  location?: string;
+  room?: string;
+  /** Disposition de la salle pour cette phase. */
+  layout?: RoomLayout;
   personIds?: string[]; // IDs of assigned persons
   lanePersons?: Record<number, string[]>; // For breakouts: persons per lane/room
   children?: WorkshopItem[];

@@ -222,6 +222,7 @@ export const BreakoutCard = ({
                   onCreateBelow={onCreateBelow}
                   onDeleteAndFocusPrev={onDeleteAndFocusPrev}
                   placeholderKey="block.breakoutTitlePlaceholder"
+                  className="font-bold"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
@@ -264,7 +265,7 @@ export const BreakoutCard = ({
                   <span
                     className="inline-block text-xs px-2 py-0.5 rounded-full font-medium bg-block-breakout-bg text-block-breakout-foreground"
                   >
-                    Breakout
+                    {t('sidebar.breakout')}
                     {totalBlocks > 0 && isSmUp && (
                       <>
                         {' • '}
@@ -291,7 +292,16 @@ export const BreakoutCard = ({
               </div>
             </div>
 
-            <BlockPreview notes={item.notes} material={item.material} showFullText={showFullPreviewText} onUpdate={onUpdate} />
+            <BlockPreview
+              objectives={item.objectives}
+              notes={item.notes}
+              material={item.material}
+              location={item.location}
+              room={item.room}
+              layout={item.layout}
+              showFullText={showFullPreviewText}
+              onUpdate={onUpdate}
+            />
           </div>
         </div>
 

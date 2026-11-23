@@ -34,7 +34,7 @@
  * ordering ensures the state read happens against the freshly-restored
  * selection, not the stale pre-insert caret.
  */
-import { FormatRegion } from './textFormatting';
+import { FormatRegion, getListKind, getListPrefixLength, type ListKind } from './textFormatting';
 
 /** Result of a formatting action. See file header for contract. */
 export type FormattingActionResult = string | null;
@@ -58,7 +58,7 @@ const tryExecInsertText = (replacement: string): boolean => {
  */
 export const wrapSelection = (
   textarea: HTMLTextAreaElement,
-  marker: '*' | '_',
+  marker: '*' | '_' | '==',
 ): FormattingActionResult => {
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
@@ -159,7 +159,7 @@ export const insertLink = (
 };
 
 /** Prompts the user for a URL to use when inserting a link. */
-export const promptForLink = (): string | null => window.prompt('URL eingeben:', 'https://');
+export const promptForLink = (): string | null => window.prompt('Adresse du lien (URL) :', 'https://');
 
 /**
  * Removes the syntax around `region`, leaving only the raw content text.
@@ -236,4 +236,111 @@ export const removeFormatting = (
   }, 0);
 
   return newText;
+};
+
+/** Remplace `[from, to)` par `replacement` en gardant l'annulation native du navigateur. */
+const replaceRange = (textarea: HTMLTextAreaElement, from: number, to: number, replacement: string): boolean => {
+  textarea.setSelectionRange(from, to);
+  return tryExecInsertText(replacement);
+};
+
+/**
+ * Transforme la ou les lignes touchées par la sélection en liste à puces ou
+ * numérotée ; si elles en sont déjà une du même type, retire la liste.
+ * Même contrat de retour que wrapSelection.
+ */
+export const toggleList = (textarea: HTMLTextAreaElement, kind: ListKind): FormattingActionResult => {
+  const value = textarea.value;
+  const selStart = textarea.selectionStart;
+  const selEnd = textarea.selectionEnd;
+  const collapsed = selStart === selEnd;
+
+  const lineStart = value.lastIndexOf('\n', selStart - 1) + 1;
+  // Une sélection qui s'arrête au tout début d'une ligne ne touche pas cette ligne.
+  const effectiveEnd = !collapsed && value[selEnd - 1] === '\n' ? selEnd - 1 : selEnd;
+  const nextBreak = value.indexOf('\n', effectiveEnd);
+  const lineEnd = nextBreak === -1 ? value.length : nextBreak;
+
+  const lines = value.slice(lineStart, lineEnd).split('\n');
+  const filled = lines.filter((line) => line.trim() !== '');
+  const remove = filled.length > 0 && filled.every((line) => getListKind(line) === kind);
+
+  let counter = 1;
+  const next = lines.map((line) => {
+    const bare = line.slice(getListPrefixLength(line));
+    if (remove) return bare;
+    return kind === 'bullets' ? `- ${bare}` : `${counter++}. ${bare}`;
+  });
+  const replacement = next.join('\n');
+
+  const caretLineIndex = value.slice(lineStart, selStart).split('\n').length - 1;
+  const delta = next[caretLineIndex].length - lines[caretLineIndex].length;
+  const restore = () => {
+    if (collapsed) {
+      const caret = Math.max(lineStart, selStart + delta);
+      textarea.setSelectionRange(caret, caret);
+    } else {
+      textarea.setSelectionRange(lineStart, lineStart + replacement.length);
+    }
+  };
+
+  if (replaceRange(textarea, lineStart, lineEnd, replacement)) {
+    restore();
+    return null;
+  }
+
+  const newText = value.slice(0, lineStart) + replacement + value.slice(lineEnd);
+  setTimeout(() => {
+    restore();
+    textarea.focus();
+  }, 0);
+  return newText;
+};
+
+/**
+ * Touche Entrée dans une liste : crée l'entrée suivante (numéro suivant pour
+ * une liste numérotée) ; sur une entrée vide, termine la liste.
+ * Retourne `handled: false` hors liste (le comportement normal s'applique).
+ */
+export const continueListOnEnter = (
+  textarea: HTMLTextAreaElement,
+): { handled: boolean; result: FormattingActionResult } => {
+  const value = textarea.value;
+  const caret = textarea.selectionStart;
+  if (caret !== textarea.selectionEnd) return { handled: false, result: null };
+
+  const lineStart = value.lastIndexOf('\n', caret - 1) + 1;
+  const nextBreak = value.indexOf('\n', caret);
+  const lineEnd = nextBreak === -1 ? value.length : nextBreak;
+  const line = value.slice(lineStart, lineEnd);
+  const kind = getListKind(line);
+  const prefixLength = getListPrefixLength(line);
+  // Dans le préfixe lui-même, Entrée garde son effet habituel.
+  if (!kind || caret < lineStart + prefixLength) return { handled: false, result: null };
+
+  // Entrée sur une entrée vide : la liste s'arrête.
+  if (line.slice(prefixLength).trim() === '' && caret === lineEnd) {
+    if (replaceRange(textarea, lineStart, lineEnd, '')) {
+      textarea.setSelectionRange(lineStart, lineStart);
+      return { handled: true, result: null };
+    }
+    setTimeout(() => { textarea.setSelectionRange(lineStart, lineStart); textarea.focus(); }, 0);
+    return { handled: true, result: value.slice(0, lineStart) + value.slice(lineEnd) };
+  }
+
+  const prefix = line.slice(0, prefixLength);
+  const nextPrefix = kind === 'bullets'
+    ? prefix
+    : `${Number.parseInt(prefix, 10) + 1}${prefix.trim().endsWith(')') ? ')' : '.'} `;
+  const insertion = `\n${nextPrefix}`;
+  textarea.setSelectionRange(caret, caret);
+  if (tryExecInsertText(insertion)) {
+    textarea.setSelectionRange(caret + insertion.length, caret + insertion.length);
+    return { handled: true, result: null };
+  }
+  setTimeout(() => {
+    textarea.setSelectionRange(caret + insertion.length, caret + insertion.length);
+    textarea.focus();
+  }, 0);
+  return { handled: true, result: value.slice(0, caret) + insertion + value.slice(caret) };
 };

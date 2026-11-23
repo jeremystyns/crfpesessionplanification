@@ -110,8 +110,9 @@
     @apply shadow-xl ring-2 ring-primary/20;
   }
 
+  /* Trait de couleur du type : 12 px (trois fois l'ancien trait de 4 px). */
   .block-type-indicator {
-    @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-lg;
+    @apply absolute left-0 top-0 bottom-0 w-3 rounded-l-lg;
   }
 
   .sidebar-section {

@@ -31,6 +31,8 @@ import {
   findActiveRegionOfKind,
 } from '@/lib/textFormatting';
 import {
+  continueListOnEnter,
+  toggleList,
   wrapSelection,
   insertLink,
   promptForLink,
@@ -43,6 +45,9 @@ export interface UseFormattingActionsResult {
   handleBold: () => void;
   handleItalic: () => void;
   handleLink: () => void;
+  handleHighlight: () => void;
+  handleBullets: () => void;
+  handleNumbers: () => void;
 }
 
 export const useFormattingActions = ({
@@ -62,7 +67,7 @@ export const useFormattingActions = ({
   // Cmd/Ctrl+B/I keyboard shortcuts so they share toggle semantics. In a
   // nested chain like `*_hello_*` only the matched layer is removed — the
   // outer/inner regions stay intact.
-  const applyMarkerOrToggle = useCallback((kind: 'bold' | 'italic', marker: '*' | '_') => {
+  const applyMarkerOrToggle = useCallback((kind: 'bold' | 'italic' | 'highlight', marker: '*' | '_' | '==') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
     const region = findActiveRegionOfKind(textarea.value, textarea.selectionStart, textarea.selectionEnd, kind);
@@ -78,6 +83,17 @@ export const useFormattingActions = ({
 
   const handleBold = useCallback(() => applyMarkerOrToggle('bold', '*'), [applyMarkerOrToggle]);
   const handleItalic = useCallback(() => applyMarkerOrToggle('italic', '_'), [applyMarkerOrToggle]);
+  const handleHighlight = useCallback(() => applyMarkerOrToggle('highlight', '=='), [applyMarkerOrToggle]);
+
+  const applyList = useCallback((kind: 'bullets' | 'numbers') => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const result = toggleList(textarea, kind);
+    if (result !== null) onChange(result);
+    scheduleSelectionStateUpdate();
+  }, [textareaRef, onChange, scheduleSelectionStateUpdate]);
+  const handleBullets = useCallback(() => applyList('bullets'), [applyList]);
+  const handleNumbers = useCallback(() => applyList('numbers'), [applyList]);
 
   const handleLink = useCallback(() => {
     const textarea = textareaRef.current;
@@ -107,9 +123,31 @@ export const useFormattingActions = ({
       return;
     }
 
+    // Entrée dans une liste : entrée suivante, ou fin de liste sur une entrée vide.
+    if (multiline && e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey && !e.nativeEvent.isComposing) {
+      const textarea = textareaRef.current;
+      if (textarea) {
+        const { handled, result } = continueListOnEnter(textarea);
+        if (handled) {
+          e.preventDefault();
+          if (result !== null) onChange(result);
+          scheduleSelectionStateUpdate();
+          return;
+        }
+      }
+    }
+
     const isMac = isMacPlatform();
     const modKey = isMac ? e.metaKey : e.ctrlKey;
     if (!modKey) return;
+
+    // Ctrl/Cmd+Maj+8 : puces, +7 : numérotée, +H : surlignage.
+    if (e.shiftKey) {
+      if (e.code === 'Digit8') { e.preventDefault(); handleBullets(); }
+      else if (e.code === 'Digit7') { e.preventDefault(); handleNumbers(); }
+      else if (e.key === 'h' || e.key === 'H') { e.preventDefault(); handleHighlight(); }
+      return;
+    }
 
     if (e.key === 'b' || e.key === 'B') {
       e.preventDefault();
@@ -121,7 +159,7 @@ export const useFormattingActions = ({
       e.preventDefault();
       handleLink();
     }
-  }, [multiline, handleBold, handleItalic, handleLink]);
+  }, [multiline, textareaRef, onChange, scheduleSelectionStateUpdate, handleBold, handleItalic, handleLink, handleBullets, handleNumbers, handleHighlight]);
 
-  return { handleKeyDown, handleBold, handleItalic, handleLink };
+  return { handleKeyDown, handleBold, handleItalic, handleLink, handleHighlight, handleBullets, handleNumbers };
 };

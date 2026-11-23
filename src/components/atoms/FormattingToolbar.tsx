@@ -1,19 +1,22 @@
 import { Button } from '@/components/primitives/button';
 import { CSSProperties, PointerEvent, forwardRef } from 'react';
-import { Bold, Italic, Link, type LucideIcon } from 'lucide-react';
-import type { FormatKind } from '@/lib/textFormatting';
+import { Bold, Highlighter, Italic, Link, List, ListOrdered, type LucideIcon } from 'lucide-react';
+import type { ToolbarKind } from '@/lib/textFormatting';
 import { cn } from '@/lib/utils';
 
 interface FormattingToolbarProps {
   onBold: () => void;
   onItalic: () => void;
   onLink: () => void;
+  onHighlight: () => void;
+  onBullets: () => void;
+  onNumbers: () => void;
   linkDisabled?: boolean;
   /** Formatting kinds active at the caret/selection. A button renders pressed
    *  (aria-pressed + primary tint) when its kind is in the array — for
    *  nested content like `*_hello_*` both bold and italic are pressed at
    *  once, and clicking either toggles that single layer off. */
-  active?: FormatKind[];
+  active?: ToolbarKind[];
   size?: 'xs' | 'sm';
   className?: string;
   style?: CSSProperties;
@@ -29,7 +32,7 @@ const ICON_SIZE: Record<NonNullable<FormattingToolbarProps['size']>, string> = {
 };
 
 interface ToolEntry {
-  kind: FormatKind;
+  kind: ToolbarKind;
   title: string;
   Icon: LucideIcon;
   /** True for the link button only — disabled when there's neither a selection
@@ -59,6 +62,24 @@ const TOOLS: ToolEntry[] = [
     Icon: Link,
     useLinkDisabled: true,
   },
+  {
+    kind: 'highlight',
+    title: 'Surlignage jaune (Ctrl/Cmd+Maj+H)',
+    Icon: Highlighter,
+    useLinkDisabled: false,
+  },
+  {
+    kind: 'bullets',
+    title: 'Liste à puces (Ctrl/Cmd+Maj+8)',
+    Icon: List,
+    useLinkDisabled: false,
+  },
+  {
+    kind: 'numbers',
+    title: 'Liste numérotée (Ctrl/Cmd+Maj+7)',
+    Icon: ListOrdered,
+    useLinkDisabled: false,
+  },
 ];
 
 export const FormattingToolbar = forwardRef<HTMLDivElement, FormattingToolbarProps>(
@@ -67,6 +88,9 @@ export const FormattingToolbar = forwardRef<HTMLDivElement, FormattingToolbarPro
       onBold,
       onItalic,
       onLink,
+      onHighlight,
+      onBullets,
+      onNumbers,
       linkDisabled = false,
       active = [],
       size = 'sm',
@@ -82,12 +106,15 @@ export const FormattingToolbar = forwardRef<HTMLDivElement, FormattingToolbarPro
       'p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent';
     const activeButtonClass = cn(buttonClass, 'bg-primary/10 text-primary-text hover:bg-primary/15 hover:text-primary-text active:bg-primary/20');
 
-    const isActive = (kind: FormatKind) => active.includes(kind);
+    const isActive = (kind: ToolbarKind) => active.includes(kind);
 
-    const actionByKind: Record<FormatKind, () => void> = {
+    const actionByKind: Record<ToolbarKind, () => void> = {
       bold: onBold,
       italic: onItalic,
       link: onLink,
+      highlight: onHighlight,
+      bullets: onBullets,
+      numbers: onNumbers,
     };
 
     return (

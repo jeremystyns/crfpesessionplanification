@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { WorkshopItem } from '@/types/workshop';
 import { EditableFieldPencil } from '@/components/atoms/EditableFieldPencil';
@@ -12,6 +13,8 @@ interface BlockTitleInputProps {
   /** Typographie du titre (appliquée au champ et à son double invisible). */
   className?: string;
   testIdAttr?: boolean;
+  /** Couleur du texte (titre aligné sur le type de l'élément). */
+  color?: string;
   onClick?: (e: React.MouseEvent) => void;
 }
 
@@ -23,6 +26,7 @@ export const BlockTitleInput = ({
   placeholderKey = 'block.titlePlaceholder',
   className,
   testIdAttr = true,
+  color,
   onClick,
 }: BlockTitleInputProps) => {
   const { t } = useTranslation('common');
@@ -54,6 +58,7 @@ export const BlockTitleInput = ({
           className,
         )}
         placeholder={t(placeholderKey)}
+        style={color ? ({ color } as CSSProperties) : undefined}
         {...(testIdAttr && {
           'data-block-title-input': true,
           'data-block-id': item.id,

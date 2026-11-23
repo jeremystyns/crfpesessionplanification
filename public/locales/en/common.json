@@ -412,9 +412,9 @@
     "fixedStartTimeActive": "Fixed",
     "lockStartTime": "Set a fixed start time",
     "persons": "Persons",
-    "notes": "Notes",
-    "notesPlaceholder": "Notes about this block...",
-    "addNotes": "Add notes",
+    "notes": "Description",
+    "notesPlaceholder": "Description of this phase…",
+    "addNotes": "Add description",
     "material": "Material",
     "materialPlaceholder": "Required materials...",
     "addMaterial": "Add material",
@@ -431,7 +431,16 @@
     "templateLoaded": "Template loaded",
     "templateSaved": "Saved as template",
     "savedToLibrary": "Saved to library",
-    "addedFromLibrary": "Block added from library"
+    "addedFromLibrary": "Block added from library",
+    "objectives": "Objectives",
+    "objectivesPlaceholder": "What participants will know or be able to do after this phase…",
+    "addObjectives": "Add objectives",
+    "materialHint": "Tick items off as you prepare them: ticked = ready.",
+    "placeSection": "Venue and layout",
+    "placeHint": "Only fill in if this phase takes place elsewhere or differently from the rest of the session.",
+    "sameAsSession": "Same as the session",
+    "layout": "Room layout",
+    "layoutNone": "Not specified"
   },
   "playMode": {
     "sessionEnded": "Session ended",
@@ -536,5 +545,21 @@
     "break": "☕ Break",
     "discussion": "💬 Discussion",
     "energizer": "⚡ Energizer"
+  },
+  "material": {
+    "readyCount": "{{ready}} of {{total}} ready",
+    "toggle": "Material ready: {{name}}",
+    "remove": "Remove {{name}}",
+    "addPlaceholder": "Add material, then press Enter…"
+  },
+  "layouts": {
+    "conference": "Conference",
+    "theatre": "Theatre",
+    "class": "Classroom",
+    "circle": "Circle",
+    "u": "U-shape",
+    "table": "Around a table",
+    "islands": "Islands",
+    "free": "Free"
   }
 }

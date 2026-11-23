@@ -1,22 +1,16 @@
 import { Button } from '@/components/primitives/button';
-import { useEffect, useRef, useState } from 'react';
-import { Package, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { parseFormatting } from '@/lib/textFormatting';
+import { hasListSyntax, renderRichText } from '@/lib/textFormatting';
 import { FormattedTextField } from '@/components/atoms/FormattedTextField';
 import { EditableFieldPencil } from '@/components/atoms/EditableFieldPencil';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useClickToEdit } from '@/hooks/useClickToEdit';
-
-interface BlockPreviewProps {
-  notes?: string;
-  material?: string;
-  showFullText?: boolean;
-  stackFields?: boolean;
-  showEmptyPlaceholders?: boolean;
-  onUpdate?: (updates: { notes?: string; material?: string }) => void;
-}
+import type { RoomLayout } from '@/types/workshop';
+import { ROOM_LAYOUT_ICONS } from '@/lib/roomLayout';
+import { MaterialChecklist, MaterialCounter } from './MaterialChecklist';
 
 const InlineEditableField = ({
   value,
@@ -42,11 +36,11 @@ const InlineEditableField = ({
     stopEditing,
     caretPoint,
     initialSelection,
-  } = useClickToEdit<HTMLParagraphElement>({ value, initiallyEditing: startFocused });
+  } = useClickToEdit<HTMLDivElement>({ value, initiallyEditing: startFocused });
 
   if (!editing) {
     return (
-      <p
+      <div
         ref={previewRef}
         className={cn(
           'editable-field editable-field-no-fill cursor-text px-1 -mx-1',
@@ -62,9 +56,10 @@ const InlineEditableField = ({
             left-aligned, so its reserved space always lands in whitespace and
             the text itself never shifts. */}
         {align === 'right' && <EditableFieldPencil className="mr-1" />}
-        {parseFormatting(value)}
-        {align !== 'right' && <EditableFieldPencil className="ml-1" />}
-      </p>
+        {renderRichText(value)}
+        {/* Après une liste, le crayon tomberait sur une ligne à lui seul. */}
+        {align !== 'right' && !hasListSyntax(value) && <EditableFieldPencil className="ml-1" />}
+      </div>
     );
   }
 
@@ -88,258 +83,151 @@ const InlineEditableField = ({
   );
 };
 
-// Small hover-intent delay before an empty-fields placeholder reveals itself, so quickly passing
-// the mouse over it (on the way to somewhere else) doesn't flash it open.
-const HOVER_REVEAL_DELAY_MS = 200;
+interface BlockPreviewProps {
+  objectives?: string;
+  notes?: string;
+  material?: string;
+  /** Lieu, salle et disposition propres à cette phase. */
+  location?: string;
+  room?: string;
+  layout?: RoomLayout;
+  showFullText?: boolean;
+  /** Conservé pour compatibilité : les champs sont désormais toujours empilés. */
+  stackFields?: boolean;
+  showEmptyPlaceholders?: boolean;
+  onUpdate?: (updates: { objectives?: string; notes?: string; material?: string }) => void;
+}
 
-// Marks where a not-yet-revealed placeholder will appear - a small strip in that spot's corner,
-// not a highlight over the whole hoverable area. Shows on any card-level hover; once this specific
-// spot has actually been hovered long enough to reveal the real "+ label", the strip is dropped in
-// favor of that (the caller only renders this while its own `visible`/`revealed` state is false).
-const HoverIndicator = ({ align }: { align: 'left' | 'right' }) => (
-  <span
-    aria-hidden
-    className={cn(
-      'absolute top-2 w-6 h-1 rounded-full bg-muted-foreground/20 opacity-0 transition-opacity delay-0 group-hover:opacity-100 group-hover:delay-300',
-      align === 'right' ? 'right-1' : 'left-1',
-    )}
-  />
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <p className="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{children}</p>
 );
 
-const FieldPlaceholder = ({
-  variant,
-  align = 'left',
-  label,
-  onActivate,
-}: {
-  variant: 'row' | 'compact';
-  align?: 'left' | 'right';
-  label: string;
-  onActivate: () => void;
-}) => {
-  if (variant === 'compact') {
-    return (
-      <Button variant="plain" size="none"
-        type="button"
-        title={label}
-        onClick={(e) => { e.stopPropagation(); onActivate(); }}
-        className="w-8 h-5 shrink-0 flex items-center justify-center text-muted-foreground rounded hover:bg-transparent active:bg-transparent"
-      >
-        <Plus className="h-3.5 w-3.5 opacity-0 transition-opacity delay-0 group-hover:opacity-100 group-hover:delay-300" />
-      </Button>
-    );
-  }
-
+/** Lieu, salle et disposition de la phase, en pastilles. */
+const ItemMetaChips = ({ location, room, layout }: { location?: string; room?: string; layout?: RoomLayout }) => {
+  const { t } = useTranslation('common');
+  const place = [location, room].filter(Boolean).join(' · ');
+  if (!place && !layout) return null;
+  const LayoutIcon = layout ? ROOM_LAYOUT_ICONS[layout] : null;
+  const chip = 'inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground';
   return (
-    <Button variant="plain" size="none"
-      type="button"
-      onClick={(e) => { e.stopPropagation(); onActivate(); }}
-      className={cn(
-        'relative h-7 flex-1 flex items-center gap-1 hover:bg-transparent active:bg-transparent',
-        align === 'right' ? 'justify-end' : 'justify-start',
+    <div className="flex flex-wrap gap-1.5">
+      {place && (
+        <span className={chip} title={t('planner.location')}>
+          <MapPin className="h-3 w-3 shrink-0" aria-hidden />
+          {place}
+        </span>
       )}
-    >
-      <span
-        className={cn(
-          'flex items-center gap-1 text-xs text-muted-foreground transition-opacity',
-          align === 'right' && 'text-right',
-          'opacity-0 delay-0 group-hover:opacity-100 group-hover:delay-300',
-        )}
-      >
-        <Plus className="h-3 w-3 shrink-0" />
-        <span className="truncate">{label}</span>
-      </span>
-    </Button>
-  );
-};
-
-// Only used while BOTH fields are empty: unlike FieldPlaceholder above, the reserved row here only
-// exists once hovered (height 0 at rest, so an empty block isn't taller than a filled one). This is
-// safe from the earlier flicker bug because only the wrapper's HEIGHT grows (extending its bottom
-// edge), never its top-margin/position - the absolutely positioned buttons inside stay anchored to
-// that unmoving top edge the whole time, so hovering one can never shift it out from under the cursor.
-const EmptyFieldsPlaceholders = ({
-  notesLabel,
-  materialLabel,
-  onActivateNotes,
-  onActivateMaterial,
-}: {
-  notesLabel: string;
-  materialLabel: string;
-  onActivateNotes: () => void;
-  onActivateMaterial: () => void;
-}) => {
-  const [notesRevealed, setNotesRevealed] = useState(false);
-  const [materialRevealed, setMaterialRevealed] = useState(false);
-  const notesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const materialTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => () => {
-    if (notesTimeoutRef.current) clearTimeout(notesTimeoutRef.current);
-    if (materialTimeoutRef.current) clearTimeout(materialTimeoutRef.current);
-  }, []);
-
-  const revealAfterDelay = (
-    setRevealed: (v: boolean) => void,
-    timeoutRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>,
-  ) => () => {
-    timeoutRef.current = setTimeout(() => setRevealed(true), HOVER_REVEAL_DELAY_MS);
-  };
-
-  const hideNow = (
-    setRevealed: (v: boolean) => void,
-    timeoutRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>,
-  ) => () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    setRevealed(false);
-  };
-
-  // Hovering the block anywhere only reveals a small marker showing where to hover next. Only
-  // hovering that marked spot grows the wrapper and reserves real space for the add action.
-  const wrapperHeight = notesRevealed || materialRevealed ? 'h-4' : 'h-0';
-
-  return (
-    <div className={cn('relative transition-[height] duration-150', wrapperHeight)}>
-      <Button variant="plain" size="none"
-        type="button"
-        onMouseEnter={revealAfterDelay(setNotesRevealed, notesTimeoutRef)}
-        onMouseLeave={hideNow(setNotesRevealed, notesTimeoutRef)}
-        onClick={(e) => { e.stopPropagation(); onActivateNotes(); }}
-        className="absolute -top-1 left-0 h-7 w-1/2 flex items-center justify-start gap-1 hover:bg-transparent active:bg-transparent"
-      >
-        {!notesRevealed && <HoverIndicator align="left" />}
-        <span className={cn('flex items-center gap-1 text-xs text-muted-foreground transition-opacity', notesRevealed ? 'opacity-100' : 'opacity-0')}>
-          <Plus className="h-3 w-3 shrink-0" />
-          <span className="truncate">{notesLabel}</span>
+      {layout && LayoutIcon && (
+        <span className={chip} title={t('dialog.layout')}>
+          <LayoutIcon className="h-3 w-3 shrink-0" aria-hidden />
+          {t(`layouts.${layout}`)}
         </span>
-      </Button>
-      <Button variant="plain" size="none"
-        type="button"
-        onMouseEnter={revealAfterDelay(setMaterialRevealed, materialTimeoutRef)}
-        onMouseLeave={hideNow(setMaterialRevealed, materialTimeoutRef)}
-        onClick={(e) => { e.stopPropagation(); onActivateMaterial(); }}
-        className="absolute -top-1 right-0 h-7 w-1/2 flex items-center justify-end hover:bg-transparent active:bg-transparent"
-      >
-        {!materialRevealed && <HoverIndicator align="right" />}
-        <span className={cn('flex items-center gap-1 text-xs text-muted-foreground text-right transition-opacity', materialRevealed ? 'opacity-100' : 'opacity-0')}>
-          <Plus className="h-3 w-3 shrink-0" />
-          <span className="truncate">{materialLabel}</span>
-        </span>
-      </Button>
+      )}
     </div>
   );
 };
 
+type FieldKey = 'objectives' | 'notes' | 'material';
+
 export const BlockPreview = ({
+  objectives,
   notes,
   material,
+  location,
+  room,
+  layout,
   showFullText = false,
-  stackFields = false,
   showEmptyPlaceholders = true,
   onUpdate,
 }: BlockPreviewProps) => {
   const isMobile = useIsMobile();
+  // Le texte se modifie en place hors mobile ; cocher le matériel reste possible partout.
   const canEdit = !!onUpdate && !isMobile;
   const { t } = useTranslation('common');
-  const [forceEditNotes, setForceEditNotes] = useState(false);
-  const [forceEditMaterial, setForceEditMaterial] = useState(false);
+  const [forced, setForced] = useState<Partial<Record<FieldKey, boolean>>>({});
+  const force = (field: FieldKey, value: boolean) => setForced((prev) => ({ ...prev, [field]: value }));
 
-  if (!notes && !material && !canEdit) return null;
+  const hasMeta = !!location || !!room || !!layout;
+  const active: Record<FieldKey, boolean> = {
+    objectives: !!objectives || !!forced.objectives,
+    notes: !!notes || !!forced.notes,
+    material: !!material || !!forced.material,
+  };
 
-  const notesActive = !!notes || forceEditNotes;
-  const materialActive = !!material || forceEditMaterial;
-  const bothActive = notesActive && materialActive;
-  const neitherActive = !notesActive && !materialActive;
+  if (!hasMeta && !active.objectives && !active.notes && !active.material && !canEdit) return null;
 
-  if (neitherActive && !showEmptyPlaceholders) return null;
-
-  const notesField = (
+  const textField = (field: 'objectives' | 'notes', value: string | undefined) =>
     canEdit ? (
       <InlineEditableField
-        value={notes || ''}
-        onChange={(v) => onUpdate!({ notes: v })}
+        value={value || ''}
+        onChange={(v) => onUpdate!({ [field]: v })}
         showFullText={showFullText}
         multiline
-        startFocused={forceEditNotes}
-        onEmptyBlur={() => setForceEditNotes(false)}
+        startFocused={!!forced[field]}
+        onEmptyBlur={() => force(field, false)}
       />
     ) : (
-      <p className={showFullText ? 'whitespace-pre-wrap break-words' : 'line-clamp-2'}>{parseFormatting(notes || '')}</p>
-    )
-  );
+      <div className={showFullText ? 'whitespace-pre-wrap break-words' : 'line-clamp-2'}>{renderRichText(value || '')}</div>
+    );
 
-  const materialField = (align: 'left' | 'right') => (
-    <div className={cn('flex items-start gap-1.5', align === 'right' && 'sm:text-right sm:justify-end')}>
-      {!!material && <Package className="h-3.5 w-3.5 mt-1 shrink-0" />}
-      {canEdit ? (
-        <InlineEditableField
-          value={material || ''}
-          onChange={(v) => onUpdate!({ material: v })}
-          showFullText={showFullText}
-          multiline
-          startFocused={forceEditMaterial}
-          onEmptyBlur={() => setForceEditMaterial(false)}
-          align={align}
-        />
-      ) : (
-        <p className={showFullText ? 'whitespace-pre-wrap break-words' : 'line-clamp-2'}>{parseFormatting(material || '')}</p>
-      )}
-    </div>
-  );
+  const missing = (['objectives', 'notes', 'material'] as FieldKey[]).filter((f) => !active[f]);
+  const addLabels: Record<FieldKey, string> = {
+    objectives: t('dialog.addObjectives'),
+    notes: t('dialog.addNotes'),
+    material: t('dialog.addMaterial'),
+  };
 
   return (
-    <div className="mr-4 mt-2">
-      {bothActive ? (
-        <div className={cn('grid grid-cols-1', !stackFields ? 'sm:grid-cols-2 gap-4' : 'gap-1')}>
-          <div className="text-sm text-muted-foreground">
-            <div className="flex items-start gap-1.5">{notesField}</div>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {materialField(!stackFields ? 'right' : 'left')}
-          </div>
-        </div>
-      ) : neitherActive ? (
-        showEmptyPlaceholders && (
-          <EmptyFieldsPlaceholders
-            notesLabel={t('dialog.notes')}
-            materialLabel={t('dialog.material')}
-            onActivateNotes={() => setForceEditNotes(true)}
-            onActivateMaterial={() => setForceEditMaterial(true)}
+    <div className="relative mr-4 mt-2 space-y-2 text-sm text-muted-foreground">
+      {hasMeta && <ItemMetaChips location={location} room={room} layout={layout} />}
+
+      {active.objectives && (
+        <section aria-label={t('dialog.objectives')}>
+          <SectionTitle>{t('dialog.objectives')}</SectionTitle>
+          {textField('objectives', objectives)}
+        </section>
+      )}
+
+      {active.notes && (
+        <section aria-label={t('dialog.notes')}>
+          <SectionTitle>{t('dialog.notes')}</SectionTitle>
+          {textField('notes', notes)}
+        </section>
+      )}
+
+      {active.material && (
+        <section aria-label={t('dialog.material')}>
+          <SectionTitle>
+            {t('dialog.material')}
+            <MaterialCounter value={material || ''} />
+          </SectionTitle>
+          <MaterialChecklist
+            value={material || ''}
+            onChange={onUpdate ? (v) => onUpdate({ material: v }) : undefined}
+            editable={canEdit}
+            startAdding={!!forced.material && !material}
+            onStopAdding={() => force('material', false)}
+            className="text-foreground"
           />
-        )
-      ) : stackFields ? (
-        <div className="flex flex-col gap-1">
-          {notesActive ? (
-            <div className="text-sm text-muted-foreground">{notesField}</div>
-          ) : (
-            canEdit && showEmptyPlaceholders && <FieldPlaceholder variant="row" align="left" label={t('dialog.addNotes')} onActivate={() => setForceEditNotes(true)} />
-          )}
-          {materialActive ? (
-            <div className="text-sm text-muted-foreground">{materialField('left')}</div>
-          ) : (
-            canEdit && showEmptyPlaceholders && <FieldPlaceholder variant="row" align="left" label={t('dialog.addMaterial')} onActivate={() => setForceEditMaterial(true)} />
-          )}
-        </div>
-      ) : (
-        <div className="flex items-center gap-1">
-          {notesActive ? (
-            <>
-              <div className="flex-1 min-w-0 text-sm text-muted-foreground">{notesField}</div>
-              {canEdit && showEmptyPlaceholders && (
-                <FieldPlaceholder variant="compact" label={t('dialog.addMaterial')} onActivate={() => setForceEditMaterial(true)} />
-              )}
-            </>
-          ) : (
-            <>
-              {canEdit && showEmptyPlaceholders && (
-                <FieldPlaceholder variant="compact" label={t('dialog.addNotes')} onActivate={() => setForceEditNotes(true)} />
-              )}
-              <div className="flex-1 min-w-0 text-sm text-muted-foreground">{materialField('right')}</div>
-            </>
-          )}
+        </section>
+      )}
+
+      {/* Ajouts rapides : posés dans la marge basse de la carte, sans en changer la hauteur. */}
+      {canEdit && showEmptyPlaceholders && missing.length > 0 && (
+        <div className="pointer-events-none absolute right-0 top-full z-10 flex gap-1 opacity-0 transition-opacity delay-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:delay-300 focus-within:pointer-events-auto focus-within:opacity-100 print:hidden">
+          {missing.map((field) => (
+            <Button
+              key={field}
+              variant="plain"
+              size="none"
+              type="button"
+              onClick={(e) => { e.stopPropagation(); force(field, true); }}
+              className="flex h-4 items-center gap-0.5 rounded-sm bg-card/90 px-1 text-[11px] leading-4 text-muted-foreground hover:text-foreground"
+            >
+              <Plus className="h-3 w-3 shrink-0" />
+              {addLabels[field]}
+            </Button>
+          ))}
         </div>
       )}
     </div>

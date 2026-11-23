@@ -27,7 +27,7 @@ const OverlayCard = ({
     {color ? (
       <div className="block-type-indicator" style={{ backgroundColor: color }} />
     ) : null}
-    <div className="flex items-start gap-3 p-4 pl-5">
+    <div className="flex items-start gap-3 p-4 pl-7">
       {icon ? <span className="text-xl mt-0.5">{icon}</span> : null}
       <div className="flex-1">{children}</div>
     </div>

@@ -53,6 +53,8 @@ const TOKEN_CLASS: Record<FormatToken['kind'], string> = {
   italic: 'italic',
   'link-text': 'text-primary-text underline',
   'link-url': 'text-muted-foreground',
+  // Surlignage : fond seul, sans effet sur les métriques du texte.
+  highlight: 'bg-yellow-200/80 dark:bg-yellow-300/30',
 };
 
 // Styles applied by an ENCLOSING match (the kinds in `token.styles`). The
@@ -63,6 +65,7 @@ const ENCLOSING_CLASS: Record<FormatKind, string> = {
   bold: 'formatting-faux-bold',
   italic: 'italic',
   link: 'text-primary-text underline',
+  highlight: 'bg-yellow-200/80 dark:bg-yellow-300/30',
 };
 
 const CHROME_CLASSES = {
@@ -108,7 +111,7 @@ export const FormattedTextField = ({
     bumpPositionVersion,
   } = useSelectionToolbar({ textareaRef });
 
-  const { handleKeyDown, handleBold, handleItalic, handleLink } = useFormattingActions({
+  const { handleKeyDown, handleBold, handleItalic, handleLink, handleHighlight, handleBullets, handleNumbers } = useFormattingActions({
     textareaRef,
     multiline,
     onChange,
@@ -234,6 +237,9 @@ export const FormattedTextField = ({
             onBold={handleBold}
             onItalic={handleItalic}
             onLink={handleLink}
+            onHighlight={handleHighlight}
+            onBullets={handleBullets}
+            onNumbers={handleNumbers}
             linkDisabled={linkDisabled}
             active={activeFormats}
             size={toolbarSize}
