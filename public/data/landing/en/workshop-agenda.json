@@ -1,0 +1,65 @@
+{
+  "slug": "workshop-agenda",
+  "title": "Example: Workshop Agenda Builder",
+  "metaTitle": "Example: Workshop Agenda Builder",
+  "metaDescription": "Example landing page for a workshop agenda builder tool.",
+  "heroTitle": "Example: Build your workshop agenda",
+  "heroDescription": "This is example content. Replace with actual marketing copy.",
+  "ctaText": "Get started",
+  "exampleSlug": "en/templates/design-thinking-workshop",
+  "alternates": {
+    "de": "/workshop-agenda-erstellen"
+  },
+  "seoContent": {
+    "sections": [
+      {
+        "type": "features",
+        "tint": "default",
+        "title": "Example features section",
+        "content": "<p>Example features description. Replace with actual content.</p>",
+        "items": [
+          { "title": "Example Feature 1", "icon": "Calendar", "description": "Description of example feature 1." },
+          { "title": "Example Feature 2", "icon": "GitBranch", "description": "Description of example feature 2." }
+        ],
+        "columns": 2
+      },
+      {
+        "title": "Example content section",
+        "content": "<p>Example content. Replace with actual details.</p>"
+      },
+      {
+        "type": "faq",
+        "title": "Example FAQ",
+        "items": [
+          { "question": "Example question?", "answer": "<p>Example answer.</p>" }
+        ]
+      },
+      {
+        "type": "cta",
+        "title": "Example CTA",
+        "buttonText": "Start now",
+        "buttonNote": "Free forever.",
+        "content": "Example CTA description."
+      }
+    ]
+  },
+  "prefillData": {
+    "workshopTitle": "New Workshop",
+    "blockTypes": [
+      { "id": "input", "name": "Lecture/Input", "color": "#004C8E" },
+      { "id": "break", "name": "Break", "color": "#58889E" }
+    ]
+  },
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Workshop Agenda Builder",
+        "description": "Example description.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    ]
+  },
+  "type": "landing-page"
+}

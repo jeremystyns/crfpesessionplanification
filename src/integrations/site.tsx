@@ -1,0 +1,11 @@
+import type { RouteObject } from 'react-router-dom';
+
+export const siteAuthor = { name: 'Session planification', url: (import.meta.env.VITE_PUBLIC_BASE_URL ?? 'https://sessionplan.de') };
+export const authorImage = '/pwa/icon-192.png';
+export const articleAuthorMetadata = {};
+export const siteFounderId: string | undefined = undefined;
+export const siteOrganizationSameAs: string[] = [];
+export const siteApplicationSameAs: string[] = [];
+export const siteRoutes: RouteObject[] = [];
+export function SiteFeedback() { return null; }
+export function useArticleIntegration(_slug: string): void {}

@@ -1,0 +1,47 @@
+{
+    "type": "template",
+    "slug": "design-thinking-workshop",
+    "title": "Example: Design Thinking Workshop",
+    "metaTitle": "Example: Design Thinking Workshop",
+    "metaDescription": "Example workshop template for Design Thinking.",
+    "heroTitle": "Example: Design Thinking Workshop",
+    "heroDescription": "Example workshop template description.",
+    "ctaText": "Use template",
+    "prefillData": {
+        "workshopTitle": "Design Thinking Workshop (Example)",
+        "workshopDescription": "Example description for a Design Thinking workshop template.",
+        "date": "",
+        "startTime": "09:00",
+        "targetDuration": null,
+        "durationLocked": null,
+        "blockTypes": [
+            { "id": "input", "name": "Input", "color": "#004C8E" },
+            { "id": "break", "name": "Break", "color": "#58889E" }
+        ],
+        "persons": [],
+        "items": [
+            {
+                "id": "example-block-1",
+                "type": "block",
+                "title": "Example Block 1",
+                "duration": 30,
+                "blockTypeId": "input",
+                "notes": "Example notes for block 1.",
+                "material": ""
+            },
+            {
+                "id": "example-block-2",
+                "type": "block",
+                "title": "Example Break",
+                "duration": 15,
+                "blockTypeId": "break",
+                "notes": "",
+                "material": ""
+            }
+        ]
+    },
+    "lastModified": "2026-01-01",
+    "alternates": {
+        "de": "/templates/design-thinking-workshop"
+    }
+}

@@ -1,0 +1,63 @@
+# Generic Apache configuration for Sessionplan SPA
+# Adapt the domain-specific rules for your own deployment.
+
+ErrorDocument 404 /404/index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Force HTTPS (strongly recommended for production)
+    # Uncomment and adjust to your domain:
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # Block direct web access to internal data directories that the SPA never
+    # links to. .htaccess context does not permit <DirectoryMatch>, so we use
+    # mod_rewrite's [F] (forbidden) flag instead. Must run before the SPA
+    # fallback below so an attacker cannot rewrite into /index.html.
+    #   sessions/ — not used by this distribution, session data lives outside
+    #               the webroot. The rule still rejects the path so a future
+    #               misconfiguration cannot expose it.
+    #   _shared/   — internal API support modules (require_once'd by sessions.php);
+    #               not meant to be served as standalone URLs.
+    #   trash/     — admin trash directory; deleted sessions live here until
+    #               permanent purge.
+    RewriteRule ^data/(sessions|trash|_shared)/ - [F,L]
+
+    # SPA fallback: serve index.html for unknown paths that are not files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# Note: <DirectoryMatch> blocks for /data/sessions/ and /data/_shared/ were
+# intentionally removed because <DirectoryMatch> is invalid in .htaccess
+# context and triggers an Apache 500 on startup. The deny rules live in the
+# mod_rewrite block above as `RewriteRule ^data/(sessions|trash|_shared)/ - [F,L]`.

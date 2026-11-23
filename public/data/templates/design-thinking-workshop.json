@@ -1,0 +1,47 @@
+{
+    "type": "template",
+    "slug": "design-thinking-workshop",
+    "title": "Beispiel: Design Thinking Workshop",
+    "metaTitle": "Beispiel: Design Thinking Workshop",
+    "metaDescription": "Beispiel-Workshop-Template für Design Thinking.",
+    "heroTitle": "Beispiel: Design Thinking Workshop",
+    "heroDescription": "Beispiel-Beschreibung für ein Workshop-Template.",
+    "ctaText": "Template nutzen",
+    "prefillData": {
+        "workshopTitle": "Design Thinking Workshop (Beispiel)",
+        "workshopDescription": "Beispiel-Beschreibung für ein Design-Thinking-Workshop-Template.",
+        "date": "",
+        "startTime": "09:00",
+        "targetDuration": null,
+        "durationLocked": null,
+        "blockTypes": [
+            { "id": "input", "name": "Vortrag/Input", "color": "#004C8E" },
+            { "id": "break", "name": "Pause", "color": "#58889E" }
+        ],
+        "persons": [],
+        "items": [
+            {
+                "id": "example-block-1",
+                "type": "block",
+                "title": "Beispiel-Block 1",
+                "duration": 30,
+                "blockTypeId": "input",
+                "notes": "Beispiel-Notizen für Block 1.",
+                "material": ""
+            },
+            {
+                "id": "example-block-2",
+                "type": "block",
+                "title": "Beispiel-Pause",
+                "duration": 15,
+                "blockTypeId": "break",
+                "notes": "",
+                "material": ""
+            }
+        ]
+    },
+    "lastModified": "2026-01-01",
+    "alternates": {
+        "en": "/en/templates/design-thinking-workshop"
+    }
+}

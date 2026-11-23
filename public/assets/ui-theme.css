@@ -1,0 +1,157 @@
+/* Shared by the React app and standalone public pages.
+   Identité visuelle CRFPE (système de design CRFPE) :
+   - polices : Mulish (substitut libre de Bliss Pro) ; sigle : Barlow (substitut de DIN)
+   - couleurs mères : bleu #004C8E et cyan #41C8F4 ; neutres #2F3342 / #EDEFF2 / #D8D9DC
+   - rayons anguleux (3 px sur les contrôles, 6 px sur les cartes), pas de dégradé. */
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url(/assets/mulish-latin-ext-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url(/assets/mulish-latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+  :root {
+    --background: 216 20% 97%;
+    --foreground: 228 17% 22%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 228 17% 22%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 228 17% 22%;
+
+    /* Bleu CRFPE #004C8E (Pantone 288 C) */
+    --primary: 208 100% 28%;
+    --primary-text: 208 100% 28%;
+    --primary-hover: 208 100% 21%;
+    --primary-active: 208 100% 17%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 216 16% 94%;
+    --secondary-foreground: 228 17% 22%;
+
+    --muted: 216 16% 94%;
+    --muted-foreground: 222 12% 38%;
+
+    --accent: 216 16% 90%;
+    --accent-active: 216 16% 83%;
+    --accent-foreground: 228 17% 22%;
+
+    --destructive: 0 100% 38%;
+    --destructive-text: 0 100% 35%;
+    --destructive-hover: 0 100% 31%;
+    --destructive-active: 0 100% 26%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 225 8% 86%;
+    --input: 225 8% 78%;
+    /* Focus cyan #00B0F0 sur fond clair : on garde le bleu de marque pour le contraste (3:1). */
+    --ring: 208 100% 28%;
+
+    --radius: 0.375rem;
+
+    /* Block type colors — palettes du CRFPE */
+    --block-input: 208 100% 28%;
+    --block-input-bg: 208 100% 97%;
+    --block-activity: 118 37% 52%;
+    --block-activity-bg: 118 37% 96%;
+    --block-break: 200 28% 48%;
+    --block-break-bg: 200 20% 95%;
+    --block-discussion: 196 89% 52%;
+    --block-discussion-bg: 196 89% 96%;
+    --block-energizer: 33 80% 48%;
+    --block-energizer-bg: 33 90% 96%;
+    --block-group: 209 66% 29%;
+    --block-group-foreground: 209 66% 29%;
+    --block-group-bg: 208 60% 98%;
+    --block-breakout: 5 77% 57%;
+    --block-breakout-foreground: 3 75% 36%;
+    --block-breakout-bg: 5 60% 97%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 228 17% 22%;
+    --sidebar-primary: 208 100% 28%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 216 16% 94%;
+    --sidebar-accent-foreground: 228 17% 22%;
+    --sidebar-border: 225 8% 86%;
+    --sidebar-ring: 208 100% 28%;
+
+    /* Custom properties */
+    --header-height: 4rem;
+    --sidebar-width: 280px;
+    --timeline-max-width: 800px;
+
+    /* Typographie CRFPE */
+    --font-official: 'Mulish', 'Bliss Pro', 'Trebuchet MS', system-ui, sans-serif;
+    --font-sigle: 'Barlow', 'DIN Medium', 'DIN Next', sans-serif;
+  }
+
+  .dark {
+    --background: 212 50% 8%;
+    --foreground: 216 20% 94%;
+
+    --card: 212 42% 12%;
+    --card-foreground: 216 20% 94%;
+
+    --popover: 212 42% 12%;
+    --popover-foreground: 216 20% 94%;
+
+    /* Cyan CRFPE #41C8F4 */
+    --primary: 196 89% 61%;
+    --primary-text: 196 89% 72%;
+    --primary-hover: 196 89% 67%;
+    --primary-active: 196 89% 73%;
+    --primary-foreground: 212 50% 8%;
+
+    --secondary: 212 30% 17%;
+    --secondary-foreground: 216 20% 94%;
+
+    --muted: 212 30% 17%;
+    --muted-foreground: 214 15% 72%;
+
+    --accent: 212 30% 23%;
+    --accent-active: 212 30% 29%;
+    --accent-foreground: 216 20% 94%;
+
+    --destructive: 0 72% 50%;
+    --destructive-text: 0 90% 78%;
+    --destructive-hover: 0 72% 44%;
+    --destructive-active: 0 72% 38%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 212 25% 22%;
+    --input: 212 25% 28%;
+    --ring: 196 100% 60%;
+    --sidebar-ring: 196 100% 60%;
+
+    --block-group-foreground: 209 80% 78%;
+    --block-breakout-foreground: 5 90% 80%;
+
+    /* Block type colors - dark mode */
+    --block-input-bg: 208 70% 15%;
+    --block-activity-bg: 118 25% 12%;
+    --block-break-bg: 200 15% 16%;
+    --block-discussion-bg: 196 50% 13%;
+    --block-energizer-bg: 33 50% 13%;
+    --block-group-bg: 209 40% 11%;
+    --block-breakout-bg: 5 35% 11%;
+
+    --sidebar-background: 212 45% 10%;
+    --sidebar-foreground: 216 20% 94%;
+    --sidebar-primary: 196 89% 61%;
+    --sidebar-primary-foreground: 212 50% 8%;
+    --sidebar-accent: 212 30% 17%;
+    --sidebar-accent-foreground: 216 20% 94%;
+    --sidebar-border: 212 25% 22%;
+  }

@@ -1,0 +1,64 @@
+{
+  "slug": "workshop-agenda-erstellen",
+  "alternates": {
+    "en": "/en/workshop-agenda"
+  },
+  "title": "Beispiel: Workshop Agenda erstellen",
+  "metaTitle": "Beispiel: Workshop Agenda erstellen",
+  "metaDescription": "Beispiel-Landingpage für einen Workshop-Planer.",
+  "heroTitle": "Beispiel: Erstelle deine Workshop-Agenda",
+  "heroDescription": "Dies ist Beispiel-Content. Durch echte Marketingtexte ersetzen.",
+  "ctaText": "Loslegen",
+  "exampleSlug": "templates/design-thinking-workshop",
+  "seoContent": {
+    "sections": [
+      {
+        "type": "features",
+        "tint": "default",
+        "title": "Beispiel: Features",
+        "content": "<p>Beispiel-Beschreibung der Features. Durch echte Inhalte ersetzen.</p>",
+        "items": [
+          { "title": "Beispiel Feature 1", "icon": "Calendar", "description": "Beschreibung von Beispiel Feature 1." },
+          { "title": "Beispiel Feature 2", "icon": "GitBranch", "description": "Beschreibung von Beispiel Feature 2." }
+        ],
+        "columns": 2
+      },
+      {
+        "title": "Beispiel: Inhalt",
+        "content": "<p>Beispiel-Content. Durch echte Details ersetzen.</p>"
+      },
+      {
+        "type": "faq",
+        "title": "Beispiel: FAQ",
+        "items": [
+          { "question": "Beispiel-Frage?", "answer": "<p>Beispiel-Antwort.</p>" }
+        ]
+      },
+      {
+        "type": "cta",
+        "title": "Beispiel: CTA",
+        "buttonText": "Jetzt starten",
+        "buttonNote": "Für immer kostenlos.",
+        "content": "Beispiel-CTA-Beschreibung."
+      }
+    ]
+  },
+  "prefillData": {
+    "workshopTitle": "Neuer Workshop",
+    "blockTypes": [
+      { "id": "input", "name": "Vortrag/Input", "color": "#004C8E" },
+      { "id": "break", "name": "Pause", "color": "#58889E" }
+    ]
+  },
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Workshop Planer",
+        "description": "Beispiel-Beschreibung.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      }
+    ]
+  }
+}

@@ -1,0 +1,601 @@
+@import '../public/assets/ui-theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :where(a[href]):focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: var(--font-official);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .ui-focus:focus-visible,
+  .editable-field:focus-visible,
+  .icon-button:focus-visible,
+  .formatted-field:focus-within {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  .ui-button {
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+  }
+
+  .dialog-field-label { min-height: 1.75rem; }
+
+  .navigation-card:focus-visible { border-radius: var(--radius); }
+
+  .inline-link {
+    @apply text-primary-text underline underline-offset-4 hover:decoration-2 active:text-foreground;
+  }
+
+  .nav-link {
+    @apply underline-offset-4 hover:underline active:text-primary-text transition-colors;
+  }
+
+  .is-past { @apply grayscale text-muted-foreground; }
+
+  .sidebar-action {
+    opacity: 1;
+  }
+
+  .selection-outline {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  .selection-outline:focus-visible { outline-width: 3px; outline-offset: 4px; }
+
+  .content-table {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .content-table:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sidebar-action { opacity: 0; }
+    .sidebar-item:hover .sidebar-action,
+    .sidebar-item:focus-within .sidebar-action,
+    .sidebar-action:focus-visible { opacity: 1; }
+  }
+
+  @media (pointer: coarse) {
+    .ui-button:not(.color-swatch) { min-width: 2.75rem; min-height: 2.75rem; }
+    .color-swatch { min-width: 2rem; min-height: 2rem; }
+    .dialog-field-label { min-height: 2.75rem; }
+  }
+
+  .timeline-connector {
+    @apply absolute left-6 top-0 bottom-0 w-0.5 bg-border;
+  }
+
+  .block-card {
+    @apply outline outline-black/0 relative bg-card rounded-sm rounded-r-lg overflow-hidden border shadow-sm transition-all duration-200;
+  }
+
+  .block-card:hover,
+  .session-history-card:hover {
+    @apply outline outline-black/5 dark:outline-white/5;
+  }
+
+  .session-history-card { @apply outline outline-transparent; }
+
+  .editable-field-no-fill:hover { background-color: transparent !important; }
+
+  .block-card.dragging {
+    @apply shadow-xl ring-2 ring-primary/20;
+  }
+
+  .block-type-indicator {
+    @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-lg;
+  }
+
+  .sidebar-section {
+    @apply mt-3 space-y-1 bg-[rgb(60,90,160,0.04)] dark:bg-black/15 -mx-4 pl-4 py-2 border-b border-sidebar-border;
+  }
+
+  .sidebar-panel { padding: 1rem; }
+  .sidebar-library-label { margin-top: 1rem; padding-top: .75rem; }
+  .planner-header-content { @apply px-4 pb-3 md:py-2.5; }
+  .planner-chrome-row { @apply md:pt-3; }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 mr-2 px-3 py-2 rounded-lg text-sm transition-colors cursor-pointer;
+  }
+
+  .sidebar-item:hover {
+    @apply bg-sidebar-accent;
+  }
+
+  @media (pointer: coarse) {
+    /* A 44px action plus vertical row padding previously made touch rows 60px. */
+    .sidebar-item { min-height: 2.75rem; padding-top: 0; padding-bottom: 0; }
+    .sidebar-panel { padding-block: .5rem; }
+    .sidebar-section { @apply mt-2 space-y-0 py-1; }
+    .sidebar-library-label { margin-top: .5rem; padding-top: .25rem; }
+    .planner-header-content { padding-bottom: .25rem; padding-top: .25rem; }
+    .session-title-input { height: 2rem; align-self: center; }
+  }
+
+  .inline-edit {
+    @apply bg-transparent border-none outline-none focus:ring-2 focus:ring-ring rounded px-1 -mx-1;
+  }
+
+  /* Editable-in-place affordance for planner text fields (workshop/block/group/
+     breakout titles, notes, material, description). A subtle highlight shows on
+     hover; click-to-edit fields additionally fade in a pencil cue
+     (.editable-field-pencil). Gated to devices with a fine pointer and real
+     hover support so touch input never gets sticky hover states, and it stays
+     invisible in print. */
+  .editable-field {
+    @apply rounded transition-colors duration-150 motion-reduce:transition-none;
+  }
+
+  .editable-field-pencil {
+    @apply opacity-0 transition-opacity duration-150 motion-reduce:transition-none -mt-1;
+  }
+
+  /* Metrics-neutral faux bold for the inline formatting backdrop
+     (FormattedTextField). The backdrop's styled text must occupy EXACTLY the
+     same advance widths as the transparent textarea above it — the textarea
+     draws the caret and selection highlight from its own (regular-weight)
+     layout, so any real font-weight in the backdrop would desync the visible
+     caret from the visible text. `-webkit-text-stroke` thickens the glyphs
+     without touching layout (supported in all evergreen browsers). Real bold
+     stays in the read-only previews (parseFormatting), where nothing needs
+     to align. */
+  .formatting-faux-bold {
+    -webkit-text-stroke: 0.6px currentColor;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* :not(:focus) keeps the hover affordance (highlight + pencil) a
+       "click-to-edit" cue only — while a field is being edited (focused) the
+       text stays plain and the pencil never appears, on every editable field
+       (click-to-edit previews and always-rendered title inputs alike). */
+    .editable-field:hover:not(:focus) {
+      @apply text-foreground;
+    }
+
+    /* Pencil cue: either a descendant of the hovered field (inline text) or a
+       descendant of an `.editable-field-sizer` sibling that mirrors an input's
+       text (inputs can't contain elements, so title fields carry the pencil in
+       an invisible sizer span placed after the input in the DOM). */
+    .editable-field:hover:not(:focus) .editable-field-pencil,
+    .editable-field:hover:not(:focus) ~ .editable-field-sizer .editable-field-pencil {
+      @apply opacity-100;
+    }
+  }
+
+  .time-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-muted text-muted-foreground;
+  }
+
+  .time-badge.is-clickable {
+    @apply cursor-pointer hover:underline;
+  }
+
+  .duration-input {
+    @apply w-16 text-center bg-muted/50 border-none rounded-md text-sm font-medium print:pb-0;
+  }
+
+  .icon-button {
+    @apply flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent active:bg-accent-active transition-colors;
+  }
+
+  /* Group Container Styles */
+  .group-container {
+    @apply relative;
+  }
+
+  .group-title-area {
+    @apply bg-card;
+  }
+
+  .group-children-area {
+    @apply relative;
+  }
+
+  /* Time Visualization Strip — diagonal hatch for breakout segments. The
+     stripe color comes from the CSS custom property --strip-color, falling
+     back to the app's breakout pink (matches `--block-breakout` in :root).
+     The base layer is a translucent tint of the same color so the track
+     still reads behind the stripes, and the stripes themselves are drawn at
+     full opacity. */
+  .time-strip-segment--breakout {
+    --strip-color: hsl(5 77% 57%);
+    background-color: color-mix(in srgb, var(--strip-color) 58%, transparent);
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 3px,
+      var(--strip-color) 3px,
+      var(--strip-color) 5px
+    );
+  }
+  .dark .time-strip-segment--breakout {
+    --strip-color: hsl(5 77% 57%);
+    background-color: color-mix(in srgb, var(--strip-color) 22%, transparent);
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 3px,
+      var(--strip-color) 3px,
+      var(--strip-color) 5px
+    );
+  }
+
+  /* Time Visualization Strip — cross-highlight overlay. Applied to a segment
+     (block / break / breakout) when its id matches the global hovered item
+     id from the hoverHighlight store. `filter: brightness()` multiplies
+     through the solid colour, the white-on-color stripe pattern, and the
+     breakout hatch, darkening them uniformly. */
+  .time-strip-segment--highlight {
+    filter: brightness(0.78);
+  }
+
+  /* Cross-highlight on timeline cards. Applied to the outermost element
+     carrying data-item-id (the sortable row in BlockCard, the breakout root
+     in BreakoutCard). The outline lives outside the card so it doesn't
+     disturb the existing border / shadow. */
+  .time-card-highlight {
+    outline: 2px solid hsl(var(--primary) / 0.45);
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+
+  .prose :where(a):not(.cta-button):not(.cta-box a:not(.minor)) {
+    @apply text-primary-text underline underline-offset-4 hover:decoration-2 active:text-foreground;
+  }
+
+  .prose table { @apply text-foreground; }
+  .prose thead { @apply bg-muted text-foreground; }
+  .prose tbody tr:nth-child(even) { @apply bg-muted/50; }
+  .prose :where(th, td) { @apply border-border; }
+
+  /* Blog Content Boxes - must work within prose */
+  .prose .cta-box {
+    @apply -mx-6 my-6 mt-10 p-6 md:pr-10 md:rounded-md bg-primary/10 md:border-2 border-primary/30 shadow-sm;
+  }
+
+  .prose .cta-box > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .prose .cta-box > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .prose .cta-box p {
+    font-weight: 500;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose .cta-box p:first-child {
+    margin-top: 0;
+  }
+
+  .prose .cta-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose .cta-box a:not(.minor) {
+    @apply inline-flex min-h-10 items-center justify-center rounded-md bg-primary px-4 py-2 my-2 mt-4 text-sm font-medium text-primary-foreground no-underline transition-colors;
+  }
+
+  .prose .cta-box a:not(.minor):hover {
+    @apply bg-primary-hover text-primary-foreground no-underline;
+  }
+
+  .prose .cta-box a:not(.minor):active {
+    @apply bg-primary-active;
+  }
+
+  .prose .at-a-glance-box {
+    @apply my-6 p-6 rounded-lg bg-card border-2 border-border shadow-sm prose-sm;
+  }
+
+  .prose .at-a-glance-box > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .prose .at-a-glance-box > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .prose .at-a-glance-box p,
+  .prose .at-a-glance-box h3,
+  .prose .at-a-glance-box h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose .at-a-glance-box p:first-child,
+  .prose .at-a-glance-box h3:first-child,
+  .prose .at-a-glance-box h4:first-child {
+    margin-top: 0;
+  }
+
+  .prose .at-a-glance-box ul {
+    margin-top: 0.75rem !important;
+    @apply space-y-1 list-disc sm:max-w-[85%];
+  }
+
+  .prose .at-a-glance-box li {
+    margin-left: -.68rem !important;
+  }
+
+  .prose .tldr-box {
+    @apply my-6 p-6 md:pr-10 rounded-lg bg-muted/50 border-l-4 border-primary;
+  }
+
+  .prose .tldr-box > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .prose .tldr-box > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .prose h2 {
+    @apply mt-16 mb-8;
+  }
+
+  .prose .tldr-box p,
+  .prose .tldr-box h3,
+  .prose .tldr-box h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose .tldr-box p:first-child,
+  .prose .tldr-box h3:first-child,
+  .prose .tldr-box h4:first-child {
+    margin-top: 0;
+  }
+
+  .prose .tldr-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose .cta-button {
+    @apply inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-8 py-2 my-6 text-sm font-medium text-primary-foreground no-underline transition-colors;
+  }
+
+  .prose .cta-button:hover {
+    @apply bg-primary-hover text-primary-foreground no-underline;
+  }
+
+  .prose .cta-button:active {
+    @apply bg-primary-active;
+  }
+
+  /* Dark mode adjustments for blog boxes */
+  .dark .prose .cta-box {
+    @apply bg-primary/20 border-primary/40;
+  }
+
+  .dark .prose .at-a-glance-box {
+    @apply bg-card/80 border-border/60;
+  }
+
+  .dark .prose .tldr-box {
+    @apply bg-muted/30 border-primary/80;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in-right {
+    animation: slideInRight 0.25s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+
+  body {
+    @apply text-sm;
+  }
+
+  /* Hide unnecessary elements */
+  .print\\:hidden,
+  button[class*="cursor-grab"],
+  button[class*="cursor-grabbing"],
+  [data-drag-handle],
+  [role="menu"],
+  [role="menubar"],
+  header nav,
+  .sidebar,
+  footer button {
+    display: none !important;
+  }
+
+  /* Adjust block cards for print */
+  .block-card {
+    @apply shadow-none border-gray-300;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .block-card:hover {
+    @apply shadow-none;
+  }
+
+  /* Ensure proper spacing */
+  .timeline-connector {
+    @apply hidden;
+  }
+
+  /* Optimize text for print */
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  h3 { font-size: 1.1rem !important; }
+
+  /* Force black text for better print quality */
+  body, p, span, div {
+    color: #000 !important;
+  }
+
+  /* Keep color indicators visible but muted */
+  .block-type-indicator {
+    opacity: 0.7;
+  }
+
+  /* Expand all containers */
+  .block-card[class*="border-dashed"] {
+    border-style: solid !important;
+  }
+
+  /* Remove hover effects */
+  *:hover {
+    @apply shadow-none;
+  }
+
+  /* Better spacing for nested items */
+  .space-y-2 {
+    @apply space-y-1;
+  }
+
+  .space-y-3 {
+    @apply space-y-2;
+  }
+
+  /* Ensure all content is visible */
+  [data-block-title-input] {
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  /* Make inputs look like plain text */
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Hide number input spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield !important;
+  }
+
+  .ui-focus:focus-visible,
+  .editable-field:focus-visible,
+  .formatted-field:focus-within { outline: none !important; }
+
+  /* Hide input focus indicators */
+  input:focus,
+  textarea:focus {
+    outline: none !important;
+    ring: none !important;
+  }
+
+  /* Hide dropdown arrows in selects */
+  button[role="combobox"] svg,
+  [role="combobox"] svg {
+    display: none !important;
+  }
+
+  /* Ensure icons are visible but muted */
+  svg {
+    opacity: 0.6;
+  }
+
+  /* Force expand all collapsible sections */
+  [data-state="closed"] {
+    display: block !important;
+  }
+}
+
+/* Keep runtime status visible without continuous or spatial motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

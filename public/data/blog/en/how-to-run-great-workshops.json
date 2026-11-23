@@ -1,0 +1,18 @@
+{
+    "slug": "how-to-run-great-workshops",
+    "alternates": {
+        "de": "/blog/gute-workshops-gestalten"
+    },
+    "title": "Example: How to Run Great Workshops",
+    "metaTitle": "Example: How to Run Great Workshops",
+    "metaDescription": "Example blog post about running great workshops.",
+    "publishedDate": "2026-01-01",
+    "lastModified": "2026-01-01",
+    "author": {
+        "name": "Example Author",
+        "url": "https://example.com/"
+    },
+    "tags": ["Example"],
+    "excerpt": "This is an example excerpt for a blog post about running great workshops.",
+    "content": "<p>This is example content for the blog post about running great workshops. Replace with actual content.</p>"
+}
