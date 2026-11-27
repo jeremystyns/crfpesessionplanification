@@ -6,3 +6,4 @@ dist/
 .env.*.local
 .DS_Store
 sessions_data/
+dist-standalone

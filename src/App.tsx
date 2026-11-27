@@ -1,11 +1,11 @@
 import { Toaster as Sonner } from "@/components/primitives/sonner";
 import { TooltipProvider } from "@/components/primitives/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider, useLocation, Outlet, useNavigation } from "react-router-dom";
+import { createBrowserRouter, createMemoryRouter, RouterProvider, type RouteObject, useLocation, Outlet, useNavigation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { lazyPage } from "./lib/lazyRoute";
-import { ROUTER_BASENAME } from "./lib/basePath";
+import { ROUTER_BASENAME, STANDALONE } from "./lib/basePath";
 import { resetPrerenderReady, signalPrerenderReadyAfterPaint, isPrerendering } from "./lib/prerender";
 import { LibraryProvider } from "./contexts/LibraryContext";
 import { LocaleProvider } from "./contexts/LocaleContext";
@@ -91,7 +91,7 @@ function RootLayout() {
 }
 
 // Router configuration with data loaders
-const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     element: <RootLayout />,
     errorElement: <LocaleProvider><ErrorBoundary /></LocaleProvider>,
@@ -297,7 +297,13 @@ const router = createBrowserRouter([
       },
     ],
   },
-], { basename: ROUTER_BASENAME || undefined });
+];
+
+// Version autonome (fichier HTML unique, ouvert hors ligne ou dans un cadre
+// isolé) : l'URL n'est pas fiable, la navigation reste donc en mémoire.
+const router = STANDALONE
+  ? createMemoryRouter(routes, { initialEntries: ['/'] })
+  : createBrowserRouter(routes, { basename: ROUTER_BASENAME || undefined });
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient());

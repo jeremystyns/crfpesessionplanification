@@ -65,14 +65,103 @@ function backendMirrorPlugin(): Plugin {
   };
 }
 
+
+// ── Build « fichier unique » (`npm run build:standalone`) ─────────────────────
+// Produit dist-standalone/session-planification.html (+ une version « fragment »
+// pour les artefacts Claude) : JS, CSS, polices, sons et textes embarqués, sans
+// service worker ni appel réseau. Le fichier s'ouvre hors ligne, tel quel.
+const VIRTUAL_ASSETS = "virtual:standalone-assets";
+const MIME: Record<string, string> = {
+  ".mp3": "audio/mpeg", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml",
+};
+
+function standaloneAssetsPlugin(enabled: boolean): Plugin {
+  const dataUri = (file: string) =>
+    `data:${MIME[path.extname(file)]};base64,${fs.readFileSync(file).toString("base64")}`;
+  return {
+    name: "standalone-assets",
+    resolveId: (id) => (id === VIRTUAL_ASSETS ? `\0${VIRTUAL_ASSETS}` : null),
+    load(id) {
+      if (id !== `\0${VIRTUAL_ASSETS}`) return null;
+      const assets: Record<string, string> = {};
+      const files: Record<string, string> = {};
+      if (enabled) {
+        const pub = path.resolve(__dirname, "public");
+        const addAssets = (dir: string, accept: RegExp) => {
+          for (const name of fs.readdirSync(path.join(pub, dir))) {
+            if (accept.test(name)) assets[`/${dir}/${name}`] = dataUri(path.join(pub, dir, name));
+          }
+        };
+        addAssets("assets", /\.(mp3|webp)$|^crfpe-logo-256\.png$/);
+        for (const name of ["favicon.svg", "crfpe-logo.svg", "icon-192.png"]) {
+          assets[`/pwa/${name}`] = dataUri(path.join(pub, "pwa", name));
+        }
+        const addText = (rel: string) => { files[`/${rel}`] = fs.readFileSync(path.join(pub, rel), "utf-8"); };
+        ["locales/fr/common.json", "locales/en/common.json", "data/defaultLibrary.json",
+          "data/defaultLibrary.en.json", "data/landing/home.json", "data/landing/en/home.json"].forEach(addText);
+      }
+      return `export const standaloneAssets = ${JSON.stringify(assets)};\nexport const standaloneFiles = ${JSON.stringify(files)};`;
+    },
+    transformIndexHtml: {
+      order: "pre",
+      handler: (html) =>
+        enabled
+          ? html
+              .replace(/<link rel="(?:icon|apple-touch-icon)"[^>]*>\s*/g, "")
+              .replace("/src/main.tsx", "/src/main.standalone.tsx")
+          : html,
+    },
+  };
+}
+
+function singleFilePlugin(): Plugin {
+  const safeScript = (code: string) => code.replace(/<\/(script)/gi, "<\\/$1");
+  return {
+    name: "single-file",
+    enforce: "post",
+    generateBundle: { order: "post", handler(_options, bundle) {
+      const htmlName = Object.keys(bundle).find((f) => f.endsWith(".html"));
+      if (!htmlName) return;
+      const htmlAsset = bundle[htmlName] as { source: string };
+      let html = String(htmlAsset.source);
+      let js = "";
+      let css = "";
+      for (const [name, item] of Object.entries(bundle)) {
+        if (item.type === "chunk" && item.isEntry) { js += item.code; delete bundle[name]; }
+        else if (item.type === "asset" && name.endsWith(".css")) { css += String(item.source); delete bundle[name]; }
+      }
+      const themeInit = html.match(/<script>[\s\S]*?<\/script>/)?.[0] ?? "";
+      const title = html.match(/<title>[\s\S]*?<\/title>/)?.[0] ?? "<title>Session planification</title>";
+      const body = `<div id="root"></div>\n${themeInit}\n<script type="module">${safeScript(js)}</script>`;
+      const lang = html.match(/<html[^>]*lang="(\w+)"/)?.[1] ?? "fr";
+      // Fichier complet : s'ouvre tel quel dans un navigateur ou une application bureau.
+      this.emitFile({
+        type: "asset",
+        fileName: "session-planification.html",
+        source: `<!doctype html>\n<html lang="${lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">${title}<style>${css}</style></head><body>${body}</body></html>`,
+      });
+      // Fragment pour les artefacts Claude (le squelette est ajouté à la publication).
+      this.emitFile({
+        type: "asset",
+        fileName: "session-planification.fragment.html",
+        source: `${title}\n<style>${css}</style>\n${body}`,
+      });
+      delete bundle[htmlName];
+    } },
+  };
+}
+
 // https://vitejs.dev/config/
 // Base de déploiement : "/" par défaut, "/depot/" pour GitHub Pages (VITE_BASE).
 const rawBase = process.env.VITE_BASE || "/";
 const base = `/${rawBase.replace(/^\/+|\/+$/g, "")}/`.replace(/^\/\/$/, "/");
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-export default defineConfig(({ mode }) => ({
-  base,
+export default defineConfig(({ mode }) => {
+  const standalone = mode === "standalone";
+  return {
+  base: standalone ? "./" : base,
+  publicDir: standalone ? false : "public",
   define: {
     __APP_BUILD__: appBuild,
   },
@@ -98,10 +187,12 @@ export default defineConfig(({ mode }) => ({
     proxy: {},
   },
   plugins: [
-    standaloneStaticPages(),
-    backendMirrorPlugin(),
+    standaloneAssetsPlugin(standalone),
+    standalone && singleFilePlugin(),
+    !standalone && standaloneStaticPages(),
+    !standalone && backendMirrorPlugin(),
     react(),
-    VitePWA({
+    !standalone && VitePWA({
       registerType: "autoUpdate",
       injectRegister: null,
       includeAssets: ["favicon.ico", "apple-touch-icon-180x180.png"],
@@ -167,7 +258,13 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
+  build: standalone ? {
+    outDir: "dist-standalone",
+    assetsInlineLimit: 100_000_000,
+    cssCodeSplit: false,
+    chunkSizeWarningLimit: 100_000,
+    rollupOptions: { output: { inlineDynamicImports: true } },
+  } : {
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -190,4 +287,5 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-}));
+  };
+});

@@ -7,15 +7,26 @@
  *       utilise `ROUTER_BASENAME`. Avec la base "/", rien ne change.
  */
 
+import { standaloneAssets } from 'virtual:standalone-assets';
+
+/** Build « fichier unique » (`vite build --mode standalone`) : tout est embarqué. */
+export const STANDALONE: boolean = import.meta.env.MODE === 'standalone';
+
 /** Base de déploiement, toujours terminée par "/". */
-export const BASE_URL: string = import.meta.env.BASE_URL || '/';
+export const BASE_URL: string = STANDALONE ? '/' : import.meta.env.BASE_URL || '/';
 
 /** Basename du routeur : "" à la racine, "/depot" dans un sous-chemin. */
 export const ROUTER_BASENAME: string = BASE_URL.replace(/\/+$/, '');
 
 /** Préfixe un chemin absolu ("/data/x.json") par la base de déploiement. */
-export const withBase = (path: string): string =>
-  path.startsWith('/') && !path.startsWith('//') ? `${ROUTER_BASENAME}${path}` : path;
+export const withBase = (path: string): string => {
+  if (STANDALONE) {
+    // Ressource embarquée (data: URI) ; les liens vers l'accueil restent dans la page.
+    if (standaloneAssets[path]) return standaloneAssets[path];
+    return path === '/' || path === '/en' ? '#' : path;
+  }
+  return path.startsWith('/') && !path.startsWith('//') ? `${ROUTER_BASENAME}${path}` : path;
+};
 
 /** Retire la base d'un chemin d'URL du navigateur ("/depot/en/blog" → "/en/blog"). */
 export const stripBase = (pathname: string): string => {

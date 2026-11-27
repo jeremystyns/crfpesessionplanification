@@ -8,6 +8,7 @@
     "dev:full": "concurrently -k \"npm run dev\" \"npm run dev:api\"",
     "build": "vite build",
     "build:spa": "vite build",
+    "build:standalone": "vite build --mode standalone",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
