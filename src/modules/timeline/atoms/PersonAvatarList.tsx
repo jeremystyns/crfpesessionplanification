@@ -16,11 +16,17 @@ export const PersonAvatarList = ({ personIds, persons, className }: PersonAvatar
   if (!personIds || personIds.length === 0) return null;
 
   return (
-    <div className={cn('flex gap-1', className)}>
+    <div className={cn('flex flex-wrap items-center gap-1 print:gap-3', className)}>
       {personIds.map(personId => {
         const person = persons.find(p => p.id === personId);
         if (!person) return null;
-        return <PersonAvatar key={personId} name={person.name} color={person.color} size="sm" />;
+        return (
+          <span key={personId} className="inline-flex items-center gap-1">
+            <PersonAvatar name={person.name} color={person.color} size="sm" />
+            {/* Les initiales ne suffisent pas sur papier : le nom complet est imprimé. */}
+            <span className="hidden text-xs print:inline">{person.name}</span>
+          </span>
+        );
       })}
     </div>
   );

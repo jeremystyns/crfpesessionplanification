@@ -3,6 +3,9 @@ import { buildWorkshopCsv, downloadWorkshopCsv, type CsvColumnLabels } from '@/l
 import { makeBlock, makeBreakout, makeGroup, makeWorkshop } from './test-helpers';
 import type { WorkshopData, WorkshopItem } from '@/types/workshop';
 
+const LAYOUTS_FR = { conference: 'Conférence', theatre: 'Théâtre', class: 'Classe', circle: 'En cercle', u: 'En U', table: "Autour d'une table", islands: 'En îlots', free: 'Libre' };
+const LAYOUTS_EN = { conference: 'Conference', theatre: 'Theatre', class: 'Classroom', circle: 'Circle', u: 'U-shape', table: 'Around a table', islands: 'Islands', free: 'Free' };
+
 const LABELS_FR: CsvColumnLabels = {
   nr: 'N°',
   from: 'Von',
@@ -12,8 +15,14 @@ const LABELS_FR: CsvColumnLabels = {
   title: 'Titel',
   breakoutGroup: 'Breakout-Gruppe',
   people: 'Personen',
-  material: 'Material',
+  objectives: 'Objectifs',
   notes: 'Notizen',
+  material: 'Material',
+  location: 'Lieu',
+  room: 'Salle',
+  layout: 'Disposition',
+  participants: 'Participants',
+  layouts: LAYOUTS_FR,
   total: 'Gesamt: {{count}} Min.',
   dayTotal: 'Summe: {{count}} Min.',
   day: (index) => `Tag ${index}`,
@@ -32,8 +41,14 @@ const LABELS_EN: CsvColumnLabels = {
   title: 'Title',
   breakoutGroup: 'Breakout group',
   people: 'Persons',
-  material: 'Material',
+  objectives: 'Objectives',
   notes: 'Notes',
+  material: 'Material',
+  location: 'Venue',
+  room: 'Room',
+  layout: 'Layout',
+  participants: 'Participants',
+  layouts: LAYOUTS_EN,
   total: 'Total: {{count}} min',
   dayTotal: 'Subtotal: {{count}} min',
   day: (index) => `Day ${index}`,
@@ -679,5 +694,79 @@ describe('buildWorkshopCsv — multiple days', () => {
     expect(lines[2]).toBe('');
     expect(lines[lines.length - 1]).toBe('Gesamt: 30 Min.');
     expect(lines.some((line) => line.startsWith('Summe'))).toBe(false);
+  });
+});
+
+
+describe('buildWorkshopCsv — full plan information', () => {
+  const full = (): WorkshopData =>
+    makeWorkshop({
+      workshop: {
+        title: 'Atelier', description: 'Public : *étudiants* EJE', date: '2026-11-24', startTime: '09:00',
+        participants: 24, location: 'CRFPE Lille', room: 'Salle 3',
+      },
+      items: [
+        makeBlock({
+          id: 'b1', title: 'Accueil', duration: 15,
+          objectives: '- Créer un climat\n- Présenter le ==cadre==',
+          notes: 'Mot de *bienvenue*, voir [la fiche](https://example.org/f).',
+          material: '[x] Badges\n[ ] Marqueurs',
+          location: 'Amphi A', room: 'Salle 12', layout: 'conference',
+        }),
+        makeBlock({ id: 'b2', title: 'Pause', duration: 5 }),
+      ],
+    } as Partial<WorkshopData>);
+
+  it('adds the objectives, venue, room and layout columns, in reading order', () => {
+    const lines = splitLines(buildWorkshopCsv(full(), LABELS_FR, 'fr'));
+    const header = lines.find((l) => l.startsWith('N°'))!.split(';');
+    expect(header).toEqual(['N°', 'Von', 'Bis', 'Dauer (Min.)', 'Typ', 'Titel', 'Objectifs', 'Notizen', 'Material', 'Lieu', 'Salle', 'Disposition']);
+    const row = lines.find((l) => l.startsWith('1;'))!;
+    expect(row).toContain('Amphi A');
+    expect(row).toContain('Salle 12');
+    expect(row).toContain('Conférence');
+  });
+
+  it('writes readable text: no formatting marks, links spelled out, bullets', () => {
+    const csv = buildWorkshopCsv(full(), LABELS_FR, 'fr');
+    expect(csv).toContain('• Créer un climat');
+    expect(csv).toContain('• Présenter le cadre');
+    expect(csv).toContain('Mot de bienvenue, voir la fiche (https://example.org/f).');
+    expect(csv).not.toContain('==');
+    expect(csv).not.toContain('*bienvenue*');
+  });
+
+  it('marks material that is ready', () => {
+    const csv = buildWorkshopCsv(full(), LABELS_FR, 'fr');
+    expect(csv).toContain('✓ Badges');
+    expect(csv).toContain('Marqueurs');
+  });
+
+  it('puts the description, participants, venue and room of the day above the table', () => {
+    const lines = splitLines(buildWorkshopCsv(full(), LABELS_FR, 'fr'));
+    expect(lines[0]).toBe('Atelier — 2026-11-24 — 09:00');
+    expect(lines[1]).toBe('Public : étudiants EJE');
+    expect(lines[2]).toBe('Participants : 24 · Lieu : CRFPE Lille · Salle : Salle 3');
+  });
+
+  it('drops the new columns and the info line when nothing is filled in', () => {
+    const lines = splitLines(buildWorkshopCsv(makeWorkshop({ items: [makeBlock({ id: 'x', title: 'Seul', duration: 5 })] }), LABELS_EN, 'en'));
+    const header = lines.find((l) => l.startsWith('No.'))!;
+    for (const label of ['Objectives', 'Venue', 'Room', 'Layout']) expect(header).not.toContain(label);
+    expect(lines.join('\n')).not.toContain('Participants');
+  });
+
+  it('gives every day its own participants, venue and room in a multi-day plan', () => {
+    const data = makeWorkshop({
+      workshop: { title: 'Retraite', description: '', date: '2026-11-24', startTime: '09:00', participants: 12, location: 'Lille' },
+      items: [makeBlock({ id: 'a', title: 'A', duration: 30 })],
+      days: [
+        { id: 'day-1' },
+        { id: 'day-2', date: '2026-11-25', startTime: '09:00', participants: 8, room: 'Salle 7', items: [makeBlock({ id: 'b', title: 'B', duration: 30 })] },
+      ],
+    } as Partial<WorkshopData>);
+    const csv = buildWorkshopCsv(data, LABELS_EN, 'en');
+    expect(csv).toContain('Participants : 12 · Venue : Lille');
+    expect(csv).toContain('Participants : 8 · Room : Salle 7');
   });
 });

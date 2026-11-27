@@ -499,6 +499,19 @@
     @apply text-sm;
   }
 
+  /* Conserver les couleurs (trait des types, surlignage, cases cochées, pastilles) */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Notifications et cellule du mode direct : jamais sur le papier */
+  [data-sonner-toaster],
+  [data-testid="live-floating-cell"],
+  [data-testid="live-focus-view"] {
+    display: none !important;
+  }
+
   /* Hide unnecessary elements */
   .print\\:hidden,
   button[class*="cursor-grab"],

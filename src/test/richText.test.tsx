@@ -7,6 +7,7 @@ import {
   mapRenderedRangeToRaw,
   parseFormatting,
   renderRichText,
+  toPlainText,
   tokenizeFormatting,
 } from '@/lib/textFormatting';
 import { readableOn, contrastRatio } from '@/lib/color-contrast';
@@ -143,5 +144,27 @@ describe('readableOn', () => {
     const light = readableOn('#004C8E', '#12202e');
     const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [number, number, number];
     expect(contrastRatio(rgb(light), rgb('#12202e'))).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+
+describe('toPlainText', () => {
+  it('removes every formatting mark, nested ones included', () => {
+    expect(toPlainText('un *gras _et italique_* ==surligné==')).toBe('un gras et italique surligné');
+  });
+
+  it('spells out links, and keeps a bare address once', () => {
+    expect(toPlainText('[la fiche](https://example.org/f)')).toBe('la fiche (https://example.org/f)');
+    expect(toPlainText('[https://example.org](https://example.org)')).toBe('https://example.org');
+  });
+
+  it('turns bullets into • and keeps numbers', () => {
+    expect(toPlainText('Intro\n- un *a*\n- deux\n1. premier')).toBe('Intro\n• un a\n• deux\n1. premier');
+  });
+
+  it('handles empty values and leaves plain text alone', () => {
+    expect(toPlainText(undefined)).toBe('');
+    expect(toPlainText('')).toBe('');
+    expect(toPlainText('Rien à changer : 10 min.')).toBe('Rien à changer : 10 min.');
   });
 });

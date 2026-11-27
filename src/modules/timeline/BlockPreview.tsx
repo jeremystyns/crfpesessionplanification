@@ -155,8 +155,9 @@ export const BlockPreview = ({
   const organisational = !showFullText;
   const hasMeta = !!location || !!room || !!layout;
   const active: Record<FieldKey, boolean> = {
-    objectives: !organisational && (!!objectives || !!forced.objectives),
-    notes: !organisational && (!!notes || !!forced.notes),
+    // Masqués à l'écran en vue organisationnelle, mais toujours présents à l'impression.
+    objectives: !!objectives || !!forced.objectives,
+    notes: !!notes || !!forced.notes,
     material: !!material || !!forced.material,
   };
 
@@ -185,14 +186,14 @@ export const BlockPreview = ({
       <div className="divide-y divide-border/70">
 
       {active.objectives && (
-        <section aria-label={t('dialog.objectives')} className="py-3 first:pt-0 last:pb-0">
+        <section aria-label={t('dialog.objectives')} className={cn('py-3 first:pt-0 last:pb-0', organisational && 'hidden print:block')}>
           <SectionTitle icon={Target}>{t('dialog.objectives')}</SectionTitle>
           {textField('objectives', objectives)}
         </section>
       )}
 
       {active.notes && (
-        <section aria-label={t('dialog.notes')} className="py-3 first:pt-0 last:pb-0">
+        <section aria-label={t('dialog.notes')} className={cn('py-3 first:pt-0 last:pb-0', organisational && 'hidden print:block')}>
           <SectionTitle icon={AlignLeft}>{t('dialog.notes')}</SectionTitle>
           {textField('notes', notes)}
         </section>

@@ -18,7 +18,8 @@
  *  - A multi-day plan lists its days one below the other, each with its own
  *    heading, column header and total. All days share the same columns.
  */
-import { WorkshopData, WorkshopItem } from '@/types/workshop';
+import { WorkshopData, WorkshopItem, type RoomLayout } from '@/types/workshop';
+import { toPlainText } from '@/lib/textFormatting';
 import { timeToMinutes } from '@/lib/playModeUtils';
 import { formatMinAsHHMM } from '@/lib/clock-time';
 import { getDays } from '@/lib/workshop-days';
@@ -33,8 +34,17 @@ export interface CsvColumnLabels {
   title: string;
   breakoutGroup: string;
   people: string;
-  material: string;
+  objectives: string;
+  /** Colonne de la description de l'élément. */
   notes: string;
+  material: string;
+  location: string;
+  room: string;
+  layout: string;
+  /** Libellé du nombre de participants, en tête de chaque journée. */
+  participants: string;
+  /** Libellés des dispositions de salle, par identifiant. */
+  layouts: Record<RoomLayout, string>;
   /** Footer label that already includes the count placeholder, e.g. "Gesamt: {{count}} Min." */
   total: string;
   /** Total below one day of a multi-day plan, e.g. "Summe: {{count}} Min." */
@@ -130,8 +140,12 @@ interface CsvRow {
   title: string;
   breakoutGroup: string;
   people: string;
-  material: string;
+  objectives: string;
   notes: string;
+  material: string;
+  location: string;
+  room: string;
+  layout: string;
   /** True for top-level (non-nested) rows; the footer total sums only these. */
   countsTowardTotal: boolean;
 }
@@ -168,8 +182,12 @@ const mkRow = (
     title: item.title ?? '',
     breakoutGroup,
     people,
+    objectives: toPlainText(item.objectives),
+    notes: toPlainText(item.notes),
     material: materialToPlainText(item.material),
-    notes: item.notes ?? '',
+    location: item.location ?? '',
+    room: item.room ?? '',
+    layout: item.layout ? ctx.labels.layouts[item.layout] ?? item.layout : '',
     countsTowardTotal,
   };
 };
@@ -386,7 +404,13 @@ export const buildWorkshopCsv = (
     // If title, date, and startTime are all missing, the row is omitted entirely.
     const heading = multiDay ? day.title || labels.day(index + 1) : data.workshop.title;
     const titleLine = [heading, day.date, day.startTime].filter(Boolean).join(' — ');
-    return { rows, titleLine, description: day.description };
+    // Participants, lieu et salle de la journée, sur une ligne.
+    const info = [
+      day.participants !== undefined ? `${labels.participants} : ${day.participants}` : '',
+      day.location ? `${labels.location} : ${day.location}` : '',
+      day.room ? `${labels.room} : ${day.room}` : '',
+    ].filter(Boolean).join(' · ');
+    return { rows, titleLine, description: toPlainText(day.description), info };
   });
   const allRows = sections.flatMap((section) => section.rows);
 
@@ -408,8 +432,12 @@ export const buildWorkshopCsv = (
     { header: labels.title, cell: (r) => r.title, droppable: false },
     { header: labels.breakoutGroup, cell: (r) => r.breakoutGroup, droppable: true },
     { header: labels.people, cell: (r) => r.people, droppable: true },
-    { header: labels.material, cell: (r) => r.material, droppable: true },
+    { header: labels.objectives, cell: (r) => r.objectives, droppable: true },
     { header: labels.notes, cell: (r) => r.notes, droppable: true },
+    { header: labels.material, cell: (r) => r.material, droppable: true },
+    { header: labels.location, cell: (r) => r.location, droppable: true },
+    { header: labels.room, cell: (r) => r.room, droppable: true },
+    { header: labels.layout, cell: (r) => r.layout, droppable: true },
   );
   const keptColumns = allColumns.filter(
     (column) => !column.droppable || allRows.some((row) => column.cell(row) !== ''),
@@ -420,10 +448,11 @@ export const buildWorkshopCsv = (
   const lines: string[] = [];
   if (multiDay && data.workshop.title) lines.push(data.workshop.title, '');
 
-  sections.forEach(({ rows, titleLine, description }) => {
+  sections.forEach(({ rows, titleLine, description, info }) => {
     // ── Header lines ──────────────────────────────────────────────────────
     if (titleLine) lines.push(titleLine);
     if (description) lines.push(description);
+    if (info) lines.push(info);
     lines.push(''); // visual gap before the column header
     lines.push(toLine(keptColumns.map((column) => column.header)));
 

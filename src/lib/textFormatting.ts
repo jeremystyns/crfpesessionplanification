@@ -226,6 +226,47 @@ export const renderRichText = (text: string): ReactNode[] => {
 };
 
 /**
+ * Texte brut d'un contenu mis en forme, pour les exports (CSV…) : sans les
+ * marqueurs *gras*, _italique_ et ==surlignage==, liens écrits « texte (adresse) »,
+ * listes à puces rendues par « • ». Le résultat garde les retours à la ligne.
+ */
+export const toPlainText = (text: string | null | undefined): string => {
+  if (!text) return '';
+  const stripInline = (value: string): string => {
+    let current = value;
+    // Le formatage peut être imbriqué : on répète jusqu'à stabilité.
+    for (let pass = 0; pass < 5; pass += 1) {
+      const next = current.replace(
+        new RegExp(FORMATTING_REGEX.source, 'g'),
+        (match, _b, bold, _i, italic, _l, linkText, url, _h, highlight) => {
+          if (bold !== undefined) return bold;
+          if (italic !== undefined) return italic;
+          if (highlight !== undefined) return highlight;
+          if (url !== undefined) {
+            if (!isValidHttpUrl(url)) return match;
+            return linkText === url ? url : `${linkText} (${url})`;
+          }
+          return match;
+        },
+      );
+      if (next === current) break;
+      current = next;
+    }
+    return current;
+  };
+  return text
+    .split('\n')
+    .map((line) => {
+      const kind = getListKind(line);
+      if (!kind) return stripInline(line);
+      const prefixLength = getListPrefixLength(line);
+      const body = stripInline(line.slice(prefixLength));
+      return kind === 'bullets' ? `• ${body}` : `${line.slice(0, prefixLength)}${body}`;
+    })
+    .join('\n');
+};
+
+/**
  * Converts bare URLs in text to markdown link format [url](url).
  * URLs already wrapped in markdown links are left untouched.
  */

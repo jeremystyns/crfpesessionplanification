@@ -187,13 +187,14 @@
       "breakoutGroup": "Sous-groupe",
       "people": "Personnes",
       "material": "Matériel",
-      "notes": "Notes",
+      "notes": "Description",
       "total": "Total : {{count}} min",
       "dayTotal": "Sous-total : {{count}} min",
       "group": "Groupe",
       "breakout": "Sous-groupes",
       "block": "Bloc",
-      "all": "tous"
+      "all": "tous",
+      "objectives": "Objectifs"
     },
     "erasePlan": "Effacer cette planification",
     "erasePlanTitle": "Effacer cette planification ?",

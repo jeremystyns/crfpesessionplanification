@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ROOM_LAYOUTS } from '@/types/workshop';
 import { toast } from 'sonner';
 import { useLibrary } from '@/contexts/LibraryContext';
 import { armFeedbackValuableAction } from '@/hooks/useFeedbackPrompt';
@@ -60,8 +61,14 @@ export const usePlannerDataActions = ({ plan, loadWorkshop }: UsePlannerDataActi
         title: t('settings.csv.title'),
         breakoutGroup: t('settings.csv.breakoutGroup'),
         people: t('settings.csv.people'),
-        material: t('settings.csv.material'),
+        objectives: t('settings.csv.objectives'),
         notes: t('settings.csv.notes'),
+        material: t('settings.csv.material'),
+        location: t('planner.location'),
+        room: t('planner.room'),
+        layout: t('dialog.layout'),
+        participants: t('planner.participants'),
+        layouts: Object.fromEntries(ROOM_LAYOUTS.map((id) => [id, t(`layouts.${id}`)])) as CsvColumnLabels['layouts'],
         total: t('settings.csv.total'),
         dayTotal: t('settings.csv.dayTotal'),
         day: (index) => t('days.label', { index }),

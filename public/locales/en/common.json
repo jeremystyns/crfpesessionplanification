@@ -187,13 +187,14 @@
       "breakoutGroup": "Breakout group",
       "people": "Persons",
       "material": "Material",
-      "notes": "Notes",
+      "notes": "Description",
       "total": "Total: {{count}} min",
       "dayTotal": "Subtotal: {{count}} min",
       "group": "Group",
       "breakout": "Breakout",
       "block": "Block",
-      "all": "all"
+      "all": "all",
+      "objectives": "Objectives"
     },
     "erasePlan": "Erase this plan",
     "erasePlanTitle": "Erase this plan?",
