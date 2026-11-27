@@ -9,9 +9,9 @@ interface PendingDelete {
 }
 
 interface SidebarDialogsProps {
-  showClearAllDialog: boolean;
-  onShowClearAllDialogChange: (open: boolean) => void;
-  onClearAll: () => void;
+  showErasePlanDialog: boolean;
+  onShowErasePlanDialogChange: (open: boolean) => void;
+  onErasePlan: () => void;
   pendingDelete: PendingDelete | null;
   onClearPendingDelete: () => void;
   onConfirmDelete: () => void;
@@ -21,9 +21,9 @@ interface SidebarDialogsProps {
 }
 
 export const SidebarDialogs = ({
-  showClearAllDialog,
-  onShowClearAllDialogChange,
-  onClearAll,
+  showErasePlanDialog,
+  onShowErasePlanDialogChange,
+  onErasePlan,
   pendingDelete,
   onClearPendingDelete,
   onConfirmDelete,
@@ -36,13 +36,13 @@ export const SidebarDialogs = ({
   return (
     <>
       <ConfirmDialog
-        open={showClearAllDialog}
-        onOpenChange={onShowClearAllDialogChange}
-        title={t('settings.clearAllTitle')}
-        description={t('settings.clearAllConfirm')}
-        confirmLabel={t('settings.clearAll')}
+        open={showErasePlanDialog}
+        onOpenChange={onShowErasePlanDialogChange}
+        title={t('settings.erasePlanTitle')}
+        description={t('settings.erasePlanConfirm')}
+        confirmLabel={t('settings.erasePlan')}
         cancelLabel={t('settings.clearAllCancel')}
-        onConfirm={onClearAll}
+        onConfirm={onErasePlan}
         destructive
       />
 

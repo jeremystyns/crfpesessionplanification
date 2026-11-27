@@ -36,12 +36,11 @@ interface SidebarProps {
   onAddPerson: (person: Omit<Person, 'id'>) => void;
   onUpdatePerson: (id: string, updates: Partial<Omit<Person, 'id'>>) => void;
   onDeletePerson: (id: string) => void;
-  onExport?: () => void;
-  onExportCsv?: () => void;
   onImport?: (file: File) => Promise<void>;
   onImportText?: (text: string) => Promise<void>;
   onReset?: () => void;
-  onClearAll?: () => void;
+  /** Efface la planification ouverte (absent quand il n'y en a pas). */
+  onErasePlan?: () => void;
   onSaveAsTemplate?: () => void;
   itemsCount?: number;
   isOpen: boolean;
@@ -67,12 +66,10 @@ export const Sidebar = ({
   onAddPerson,
   onUpdatePerson,
   onDeletePerson,
-  onExport,
-  onExportCsv,
   onImport,
   onImportText,
   onReset: _onReset,
-  onClearAll,
+  onErasePlan,
   onSaveAsTemplate,
   itemsCount: _itemsCount = 0,
   isOpen,
@@ -106,7 +103,7 @@ export const Sidebar = ({
   const [showNewTypeForm, setShowNewTypeForm] = useState(false);
   const [newPersonColor, setNewPersonColor] = useState(DEFAULT_PERSON_COLOR);
   const [showNewPersonForm, setShowNewPersonForm] = useState(false);
-  const [showClearAllDialog, setShowClearAllDialog] = useState(false);
+  const [showErasePlanDialog, setShowErasePlanDialog] = useState(false);
   const [editingBlockTypeId, setEditingBlockTypeId] = useState<string | null>(null);
   const [editingPersonId, setEditingPersonId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<
@@ -335,13 +332,10 @@ export const Sidebar = ({
         >
           {expandedSections.settings && !collapsed && (
             <SettingsPanel
-              onExport={onExport}
-              onExportCsv={onExportCsv}
-              onImport={onImport}
+              onErasePlan={onErasePlan ? () => setShowErasePlanDialog(true) : undefined}
               onOpenFeedback={onOpenFeedback}
               onOpenKeyboardShortcuts={onOpenKeyboardShortcuts}
               onOpenAiHelp={() => setShowAiHelp(true)}
-              onClearAll={() => setShowClearAllDialog(true)}
               panelRef={settingsRef}
             />
           )}
@@ -356,11 +350,11 @@ export const Sidebar = ({
       </aside>
 
       <SidebarDialogs
-        showClearAllDialog={showClearAllDialog}
-        onShowClearAllDialogChange={setShowClearAllDialog}
-        onClearAll={() => {
-          onClearAll?.();
-          setShowClearAllDialog(false);
+        showErasePlanDialog={showErasePlanDialog}
+        onShowErasePlanDialogChange={setShowErasePlanDialog}
+        onErasePlan={() => {
+          onErasePlan?.();
+          setShowErasePlanDialog(false);
         }}
         pendingDelete={pendingDelete}
         onClearPendingDelete={() => setPendingDelete(null)}

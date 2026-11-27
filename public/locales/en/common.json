@@ -119,7 +119,7 @@
     "truncateDescription": "Organisational view: hide objectives and descriptions",
     "playModeSounds": "Audio notifications",
     "timeVisualizationStrip": "Show time visualization",
-    "exportData": "Export data",
+    "exportData": "Export as file (JSON)",
     "exportPdf": "Export as PDF",
     "exportCsv": "Export as spreadsheet (CSV)",
     "importData": "Import data",
@@ -194,7 +194,11 @@
       "breakout": "Breakout",
       "block": "Block",
       "all": "all"
-    }
+    },
+    "erasePlan": "Erase this plan",
+    "erasePlanTitle": "Erase this plan?",
+    "erasePlanConfirm": "This plan will be erased from this browser and removed from your session list. This cannot be undone: export it first if you want to keep a copy.",
+    "erasePlanSuccess": "Plan erased"
   },
   "author": {
     "about": "About the Author",
@@ -360,7 +364,8 @@
     "room": "Room",
     "roomPlaceholder": "Room number or name",
     "infoCardLabel": "Session description and logistics",
-    "displayOptions": "Display options"
+    "displayOptions": "Display options",
+    "exportSection": "Export"
   },
   "block": {
     "newBlock": "New Block",
@@ -503,15 +508,15 @@
     "unavailable": "Dynamic link unavailable",
     "untitled": "Untitled",
     "reopen": "Open",
-    "hide": "Hide",
+    "hide": "Erase this plan",
     "deleteServer": "Delete",
     "deleteConfirmTitle": "Delete dynamic link?",
     "deleteConfirmText": "This will permanently delete the session from the server. Anyone with the link will no longer be able to open it.",
     "deleteConfirmAction": "Delete permanently",
     "deleteConfirmCancel": "Cancel",
-    "hideConfirmTitle": "Hide session?",
-    "hideConfirmText": "The session will be removed from the list. Without the exact URL it will no longer be accessible.",
-    "hideConfirmAction": "Hide",
+    "hideConfirmTitle": "Erase this plan?",
+    "hideConfirmText": "It will be removed from the list and erased from this browser. Without its exact URL or an exported file, it can no longer be found.",
+    "hideConfirmAction": "Erase",
     "hideAll": "Hide all",
     "hideAllConfirmTitle": "Hide all sessions?",
     "hideAllConfirmText": "All sessions will be removed from the list. Without the exact URL they will no longer be accessible.",

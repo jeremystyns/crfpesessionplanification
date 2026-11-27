@@ -8,7 +8,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu, ListChecks, ChartNoAxesGantt, Volume2, VolumeX } from 'lucide-react';
+import { Share2, X, Play, Square, Link, ChevronDown, Undo2, Printer, Menu, Download, FileSpreadsheet, ListChecks, ChartNoAxesGantt, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { Badge } from '@/components/primitives/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/primitives/tooltip';
@@ -55,6 +55,9 @@ interface HeaderActionButtonsProps {
   /** Notifies the parent when the share popover opens or closes (used by
    *  the optional feedback prompt to gate exit-intent / card eligibility). */
   onSharePopoverOpenChange?: (open: boolean) => void;
+  /** Exports proposés dans le menu de partage. */
+  onExportJson?: () => void;
+  onExportCsv?: () => void;
   /** Affichage : descriptions tronquées, frise du temps, notifications sonores. */
   showFullPreviewText?: boolean;
   onSetShowFullPreviewText?: (value: boolean) => void;
@@ -87,22 +90,46 @@ const DisplayToggle = ({ pressed, label, icon, onToggle, className }: DisplayTog
   </Button>
 );
 
-const PrintPlanButton = () => {
+interface ExportButtonsProps {
+  onExportJson?: () => void;
+  onExportCsv?: () => void;
+}
+
+/** Exports de la planification, réunis dans le menu de partage : PDF, tableur, fichier. */
+const ExportButtons = ({ onExportJson, onExportCsv }: ExportButtonsProps) => {
   const { t } = useTranslation('common');
+  const item = 'w-full justify-start gap-2';
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="w-full mt-2"
-      onClick={() => {
-        armFeedbackValuableAction('print');
-        window.print();
-      }}
-    >
-      <Printer className="h-4 w-4" />
-      {t('settings.exportPdf')}
-    </Button>
+    <div className="mt-2 space-y-0.5" role="group" aria-label={t('planner.exportSection')}>
+      <p className="px-2 pb-1 pt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {t('planner.exportSection')}
+      </p>
+      <Button
+        variant="ghost"
+        size="sm"
+        className={item}
+        onClick={() => {
+          armFeedbackValuableAction('print');
+          window.print();
+        }}
+      >
+        <Printer className="h-4 w-4" />
+        {t('settings.exportPdf')}
+      </Button>
+      {onExportCsv && (
+        <Button variant="ghost" size="sm" className={item} onClick={onExportCsv}>
+          <FileSpreadsheet className="h-4 w-4" />
+          {t('settings.exportCsv')}
+        </Button>
+      )}
+      {onExportJson && (
+        <Button variant="ghost" size="sm" className={item} onClick={onExportJson}>
+          <Download className="h-4 w-4" />
+          {t('settings.exportData')}
+        </Button>
+      )}
+    </div>
   );
 };
 
@@ -142,6 +169,8 @@ export const HeaderActionButtons = ({
   hasActions = true,
   isReadOnly = false,
   onSharePopoverOpenChange,
+  onExportJson,
+  onExportCsv,
   showFullPreviewText = true,
   onSetShowFullPreviewText,
   timeVisualizationStrip = false,
@@ -391,7 +420,7 @@ export const HeaderActionButtons = ({
           <PopoverContent className="w-80 p-4" align="end">
             <SharePopoverContent {...sharePopoverContentProps} />
             <Separator className="mt-3" />
-            <PrintPlanButton />
+            <ExportButtons onExportJson={onExportJson} onExportCsv={onExportCsv} />
           </PopoverContent>
         </Popover>
         {/* Mobile: one button that always opens the Drawer */}
@@ -422,7 +451,7 @@ export const HeaderActionButtons = ({
             <div className="overflow-y-auto px-4 pb-4">
               <SharePopoverContent {...sharePopoverContentProps} />
               <Separator className="mt-6" />
-              <PrintPlanButton />
+              <ExportButtons onExportJson={onExportJson} onExportCsv={onExportCsv} />
             </div>
           </DrawerContent>
         </Drawer>

@@ -1,15 +1,11 @@
 import { Button } from '@/components/primitives/button';
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, FileSpreadsheet, Keyboard, MessageSquare, Printer, RotateCcw, Sparkles, Upload } from 'lucide-react';
+import { Eraser, Keyboard, MessageSquare, Sparkles } from 'lucide-react';
 import { ThemeToggle } from './atoms/ThemeToggle';
-import { armFeedbackValuableAction } from '@/hooks/useFeedbackPrompt';
 
 interface SettingsPanelProps {
-  onExport?: () => void;
-  onExportCsv?: () => void;
-  onImport?: (file: File) => void;
-  onClearAll?: () => void;
+  /** Efface la planification ouverte (absent quand il n'y en a pas). */
+  onErasePlan?: () => void;
   onOpenAiHelp?: () => void;
   /** Open the optional feedback dialog (always available; bypasses locks). */
   onOpenFeedback?: () => void;
@@ -18,17 +14,13 @@ interface SettingsPanelProps {
 }
 
 export const SettingsPanel = ({
-  onExport,
-  onExportCsv,
-  onImport,
-  onClearAll,
+  onErasePlan,
   onOpenAiHelp,
   onOpenFeedback,
   onOpenKeyboardShortcuts,
   panelRef,
 }: SettingsPanelProps) => {
   const { t } = useTranslation('common');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div
@@ -39,25 +31,6 @@ export const SettingsPanel = ({
         <ThemeToggle />
 
         <div className="border-t pt-1 mt-1">
-          <Button variant="plain" size="none"
-            onClick={() => {
-              armFeedbackValuableAction('print');
-              window.print();
-            }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-          >
-            <Printer className="h-4 w-4" />
-            {t('settings.exportPdf')}
-          </Button>
-          {onExportCsv && (
-            <Button variant="plain" size="none"
-              onClick={onExportCsv}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-            >
-              <FileSpreadsheet className="h-4 w-4" />
-              {t('settings.exportCsv')}
-            </Button>
-          )}
           {onOpenFeedback && (
             <Button variant="plain" size="none"
               onClick={onOpenFeedback}
@@ -87,37 +60,15 @@ export const SettingsPanel = ({
               {t('settings.aiHelp')}
             </Button>
           )}
-          <Button variant="plain" size="none"
-            onClick={onExport}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-          >
-            <Download className="h-4 w-4" />
-            {t('settings.exportData')}
-          </Button>
-          <label className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors cursor-pointer">
-            <Upload className="h-4 w-4" />
-            {t('settings.importData')}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  onImport?.(file);
-                  e.target.value = '';
-                }
-              }}
-              className="hidden"
-            />
-          </label>
-          <Button variant="plain" size="none"
-            onClick={onClearAll}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-destructive/10 text-destructive-text transition-colors font-semibold"
-          >
-            <RotateCcw className="h-4 w-4" />
-            {t('settings.clearAll')}
-          </Button>
+          {onErasePlan && (
+            <Button variant="plain" size="none"
+              onClick={onErasePlan}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-destructive/10 text-destructive-text transition-colors font-semibold"
+            >
+              <Eraser className="h-4 w-4" />
+              {t('settings.erasePlan')}
+            </Button>
+          )}
         </div>
       </div>
     </div>

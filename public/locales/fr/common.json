@@ -119,7 +119,7 @@
     "truncateDescription": "Vue organisationnelle : masquer objectifs et descriptions",
     "playModeSounds": "Notifications sonores",
     "timeVisualizationStrip": "Afficher la visualisation du temps",
-    "exportData": "Exporter les données",
+    "exportData": "Exporter en fichier (JSON)",
     "exportPdf": "Exporter en PDF",
     "exportCsv": "Exporter en tableur (CSV)",
     "importData": "Importer des données",
@@ -194,7 +194,11 @@
       "breakout": "Sous-groupes",
       "block": "Bloc",
       "all": "tous"
-    }
+    },
+    "erasePlan": "Effacer cette planification",
+    "erasePlanTitle": "Effacer cette planification ?",
+    "erasePlanConfirm": "Cette planification sera effacée de ce navigateur et retirée de la liste de vos séances. L'action est définitive : exportez-la d'abord si vous voulez en garder une copie.",
+    "erasePlanSuccess": "Planification effacée"
   },
   "author": {
     "about": "À propos de l'auteur",
@@ -360,7 +364,8 @@
     "room": "Salle",
     "roomPlaceholder": "Numéro ou nom de la salle",
     "infoCardLabel": "Description et organisation de la séance",
-    "displayOptions": "Options d'affichage"
+    "displayOptions": "Options d'affichage",
+    "exportSection": "Exporter"
   },
   "block": {
     "newBlock": "Nouveau bloc",
@@ -503,15 +508,15 @@
     "unavailable": "Lien dynamique indisponible",
     "untitled": "Sans titre",
     "reopen": "Ouvrir",
-    "hide": "Masquer",
+    "hide": "Effacer cette planification",
     "deleteServer": "Supprimer",
     "deleteConfirmTitle": "Supprimer le lien dynamique ?",
     "deleteConfirmText": "La séance sera définitivement supprimée du serveur. Les personnes qui ont le lien ne pourront plus l'ouvrir.",
     "deleteConfirmAction": "Supprimer définitivement",
     "deleteConfirmCancel": "Annuler",
-    "hideConfirmTitle": "Masquer la séance ?",
-    "hideConfirmText": "La séance sera retirée de la liste. Sans l'adresse exacte, elle ne sera plus accessible.",
-    "hideConfirmAction": "Masquer",
+    "hideConfirmTitle": "Effacer cette planification ?",
+    "hideConfirmText": "Elle sera retirée de la liste et effacée de ce navigateur. Sans son adresse exacte ou un fichier exporté, elle ne pourra plus être retrouvée.",
+    "hideConfirmAction": "Effacer",
     "hideAll": "Tout masquer",
     "hideAllConfirmTitle": "Masquer toutes les séances ?",
     "hideAllConfirmText": "Toutes les séances seront retirées de la liste. Sans l'adresse exacte, elles ne seront plus accessibles.",

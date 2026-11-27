@@ -12,7 +12,6 @@ import type { CSSProperties, ReactNode } from 'react';
 import { useFirstBlockAdded } from '@/hooks/useFirstBlockAdded';
 import { useMobileHeaderHidden } from '@/hooks/useMobileHeaderHidden';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'next-themes';
 import { useLocale } from '@/contexts/LocaleContext';
 import { Helmet } from 'react-helmet-async';
 import { formatTitle } from '@/lib/metaConfig';
@@ -29,7 +28,6 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useWorkshop } from '@/hooks/useWorkshop';
-import { useLibrary } from '@/contexts/LibraryContext';
 import { DragDropProvider } from '@/hooks/useDragDropContext';
 import { useDragHandlers } from '@/hooks/useDragHandlers';
 import { usePlannerDataActions } from '@/hooks/usePlannerDataActions';
@@ -37,13 +35,12 @@ import { usePlannerPreferences } from '@/hooks/usePlannerPreferences';
 import { usePlannerShortcuts } from '@/hooks/usePlannerShortcuts';
 import { useServerLinkActions } from '@/hooks/useServerLinkActions';
 import { useSessionCloseFlow } from '@/hooks/useSessionCloseFlow';
-import { refreshKeyboardShortcutsEnabled } from '@/hooks/useKeyboardShortcutsEnabled';
 import { KeyboardShortcutHints } from '@/components/sections/KeyboardShortcutHints';
 import { KeyboardShortcutsDialog } from '@/components/sections/KeyboardShortcutsDialog';
 import { useFeedbackPrompt } from '@/hooks/useFeedbackPrompt';
 import { FEEDBACK_API_URL } from '@/lib/feedback-api';
 import { FeedbackPromptLayer } from '@/modules/planner/FeedbackPromptLayer';
-import { calculateEffectiveDuration, clearAllData } from '@/lib/workshopStorage';
+import { calculateEffectiveDuration } from '@/lib/workshopStorage';
 import { WorkshopPageContext } from '@/contexts/WorkshopPageContext';
 import type { WorkshopItem, WorkshopPrefillData } from '@/types/workshop';
 import { WorkshopHeader } from '@/modules/planner/WorkshopHeader';
@@ -107,7 +104,6 @@ interface EmptyStateRenderProps {
 
 export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: WorkshopPlannerProps = {}) => {
   const { t } = useTranslation('common');
-  const { setTheme } = useTheme();
   const { locale } = useLocale();
   const {
     // `plan` is the full document; `activeDay` is the shown day as a regular
@@ -198,7 +194,6 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
     if (workshopPageRef) workshopPageRef.current = true;
   }, [workshopPageRef]);
 
-  const { refreshAll } = useLibrary();
   const isLg = useIsLg();
   const isMobile = useIsMobile();
 
@@ -412,16 +407,12 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
     toast.success(t('dialog.addedFromLibrary'));
   };
 
-  const handleClearAll = async () => {
-    await clearAllData();
+  /** Efface la planification ouverte : retirée de l'historique et de l'écran. */
+  const handleErasePlan = () => {
     resetSyncState();
     clearWorkshopCompletely();
-    refreshAll();
-    preferences.resetToDefaults();
-    refreshKeyboardShortcutsEnabled();
-    setTheme('system');
     setEmptyStateRevision((revision) => revision + 1);
-    toast.success(t('settings.clearAllSuccess'));
+    toast.success(t('settings.erasePlanSuccess'));
     onReset?.();
   };
 
@@ -535,6 +526,8 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
               isSidebarCollapsed={sidebarCollapsed}
               hasActions={planHasItems}
               onSharePopoverOpenChange={setSharePopoverOpen}
+              onExportJson={dataActions.handleExport}
+              onExportCsv={dataActions.handleExportCsv}
               showFullPreviewText={showFullPreviewText}
               onSetShowFullPreviewText={preferences.setShowFullPreviewText}
               timeVisualizationStrip={timeVisualizationStrip}
@@ -583,12 +576,10 @@ export const WorkshopPlanner = ({ prefillData, renderEmptyState, onReset }: Work
         onAddPerson={addPerson}
         onUpdatePerson={updatePerson}
         onDeletePerson={deletePerson}
-        onExport={dataActions.handleExport}
-        onExportCsv={dataActions.handleExportCsv}
         onImport={dataActions.handleImport}
         onImportText={dataActions.handleImportText}
         onReset={closeFlow.handleReset}
-        onClearAll={handleClearAll}
+        onErasePlan={planHasItems ? handleErasePlan : undefined}
         onSaveAsTemplate={planHasItems ? () => dataActions.setSaveTemplateDialogOpen(true) : undefined}
         itemsCount={getAllItems(plan).length}
         isOpen={sidebarOpen}

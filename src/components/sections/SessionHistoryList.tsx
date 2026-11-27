@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { CalendarRange, EyeOff, Link, Link2Off, ScrollText, SquareChartGantt, Trash2 } from 'lucide-react';
+import { CalendarRange, X, Link, Link2Off, ScrollText, SquareChartGantt, Trash2 } from 'lucide-react';
 import { SessionHistoryEntry } from '@/types/sessionHistory';
 import { getSessionHistory, removeSessionFromHistory, upsertSessionToHistory } from '@/lib/workshopLocalStorage';
 import { deleteServerSession, fetchServerSessionStatus, getServerSessionAccess, isLegacyServerKey } from '@/lib/workshopServer';
@@ -310,10 +310,11 @@ export const SessionHistoryList = ({ onReopenSession, onEmpty }: SessionHistoryL
                         size="sm"
                         className={`h-7 w-7 p-0
                           ${entry.unavailable ? "text-foreground ": "text-muted-foreground "},
-                           hover:text-foreground`}
+                           hover:text-destructive-text`}
                         title={t('sessionHistory.hide')}
+                        aria-label={t('sessionHistory.hide')}
                       >
-                        <EyeOff className="h-3.5 w-3.5" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
